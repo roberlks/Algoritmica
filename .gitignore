@@ -33,12 +33,12 @@
 
 
 # Extra
-tmp/*
-.vscode/*
+*tmp*
+*.vscode/*
 # *.pdf
-.html
-.js
-.css
-output/*
+*.html
+*.js
+*.css
+*output/*
 
 
