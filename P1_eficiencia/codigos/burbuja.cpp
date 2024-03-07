@@ -1,106 +1,161 @@
 /**
-   @file Ordenación por burbuja
+   @file Ordenaciï¿½n por burbuja
 */
 
-   
-#include <iostream>
-using namespace std;
 #include <ctime>
 #include <cstdlib>
 #include <climits>
 #include <cassert>
+#include <chrono>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
+#define TYPE double
 
-
-
-
-
-/* ************************************************************ */ 
-/*  Método de ordenación por burbuja  */
+/* ************************************************************ */
+/*  Mï¿½todo de ordenaciï¿½n por burbuja  */
 
 /**
-   @brief Ordena un vector por el método de la burbuja.
+   @brief Ordena un vector por el mï¿½todo de la burbuja.
 
    @param T: vector de elementos. Debe tener num_elem elementos.
              Es MODIFICADO.
-   @param num_elem: número de elementos. num_elem > 0.
+   @param num_elem: nï¿½mero de elementos. num_elem > 0.
 
    Cambia el orden de los elementos de T de forma que los dispone
    en sentido creciente de menor a mayor.
    Aplica el algoritmo de la burbuja.
 */
-inline static 
-void burbuja(int T[], int num_elem);
-
-
+inline static void burbuja(TYPE T[], int num_elem);
 
 /**
-   @brief Ordena parte de un vector por el método de la burbuja.
+   @brief Ordena parte de un vector por el mï¿½todo de la burbuja.
 
-   @param T: vector de elementos. Tiene un número de elementos 
+   @param T: vector de elementos. Tiene un nï¿½mero de elementos
                    mayor o igual a final.Es MODIFICADO.
 
-   @param inicial: Posición que marca el incio de la parte del
+   @param inicial: Posiciï¿½n que marca el incio de la parte del
                    vector a ordenar.
-   @param final: Posición detrás de la última de la parte del
-                   vector a ordenar. 
-		   inicial < final.
+   @param final: Posiciï¿½n detrï¿½s de la ï¿½ltima de la parte del
+                   vector a ordenar.
+       inicial < final.
 
    Cambia el orden de los elementos de T entre las posiciones
    inicial y final - 1de forma que los dispone en sentido creciente
    de menor a mayor.
    Aplica el algoritmo de la burbuja.
 */
-static void burbuja_lims(int T[], int inicial, int final);
-
-
+static void burbuja_lims(TYPE T[], int inicial, int final);
 
 /**
-   Implementación de las funciones
+   Implementaciï¿½n de las funciones
 **/
 
-inline void burbuja(int T[], int num_elem)
+inline void burbuja(TYPE T[], int num_elem)
 {
-  burbuja_lims(T, 0, num_elem);
+    burbuja_lims(T, 0, num_elem);
 };
 
-
-static void burbuja_lims(int T[], int inicial, int final)
+static void burbuja_lims(TYPE T[], int inicial, int final)
 {
-  int i, j;
-  int aux;
-  for (i = inicial; i < final - 1; i++)
-    for (j = final - 1; j > i; j--)
-      if (T[j] < T[j-1])
-	{
-	  aux = T[j];
-	  T[j] = T[j-1];
-	  T[j-1] = aux;
-	}
+    int i, j;
+    TYPE aux;
+    for (i = inicial; i < final - 1; i++)
+        for (j = final - 1; j > i; j--)
+            if (T[j] < T[j - 1])
+            {
+                aux = T[j];
+                T[j] = T[j - 1];
+                T[j - 1] = aux;
+            }
 }
 
+// main para int, float, double
 
-
-
-int main()
+int main(int argc, char *argv[])
 {
-  int n;
-  cout << "Introduce número de elementos del vector: ";
-  cin >> n;
 
-  int * T = new int[n];
-  assert(T);
-
-  srandom(time(0));
-
-  for (int i = 0; i < n; i++)
+    if (argc != 2)
     {
-      T[i] = random();
+        cerr << "Uso: ./burbuja <n>" << endl;
+        exit(1);
+    }
+
+    int n = atoi(argv[1]);
+
+    TYPE *T = new TYPE[n];
+    assert(T);
+
+    chrono::high_resolution_clock::time_point tantes, tdespues;
+    chrono::duration<double> transcurrido;
+    srandom(time(0));
+
+    for (int i = 0; i < n; i++)
+    {
+        T[i] = random();
     };
 
-  burbuja(T, n);
+    tantes = chrono::high_resolution_clock::now();
 
-  delete [] T;
+    burbuja(T, n);
 
-  return 0;
+    tdespues = chrono::high_resolution_clock::now();
+
+    transcurrido = tdespues - tantes;
+
+    cout << n << " " << transcurrido.count() << endl;
+    delete[] T;
+
+    return 0;
 };
+
+// main para string
+
+// int main(int argc, char *argv[])
+// {
+
+//     if (argc != 2)
+//     {
+//         cerr << "Uso: ./burbuja <n>" << endl;
+//         exit(1);
+//     }
+
+//     int n = atoi(argv[1]);
+
+//     TYPE *T = new TYPE[n];
+//     assert(T);
+
+//     chrono::high_resolution_clock::time_point tantes, tdespues;
+//     chrono::duration<double> transcurrido;
+
+//     ifstream is;
+//     TYPE elem;
+//     is.open("../Datos/quijote.txt");
+//     if(!is) {
+//         cerr << "Error al abrir el archivo ../Datos/quijote.txt" << endl;
+//         exit(1);
+//     }
+
+//     for (int i = 0; i < n && is; i++)
+//     {
+//         is >> elem;
+//         T[i] = elem;
+//     };
+
+// 	is.close();
+
+//     tantes = chrono::high_resolution_clock::now();
+
+//     burbuja(T, n);
+
+//     tdespues = chrono::high_resolution_clock::now();
+
+//     transcurrido = tdespues - tantes;
+
+//     cout << n << " " << transcurrido.count() << endl;
+	
+//     delete[] T;
+
+//     return 0;
+// };
