@@ -10,9 +10,8 @@
 #include <string>
 using namespace std;
 
-#define TYPE int
-#define TYPE_MAX INT_MAX
-
+#define TYPE string
+//#define TYPE_MAX DBL_MAX
 
  
 /* ************************************************************ */
@@ -144,24 +143,32 @@ static void mergesort_lims(TYPE T[], int inicial, int final)
     }
     else
     {
+        
         int k = (final - inicial) / 2;
 
         TYPE *U = new TYPE[k - inicial + 1];
         assert(U);
         int l, l2;
+
+        
         for (l = 0, l2 = inicial; l < (k-inicial); l++, l2++)
             U[l] = T[l2];
-        U[l] = TYPE_MAX;
-
+        
+        
+        
         TYPE *V = new TYPE[final - k + 1];
         assert(V);
         for (l = 0, l2 = k; l < final - k; l++, l2++)
             V[l] = T[l2];
-        V[l] = TYPE_MAX;
+        
+        
+        
+        mergesort_lims(U, 0, k-inicial);
+        mergesort_lims(V, 0, final - k);
 
-        mergesort_lims(U, inicial, k);
-        mergesort_lims(V, inicial, final - k);
+        
         fusion(T, inicial, final, U, V);
+        
         delete[] U;
         delete[] V;
     };
@@ -174,7 +181,9 @@ static void fusion(TYPE T[], int inicial, int final, TYPE U[], TYPE V[])
     int tam = (final - inicial) / 2;
     for (int i = inicial; i < final; i++)
     {
-        if (j < tam && k < tam && U[j] < V[k])
+
+
+        if ((k==tam)  || ((j<tam) && (U[j] < V[k])) )
         {
             T[i] = U[j];
             j++;
@@ -186,7 +195,7 @@ static void fusion(TYPE T[], int inicial, int final, TYPE U[], TYPE V[])
         };
     };
 }
-/*MAIN PARA TIPOS GENERALES*/
+/*MAIN PARA TIPOS GENERALES
 int main(int argc, char* argv[])
 {
   // int n;
@@ -224,10 +233,10 @@ int main(int argc, char* argv[])
   delete [] T;
 
   return 0;
-};
+};*/
 
 
-/*MAIN PARA STRING
+/*MAIN PARA STRING*/
 int main(int argc, char *argv[])
 {
 
@@ -253,7 +262,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    for (int i = 0; i < n && is; i++)
+    for (int i = 0; is && i<n; i++)
     {
         is >> elem;
         T[i] = elem;
@@ -275,4 +284,3 @@ int main(int argc, char *argv[])
 
     return 0;
 };
-*/
