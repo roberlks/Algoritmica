@@ -1,11 +1,12 @@
 #!/bin/bash
 # ./testing.sh <exec> <ini> <fin> <step> <data>
 
-data_path="../Datos"
+data_path="../Datos/$1_data"
 exec_path="../codigos/output"
 graph_path="../Graficas/$1"
 
 mkdir -p $exec_path
+mkdir -p $data_path
 
 data="$data_path/$1_${5:-$USER}.dat" 
 
