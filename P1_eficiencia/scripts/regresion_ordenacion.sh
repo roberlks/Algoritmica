@@ -8,6 +8,6 @@ tipos=("int" "float" "double" "string")
 for algoritmo in "${algoritmos[@]}"; do
     # Recorrer cada tipo de dato
     for tipo in "${tipos[@]}"; do
-        gnuplot -c $algoritmo $tipo cuadratico
+        gnuplot -c "regresion_ordenacion.gp" $algoritmo $tipo "cuadratico"
     done
 done
