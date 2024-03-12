@@ -8,18 +8,18 @@ ALG=ARG1
 TYPE=ARG2
 REG=ARG3
 TITLE="Regresión ".ALG
-DATAPATH="../data/".ALG."_data/"
+DATAPATH="../Datos/".ALG."_data/dats/"
 NOMBRE_IMAGEN=REG."_".ALG."_".TYPE.".png"
 DATOS=DATAPATH.ALG."_".TYPE.".dat"
 
 set terminal png
-set output DATAPATH."graphs/".NOMBRE_IMAGEN
+set output DATAPATH."/../graphs/".NOMBRE_IMAGEN
 set fit logfile DATAPATH.ALG."_".TYPE."_".REG.".log"
 
 set xlabel "Tamaño"
 set ylabel "Tiempo (seg)"
 
-f(x)=a*x*x*x # Cambiar para cambiar el tipo de regresión
+f(x)=a*x*x # Cambiar para cambiar el tipo de regresión
 
 fit f(x) DATOS via a # Cambiar si se necesitan más parámetros
 
