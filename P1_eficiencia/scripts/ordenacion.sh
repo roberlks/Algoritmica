@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Algoritmos y tipos de datos
-algoritmos=("hanoi")
-tipos=("int")
+algoritmos=("burbuja" "insercion")
+tipos=("string")
 
 # Recorrer cada algoritmo
 for algoritmo in "${algoritmos[@]}"; do
@@ -12,7 +12,7 @@ for algoritmo in "${algoritmos[@]}"; do
         if [[ "$tipo" == "string" ]]; then
         	./recoger_datos2.sh "$algoritmo" "$tipo" 12308 202308 10000
         else
-        	./recoger_datos2.sh "$algoritmo" "$tipo" 1 36 1
+        	./recoger_datos2.sh "$algoritmo" "$tipo" 5000 125000 5000
         fi
         echo "Finalizado ${algoritmo}_${tipo}..."
     done
