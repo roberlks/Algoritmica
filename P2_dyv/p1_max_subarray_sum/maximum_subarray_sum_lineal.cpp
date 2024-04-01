@@ -41,7 +41,7 @@ void mss_subarray_lineal(int n, ll a[], int & ini, int & fin){
         ac += a[i];
         if(ac < 0) {
             ac = 0;
-            loc_ini = i;
+            loc_ini = i+1;
         }
         if(ac > mx){ 
             mx = ac;
@@ -69,7 +69,12 @@ int main(){
     ll a[n];
     for(int i=0; i<n; ++i) cin >> a[i];
     
-    
+    int ini,fin;
+    mss_subarray_lineal(n,a,ini,fin);
+
     // OUTPUT
-    cout << kadane(n,a) << endl;
+    cout << fin-ini+1 << endl;
+    for(int i=ini; i<=fin; ++i)
+        cout << a[i] << " ";
+    cout << endl;
 }
