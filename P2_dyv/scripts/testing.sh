@@ -19,22 +19,23 @@ brute=${3:-$1/brute.cpp}
 gen=${4:-$1/gen.cpp}
 checker=${5:-$1/checker.cpp}
 
-out="$1/output"
+output_dir="$1/output"
+mkdir -p $output_dir
 
 #In case of error the script stops
 set -e
 
 #Compilation 
-g++ $code -o "$out/code"
-g++ $brute -o "$out/brute"
-g++ $gen -o "$out/gen"
-g++ $checker -o "$out/checker"
+g++ $code -o "$output_dir/code" 
+g++ $brute -o "$output_dir/brute" 
+g++ $gen -o "$output_dir/gen" 
+g++ $checker -o "$output_dir/checker" 
 
 #Testing
 for((i=0;i<N;++i)); do 
-    "$out/gen" $i > "$out/input_file"
-    "$out/code" < "$out/input_file" > "$out/myAnswer"
-    "$out/brute" < "$out/input_file" > "$out/correctAnswer"
-    "$out/checker" > "$out/checker_log"
+    "$output_dir/gen" $i > "$output_dir/input_file"
+    "$output_dir/code" < "$output_dir/input_file" > "$output_dir/myAnswer"
+    "$output_dir/brute" < "$output_dir/input_file" > "$output_dir/correctAnswer"
+    "$output_dir/checker" > "$output_dir/checker_log"
     echo "Passed test: " $i
 done

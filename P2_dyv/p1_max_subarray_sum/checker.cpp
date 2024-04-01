@@ -77,5 +77,6 @@ int main(){
         cout << "WA: not the maximum sum" << endl;
         return -1;
     }
+    fin.close();ans.close();cor.close();
     return 0;
 }
