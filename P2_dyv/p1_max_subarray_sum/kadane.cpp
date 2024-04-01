@@ -3,6 +3,9 @@ using namespace std;
 
 typedef long long ll;
 
+/**
+ * @brief Kadane's algorithm for finding the sum of the maximum subsequent of the array @p v
+*/
 ll kadane(int n, ll a[]){
     ll tot_max = a[0];
     ll cur_max = a[0];
@@ -28,5 +31,6 @@ int main(){
     
     
     // OUTPUT
+    // https://cses.fi/problemset/task/1643/
     cout << kadane(n,a) << endl;
 }

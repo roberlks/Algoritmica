@@ -76,6 +76,7 @@ int main(){
         cout << endl;
     }
     // Codeforces's Output (for testing)
+    // https://codeforces.com/problemset/gymProblem/101845/L
     /*for(int i=0; i<n; ++i){
         for(int j=0; j<n; ++j){
             if(!v[i][j]){
