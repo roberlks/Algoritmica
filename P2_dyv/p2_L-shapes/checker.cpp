@@ -8,19 +8,41 @@ bool validPos(int x, int y, int n){
     return 0 <= x && x < n && 0 <= y && y < n;
 }
 
-bool isL(int x, int y,const vector<vector<int>> & v,int n){
+bool isL(int x, int y,const vector<vector<int>> & v, int & cont, int n){
     if(v[x][y] < 0) return false;
-    int cont = 0;
+    vector<int> neighbours;
     for(int i=0; i<4; ++i){
         int nx = x + sx[i];
         int ny = y + sy[i];
         if(validPos(nx,ny,n)){
-            if(v[x][y] == v[nx][ny])
-                ++cont;
+            if(v[x][y] == v[nx][ny]) {
+                neighbours.push_back(i);
+            }
         }
     }
-    if(!v[x][y]) return cont == 0;
-    return 1 <= cont <= 2;
+    // cout << x << " " << y << endl;
+    // cout << neighbours.size() << endl;
+    bool valid = true;
+    switch (neighbours.size()) {
+        case 0:
+            valid = !v[x][y];
+            break;
+        case 1:
+            ++cont;
+            valid = cont == 1 && isL(x + sx[neighbours[0]], y + sy[neighbours[0]], v, cont, n);
+            --cont;
+            break;
+        case 2:
+            // cout << cont << " " << sx[neighbours[0]] << " " << sx[neighbours[1]] << " " << sy[neighbours[0]] << " " << sy[neighbours[1]] << endl;
+            valid = sx[neighbours[0]]*sx[neighbours[1]] != -1 &&
+                    sy[neighbours[0]]*sy[neighbours[1]] != -1;
+                        
+            break;
+        default:
+            valid = false;
+            break;
+    }
+    return valid;
 }
 
 /**
@@ -43,7 +65,7 @@ int main(int argc, char * argv[]){
     for(int i=0; i<n; ++i){
         for(int j=0; j<n; ++j){
             ans >> v[i][j];
-            cout << v[i][j] << " ";
+            cout << setw(3) << v[i][j] << " ";
         }
         cout << endl;
     }
@@ -52,12 +74,14 @@ int main(int argc, char * argv[]){
         cout << "WA: square tile not found where it was supposed to be" << endl;
         return -1;
     }
-
+    int cont = 0;
     bool allL = true;
     for(int i=0; i<n; ++i){
         for(int j=0; j<n; ++j){
-            allL = isL(i,j,v,n);
-            if(!allL) break;
+            allL = isL(i,j,v,cont,n);
+            if(!allL) {
+                break;
+            }
         }
         if(!allL) break;
     }
