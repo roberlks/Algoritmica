@@ -2,12 +2,14 @@
 
 using namespace std;
 
+typedef long long ll;
+
 struct Solucion {
     int pos_izq;        // Inclusive
     int pos_der;        // Descartable
-    int sum;
+    ll sum;
 
-    Solucion(int pos_izq, int pos_der, int sum):
+    Solucion(int pos_izq, int pos_der, ll sum):
         pos_izq(pos_izq), pos_der(pos_der),sum(sum) {};
 };
 
@@ -73,7 +75,13 @@ int main() {
         cin >> vector[i];
     }
 
-    cout << solucionDYV(vector, 0, n).sum;
+    //cout << solucionDYV(vector, 0, n).sum;
+    Solucion sol = solucionDYV(vector,0,n);
+    cout << sol.pos_der - sol.pos_izq << endl;
+    for(int i=sol.pos_izq; i<sol.pos_der; ++i){
+        cout << vector[i] << " ";
+    }
+    cout << endl;
 
     delete vector;
     return 0;

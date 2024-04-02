@@ -9,10 +9,14 @@ const double EPS = 1e-3;
  * It checks that the solution given is **aproximately** the right one
 */
 int main(int argc, char * argv[]){
+    if(argc < 4){
+        cout << "Error missing arguments" << endl;
+        return -1;
+    }
     // Read files
-    ifstream fin("input_file", ifstream::in);
-    ifstream ans("myAnswer", ifstream::in);
-    ifstream cor("correctAnswer", ifstream::in);
+    ifstream fin(argv[1]);
+    ifstream ans(argv[2]);
+    ifstream cor(argv[3]);
 
     if(!fin){
         cout << argv[0] << endl;
@@ -23,7 +27,6 @@ int main(int argc, char * argv[]){
     
     int n;
     fin >> n;
-    cout << "n: " << n << endl;
     City cities[n];
     int myCycle[n+1], correctCycle[n+1];
     for(int i=0; i<n; ++i){
@@ -33,11 +36,6 @@ int main(int argc, char * argv[]){
     }
     ans >> myCycle[n];
     //cor >> correctCycle[n];
-    
-    for(int i=0; i<n+1; ++i){
-        cout << myCycle[i] << " ";
-    }
-    cout << endl;
 
     // Check it is in fact a cycle a visits all cities ONLY once
     if(myCycle[0] != 0){
@@ -63,13 +61,15 @@ int main(int argc, char * argv[]){
     ld ans_sum = 0;
     for(int i=0; i<n; ++i)
         ans_sum += cities[myCycle[i]].dist(cities[myCycle[i+1]]);
-    ll cor_sum = 0;
+    ld cor_sum = 0;
     //for(int i=0; i<n; ++i)
     //    cor_sum += cities[correctCycle[i]].dist(cities[correctCycle[i+1]]);;
     cor >> cor_sum;
     
-    if(abs(ans_sum - cor_sum) < EPS){
+    if(abs(ans_sum - cor_sum) > EPS){
         cout << "WA: not the minimum distance" << endl;
+        cout << "ans: " << ans_sum << endl;
+        cout << "correct: " << cor_sum << endl;
         return -1;
     }
     fin.close();ans.close();cor.close();

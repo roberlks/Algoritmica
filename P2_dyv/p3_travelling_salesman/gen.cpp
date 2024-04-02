@@ -23,7 +23,8 @@ int main(int argc, char * argv[]){
     cout << n << endl;
     for(int i=0; i<n; ++i){
         // Generate random positive and negative numbers
-        cout << (rand() - RAND_MAX/2) << " " << (rand() - RAND_MAX/2) << endl;
+        //cout << (rand() - RAND_MAX/2) << " " << (rand() - RAND_MAX/2) << endl;
+        cout << rnd(-3,3) << " " << rnd(-3,3) << endl;
     }
     cout << endl;
     return 0;

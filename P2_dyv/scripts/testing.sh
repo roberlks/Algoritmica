@@ -22,6 +22,11 @@ checker=${5:-$1/checker.cpp}
 output_dir="$1/output"
 mkdir -p $output_dir
 
+input="$output_dir/input_file"
+my_ans="$output_dir/myAnswer"
+correct_ans="$output_dir/correctAnswer"
+log="$output_dir/checker_log"
+
 #In case of error the script stops
 set -e
 
@@ -33,9 +38,9 @@ g++ $checker -o "$output_dir/checker"
 
 #Testing
 for((i=0;i<N;++i)); do 
-    "$output_dir/gen" $i > "$output_dir/input_file"
-    "$output_dir/code" < "$output_dir/input_file" > "$output_dir/myAnswer"
-    "$output_dir/brute" < "$output_dir/input_file" > "$output_dir/correctAnswer"
-    "$output_dir/checker" > "$output_dir/checker_log"
+    "$output_dir/gen" $i > $input
+    "$output_dir/code" < $input > $my_ans
+    "$output_dir/brute" < $input > $correct_ans
+    "$output_dir/checker" $input $my_ans $correct_ans > $log
     echo "Passed test: " $i
 done
