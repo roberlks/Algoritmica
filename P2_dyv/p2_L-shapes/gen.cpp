@@ -18,12 +18,12 @@ int rnd(int a, int b){
 int main(int argc, char * argv[]){
     int seed = atoi(argv[1]);
     srand(seed);
-    int k = rnd(1,MAXK+1);
+    int k = rnd(1,MAXK);
     // n must be a power of 2 (size of the square)
-    int n = 2 << k;
+    int n = 1 << k;
     // (r,c) -> position of the square tile (NOT zero base)
-    int r = rnd(1,n+1);
-    int c = rnd(1,n+1);
+    int r = rnd(1,n);
+    int c = rnd(1,n);
     // OUTPUT
     cout << n << endl;
     cout << r << " " << c << endl;
