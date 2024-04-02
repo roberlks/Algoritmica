@@ -34,7 +34,9 @@
 
 # Extra
 *tmp*
-*.vscode/*
+.vscode/
+.cph/
+output/
 # *.pdf
 *.html
 *.js

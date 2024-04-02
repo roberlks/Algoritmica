@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+#include "City.h"
+using namespace std;
+
+const double EPS = 1e-3;
+
+/**
+ * @brief Checks the solution for Travelling Salesman Problem problem.
+ * It checks that the solution given is **aproximately** the right one
+*/
+int main(int argc, char * argv[]){
+    // Read files
+    ifstream fin("input_file", ifstream::in);
+    ifstream ans("myAnswer", ifstream::in);
+    ifstream cor("correctAnswer", ifstream::in);
+
+    if(!fin){
+        cout << argv[0] << endl;
+        cout << "Error opening input_file" << endl;
+        cout << "ERROR: " << strerror(errno) << endl;
+        return -1;
+    }
+    
+    int n;
+    fin >> n;
+    cout << "n: " << n << endl;
+    City cities[n];
+    int myCycle[n+1], correctCycle[n+1];
+    for(int i=0; i<n; ++i){
+        fin >> cities[i];
+        ans >> myCycle[i];
+        //cor >> correctCycle[i];
+    }
+    ans >> myCycle[n];
+    //cor >> correctCycle[n];
+    
+    for(int i=0; i<n+1; ++i){
+        cout << myCycle[i] << " ";
+    }
+    cout << endl;
+
+    // Check it is in fact a cycle a visits all cities ONLY once
+    if(myCycle[0] != 0){
+        cout << "WA: doesn't start at the origin city" << endl;
+        return -1;
+    }
+    if(myCycle[n] != 0){
+        cout << "WA: doesn't end at the origin city (not a cycle)" << endl;
+        return -1;
+    }
+
+    bool visited[n];
+    memset(visited,false,sizeof(visited));
+    for(int i=1; i<n; ++i){
+        if(visited[i]){
+            cout << "WA: visits a city more than once" << endl;
+            return -1;
+        }
+        visited[i] = true;
+    }
+
+    // Check aproximate sum
+    ld ans_sum = 0;
+    for(int i=0; i<n; ++i)
+        ans_sum += cities[myCycle[i]].dist(cities[myCycle[i+1]]);
+    ll cor_sum = 0;
+    //for(int i=0; i<n; ++i)
+    //    cor_sum += cities[correctCycle[i]].dist(cities[correctCycle[i+1]]);;
+    cor >> cor_sum;
+    
+    if(abs(ans_sum - cor_sum) < EPS){
+        cout << "WA: not the minimum distance" << endl;
+        return -1;
+    }
+    fin.close();ans.close();cor.close();
+    return 0;
+}
