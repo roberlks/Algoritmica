@@ -18,7 +18,7 @@ struct tupla
     }
 };
 
-tupla dyv(int ini, int fin, ll a[]){
+tupla dyv_value(int ini, int fin, ll a[]){
     // Base case
     if(fin - ini <= UMBRAL){
         return tupla(a[ini],a[ini],a[ini],a[ini]);
@@ -27,8 +27,8 @@ tupla dyv(int ini, int fin, ll a[]){
     // Divide 
     int mid = (fin + ini)/2;
     tupla t1,t2;
-    t1 = dyv(ini,mid,a);
-    t2 = dyv(mid,fin,a);
+    t1 = dyv_value(ini,mid,a);
+    t2 = dyv_value(mid,fin,a);
 
     // Fusion
     tupla ans;
@@ -54,5 +54,5 @@ int main(){
     
     // OUTPUT
     // https://cses.fi/problemset/task/1643/
-    cout << dyv(0,n,a).mcss << endl;
+    cout << dyv_value(0,n,a).mcss << endl;
 }

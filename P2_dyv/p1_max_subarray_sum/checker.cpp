@@ -13,7 +13,7 @@ typedef long long ll;
 */
 bool isSubsequent(int nsub, ll * sub,int n, ll * v){
     bool is_subsequent = true;
-    for(int i=0; i<n-nsub; ++i){
+    for(int i=0; i<n-nsub+1; ++i){
         is_subsequent = true;
         for(int j=0,k=i; j<nsub; ++j,++k){
             if(v[k] != sub[j]){
