@@ -10,6 +10,10 @@ struct index{
     ll val,ini,fin;
     index(ll val = 0, ll ini  = 0, ll fin = 0) : val(val), ini(ini), fin(fin) {}
 
+    friend bool operator<(const index & a,const index & b){
+        return a.val < b.val;
+    }
+
     friend ostream & operator<<(ostream & os, const index & ind){
         os << ind.val << " [" << ind.ini << ", " << ind.fin << "]"; 
         return os;
@@ -106,11 +110,12 @@ tupla dyv(int ini, int fin, ll a[]){
     // the prefix of the right side
 
     // ans.mcss = max(max(t1.mcss,t2.mcss),t1.max_sufix + t2.max_prefix)
-    if(t1.mcss.val > t2.mcss.val){ // ans.mcss = max(t1.mcss, t2.mcss)
+     ans.mcss = max(t1.mcss, t2.mcss);
+    /*if(t1.mcss.val > t2.mcss.val){ // ans.mcss = max(t1.mcss, t2.mcss)
         ans.mcss = t1.mcss;
     }else{
         ans.mcss = t2.mcss;
-    }
+    }*/
     if(t1.max_sufix.val + t2.max_prefix.val > ans.mcss.val){
         ans.mcss = t1.max_sufix.val + t2.max_prefix.val;
         ans.mcss.ini = t1.max_sufix.ini;
