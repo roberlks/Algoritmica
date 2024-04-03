@@ -26,6 +26,11 @@ struct City
         return sqrt(dx*dx+dy*dy);
     }
 
+    // Sort by x axis
+    bool operator<(const City & other){
+        return x < other.x;
+    }
+
     // I/O operators
     friend std::istream & operator>>(std::istream & is, City & p){
         is >> p.x >> p.y;

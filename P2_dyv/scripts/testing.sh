@@ -10,6 +10,18 @@
 
 #!/bin/bash
 
+if (($# < 2)) 
+then
+    echo "./testing.sh <dir> <code> <brute force> <gen> <checker> "
+    echo "<dir>          The directory where all codes will be found"
+    echo "<code>         the code to test"
+    echo "<brute force>  the brute force code (already know is correct)"
+    echo "<gen>          test generator for the problem"
+    echo "<checker>      checks whether the answer given by the <code> is correct"
+    echo "All parameters are optional except <dir>"
+    exit 1
+fi;
+
 #Variables
 N=100000 #Maximum number of tests made
 dir=$1
