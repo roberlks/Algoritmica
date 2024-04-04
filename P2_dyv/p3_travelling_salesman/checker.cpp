@@ -29,7 +29,8 @@ int main(int argc, char * argv[]){
     int n;
     fin >> n;
     City cities[n];
-    int myCycle[n+1], correctCycle[n+1];
+    int myCycle[n+1]; 
+    int correctCycle[n+1];
     for(int i=0; i<n; ++i){
         fin >> cities[i];
         ans >> myCycle[i];
@@ -61,7 +62,8 @@ int main(int argc, char * argv[]){
     // Check aproximate sum
     ld ans_sum = 0;
     for(int i=0; i<n; ++i)
-        ans_sum += cities[myCycle[i]].dist(cities[myCycle[i+1]]);
+        ans_sum += cities[myCycle[i]].dist(cities[myCycle[i+1]]); // Print index
+        //ans_sum += myCycle[i].dist(myCycle[i+1]);   // Print cities
     ld cor_sum = 0;
     //for(int i=0; i<n; ++i)
     //    cor_sum += cities[correctCycle[i]].dist(cities[correctCycle[i+1]]);;

@@ -195,7 +195,7 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     }
     path.push_back(path2[finish_z]);
 
-    cout << path << endl;
+    //cout << path << endl;
 }
 
 int main(){
@@ -207,10 +207,9 @@ int main(){
     int n;
     cin >> n;
     City v[n];
-    City home = v[0];
     for(int i=0; i<n; ++i)
         cin >> v[i];
-
+    City home = v[0];
     // Sort by x axis
     sort(v,v+n,[&](const City & a, const City & b){
         return a.x < b.x;
@@ -244,7 +243,7 @@ int main(){
     }
     cout << v[path[pos_ini]] << endl; // Cycle
 
-    cout << "Long path: " << long_path << endl;
+    //cout << "Long path: " << long_path << endl;
 
     return 0;
 }

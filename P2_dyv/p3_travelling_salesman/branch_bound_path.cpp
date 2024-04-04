@@ -10,9 +10,13 @@ using namespace std;
  * @param v array of cities to visit
  * @param visited whether city i has been visited or not
 */
-void TSP_branch_bound_value(int n,int prev, int cnt,const City v[],bool visited[], ld dist, ld & best_dist){
+void TSP_branch_bound(int n,int prev, int cnt,const City v[],bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
     if(cnt == n){ // Base case
-        best_dist = min(best_dist,dist + v[prev].dist(v[0]));
+        ld new_dist = dist + v[prev].dist(v[0]);
+        if(new_dist < best_dist){
+            best_dist = new_dist;
+            best_cycle = cur_cycle;
+        }
         return;
     }
 
@@ -20,8 +24,11 @@ void TSP_branch_bound_value(int n,int prev, int cnt,const City v[],bool visited[
         if(!visited[i]){
             visited[i] = true;
             ld new_dist = dist + v[i].dist(v[prev]);
-            if(new_dist < best_dist)
-                TSP_branch_bound_value(n,i,cnt+1,v,visited,new_dist,best_dist);
+            if(new_dist < best_dist){
+                cur_cycle.push_back(i);
+                TSP_branch_bound(n,i,cnt+1,v,visited,new_dist,best_dist,cur_cycle,best_cycle);
+                cur_cycle.pop_back();
+            }
             visited[i] = false;
         }
     }
@@ -42,6 +49,8 @@ int main(){
     ld best_dist = INF;
     bool visited[n];
     memset(visited,false,sizeof(visited));
-    TSP_branch_bound_value(n,0,0,v,visited,0,best_dist);
-    cout << best_dist << endl;
+    vector<int> ans;
+    TSP_branch_bound(n,0,0,v,visited,0,best_dist,ans,ans);
+    printCycle(ans);
+    //printCycle(ans,v[0],v);
 }
