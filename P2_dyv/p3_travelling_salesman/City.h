@@ -36,6 +36,7 @@ struct City
 
     friend bool operator==(const City & a, const City & b){
         return a.x == b.x && a.y == b.y;
+    }
     friend bool operator<(const City & a, const City & b){
         return a.x < b.x;
     }
