@@ -2,7 +2,7 @@
 #include "City.h"
 using namespace std;
 
-const int UMBRAL = 3;
+const int UMBRAL = 2;
 
 ostream & operator<<(ostream & os, const vector<int> & v) {
     for (int i=0; i < v.size(); ++i) {
@@ -58,26 +58,20 @@ ld TSP_brute_path(int n,City p,City v[],bool visited[], vector<int> & path){
 // [ini,fin)
 
 void dyv(int ini, int fin, City v[], vector<int> & path){
-    // Base case 
-    cout << ini << " " << fin << endl;
 
     if(fin - ini <= UMBRAL){
-        cout << "base case\n";
         bool visited[fin-ini] = {false};
         TSP_brute_path(fin-ini, v[0], v, visited, path);
-        //path.push_back(ini);
         return;
     }
 
-    //sort(v,v+fin-ini);
-
     //Divide
     vector<int> path1,path2;
-
     int mid = (fin+ini)/2;
-    
     dyv(ini,mid, v, path1);
     dyv(mid,fin, v, path2);
+
+    // Adjust vectors from brute force algorithm
 
     for (int i=0; i < mid-ini+1; ++i) {
         path1[i] += ini;
@@ -87,152 +81,136 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
         path2[i] += mid;
     }
 
+    // Pop last zero
     path1.pop_back();
     path2.pop_back();
 
-    cout << "Path1: " << path1 << endl;
-    cout << "Path2: " << path2 << endl;
+    // cout << "Path1: " << path1 << endl;
+    // cout << "Path2: " << path2 << endl;
 
-    //  cout << "path1" <<endl;
-    // for(int i : path1){
-    //     cout << i << endl;
-    // }
-    //  cout << "path2" <<endl;
-    // for(int i : path2){
-    //     cout << i << endl;
-    // }
-    // return ;
     //Fusion
 
     int r_nearest_city = mid;
     int l_nearest_city = mid-1;
 
-    bool found_first = false, found_second = false;
     int x;
-    cout << "ini = " << ini << endl;
-    cout << "fin = " << fin << endl;
-    cout << "mid = " << mid << endl;
-    cout << "Searching " << l_nearest_city << " in path1[" << path1.size() << "]" << endl;
+    // cout << "ini = " << ini << endl;
+    // cout << "fin = " << fin << endl;
+    // cout << "mid = " << mid << endl;
+    // cout << "Searching " << l_nearest_city << " in path1[" << path1.size() << "]" << endl;
     for (int i=0; i < mid-ini; ++i) {
-        cout << "Accessing element " << i << endl;
+        // cout << "Accessing element " << i << endl;
         if (path1[i] == l_nearest_city) {
             x = i;
             break;
-            // found_first = true;
         }
-        // else if (path1[i] == l_nearest_cities.second) {
-        //     y = i;
-        //     found_second = true;
-        // }
-        // if (found_first && found_second) break;
     }
 
-    found_first = found_second = false;
     int z;
-    cout << "Searching in path2[" << path2.size() << "]" << endl;
+    // cout << "Searching in path2[" << path2.size() << "]" << endl;
 
 
     // ? Se podría cambiar z por el elemento más cercano a x en
     // ? en lado derecho
     // ? Creo que no afecta a la eficiencia
+    // ? Probado: suelen salir peores resultados
     for (int i=0; i < fin-mid; ++i) {
-        cout << "Accessing element " << i << endl;
+        // cout << "Accessing element " << i << endl;
 
         if (path2[i] == r_nearest_city) {
             
             z = i;
             break;
-            // found_first = true;
         }
-        // else if (path2[i] == r_nearest_cities.second) {
-        //     t = i;
-        //     found_second = true;
-        // }
-        // if(found_first && found_second) break;
     }
+
+    //? The other method
     // ld min_dist = INF;
     // for (int i=0; i < fin-mid; ++i) {
     //     if(v[path1[x]].dist(v[path2[i]]) <= min_dist) {
     //         z = i;
     //     }
     // }
+
+    // Calculate y and left orientation
     int inc_x = 1;
     int y1 = (x+1)%(mid-ini), y2 = (x+mid-ini-1)%(mid-ini), y = y1;
     if (path1[y1] < path1[y2]) {
         inc_x = -1;
         y = y2;
     }
-    // y = x + inc_x
-    cout << "y1 = " << y1 << endl;
-    cout << "y2 = " << y2 << endl;
-    cout << "inc_x = " << inc_x << endl;
+
+    // cout << "y1 = " << y1 << endl;
+    // cout << "y2 = " << y2 << endl;
+    // cout << "inc_x = " << inc_x << endl;
 
     int inc_z = 1;
     
+    // Calculate t and orientation
     int t1 = (z+1)%(fin-mid), t2 = (z+fin-mid-1)%(fin-mid), t = t1;
     if (path2[t2] < path2[t1]) {
         inc_z = -1;
         t = t2;
     }
 
-    cout << "x " << x << " --> " << path1[x] << endl;
-    cout << "y " << y << " --> " << path1[y] << endl;
-    cout << "z " << z << " --> " << path2[z] << endl;
-    cout << "t " << t << " --> " << path2[t] << endl;
+    // cout << "x " << x << " --> " << path1[x] << endl;
+    // cout << "y " << y << " --> " << path1[y] << endl;
+    // cout << "z " << z << " --> " << path2[z] << endl;
+    // cout << "t " << t << " --> " << path2[t] << endl;
 
-    bool link_xz = true;
+
     ld xz = v[path1[x]].dist(v[path2[z]]);
-    cout << "x --> z (" << v[path1[x]] << " --> " << v[path2[z]] << ") : " << xz << endl;
     ld xt = v[path1[x]].dist(v[path2[t]]);
-    cout << "x --> t (" << v[path1[x]] << " --> " << v[path2[t]] << ") : " << xt << endl;
     ld yz = v[path1[y]].dist(v[path2[z]]);
-    cout << "y --> z (" << v[path1[y]] << " --> " << v[path2[z]] << ") : " << yz << endl;
     ld yt = v[path1[y]].dist(v[path2[t]]);
-    cout << "y --> t (" << v[path1[y]] << " --> " << v[path2[t]] << ") : " << yt << endl;
 
-    cout << xt << " + " << yz << " < " << xz << " + " << yt << " ? " << boolalpha << (xt + yz < xz + yt) << endl;
+    // cout << xt << " + " << yz << " < " << xz << " + " << yt << " ? " << boolalpha << (xt + yz < xz + yt) << endl;
 
-    if (xt + yz <= xz + yt) {
-        link_xz = false;
-    }
+    bool link_xz = xt + yz > xz + yt;
 
-    cout << "Link x and z ? " << boolalpha << link_xz << endl;
+    // cout << "Link x and z ? " << boolalpha << link_xz << endl;
 
-    cout << "Pushing from path1[" << path1.size() << "]" << endl;
+    // cout << "Pushing from path1[" << path1.size() << "]" << endl;
 
-    cout << "Pushing from " << y << " to " << x << " (jump: " << inc_x << ")" << endl;
+    // cout << "Pushing from " << y << " to " << x << " (jump: " << inc_x << ")" << endl;
+    
+    // Push path1 to path
     for (int i=y; i != x; i = (i+mid-ini+inc_x)%(mid-ini)) {
         //cout << "Pushing element path[" << i << "] = " << path1[i] << endl;
         path.push_back(path1[i]);
     }
     path.push_back(path1[x]);
-    cout << "Pushing from path2[" << path2.size() << "]" << endl;
+    // cout << "Pushing from path2[" << path2.size() << "]" << endl;
 
     int start_z = link_xz ? z : t;
 
-    cout << "starts z ? " << boolalpha << (start_z == z) << endl;
+    // cout << "starts z ? " << boolalpha << (start_z == z) << endl;
     int finish_z = start_z == z ? t : z;
 
-    cout << "inc_z = " << inc_z << endl;
+    // cout << "inc_z = " << inc_z << endl;
 
     inc_z = start_z == z ? -inc_z : inc_z;
 
-    cout << "inc_z = " << inc_z << endl;
+    // cout << "inc_z = " << inc_z << endl;
 
-    cout << "Pushing from " << start_z << " to " << finish_z << " (jump: " << inc_z << ")" << endl;
+    // cout << "Pushing from " << start_z << " to " << finish_z << " (jump: " << inc_z << ")" << endl;
 
+    // Push path2 to path
     for (int i=start_z; i != finish_z; i = (i+fin-mid+inc_z)%(fin-mid)) {
-        cout << "Pushing element path[" << i << "] = " << path2[i] << endl;
+        // cout << "Pushing element path[" << i << "] = " << path2[i] << endl;
         path.push_back(path2[i]);
     }
     path.push_back(path2[finish_z]);
 
-    cout << path << endl;
+    // cout << path << endl;
+
+    // Adjust like brute_force format
     for (int i=0; i < path.size(); ++i) {
         path[i] -= ini;
     }
     path.push_back(0);
 
+    // Know the cycle, salesman home must be found
 }
 
 int main(){
@@ -259,7 +237,7 @@ int main(){
     });
 
     for(City c : v){
-        cout << c << endl;
+        // cout << c << endl;
     }
 
     vector<int> path;
@@ -270,6 +248,8 @@ int main(){
     
     int pos_ini = 0;
     ld long_path = 0.0;
+
+    // Find salesman home and length of the path
     for(int i=0; i < n; i++) {
         if (v[path[i]] == home)
             pos_ini = i;

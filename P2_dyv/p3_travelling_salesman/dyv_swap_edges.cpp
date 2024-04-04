@@ -2,7 +2,7 @@
 #include "City.h"
 using namespace std;
 
-const int UMBRAL = 2;
+const int UMBRAL = 5;
 
 vector<int> swapEdges(int e1, int e2,vector<int> & cycle1,vector<int> & cycle2, const City v[]){
     int n1 = cycle1.size();

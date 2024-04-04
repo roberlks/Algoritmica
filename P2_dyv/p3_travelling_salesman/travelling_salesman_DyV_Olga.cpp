@@ -8,6 +8,8 @@ using namespace std;
 
 typedef long long ll;
 
+const int UMBRAL = 2;
+
 /**
  * @struct Auxiliar 
  * @details Almacena parejas de iteradores constantes de list<int> que servirán de auxiliares en 
@@ -122,7 +124,7 @@ list<int>::const_iterator acceso(int pos_relativa, const list<int>& c, list<int>
 
 void dyv (City *v, int init, int fin, list<int>& ciclo) {
 
-    if (fin - init < 3) {
+    if (fin - init <= UMBRAL) {
         
         for (int i = init; i < fin; ++i) {
             ciclo.push_back(i);
@@ -225,7 +227,8 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> vector[i];
     }
-    
+    City home = vector[0];
+
     sort(vector, vector+n);         //Falta definir el operador relacional  
 /*
     for (int i = 0; i < n; i++) {
@@ -243,6 +246,8 @@ int main() {
     
     list<int> rotado;
 
+    
+
     typename list<int>::iterator it = ciclo_resultado.begin();
 
     while (*it != 0) {
@@ -252,10 +257,28 @@ int main() {
 
     rotado.insert(rotado.begin(), it, ciclo_resultado.end());
 
-    cout << rotado;
-    cout << *rotado.begin();
+    // cout << rotado;
+    // cout << *rotado.begin();
 
-    cout << endl;
+    // cout << endl;
+
+    int pos_ini;
+    for(int i=0; i < n; i++) {
+        if (vector[i] == home)
+            pos_ini = i;
+    }
+
+    auto it_origin = find(rotado.begin(),rotado.end(),pos_ini);
+    for (typename list<int>::const_iterator it = it_origin; 
+                                                        it != rotado.end(); ++it) {
+        cout << vector[*it] << " ";
+    }
+    for (typename list<int>::const_iterator it = rotado.begin(); 
+                                                        it != it_origin; ++it) {
+        cout << vector[*it] << " ";
+    }
+    cout << vector[*it_origin];
+
     
     double sum = 0;
     typename list<int>::const_iterator pre  = rotado.cbegin();
@@ -267,7 +290,7 @@ int main() {
         pre = post;
     }
 
-    cout << sum;
+    cout << sum << endl;
 
     return 0;
 }

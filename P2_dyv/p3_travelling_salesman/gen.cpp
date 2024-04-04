@@ -6,6 +6,8 @@ typedef long double ld;
 
 // Maximum size of the array
 const int MAXN = 10;
+// Side of the map
+const int N = 1;
 
 /**
  * @brief Returns a random int x € [a,b)
@@ -27,12 +29,12 @@ int main(int argc, char * argv[]){
     cout << n << endl;
     set<pair<ld,ld>> s;
     for(int i=0; s.size() < n; ++i){
-        pair<ld,ld> elem(rnd(-3,3),rnd(-3,3));
+        pair<ld,ld> elem(rnd(-N,N),rnd(-N,N));
         if(!s.count(elem)) {
             s.insert(elem);
             // Generate random positive and negative numbers
             //cout << (rand() - RAND_MAX/2) << " " << (rand() - RAND_MAX/2) << endl;
-            cout << "(" << rnd(-3,3) << ", " << rnd(-3,3) << ")" << endl;
+            cout << "(" << elem.first << ", " << elem.second << ")" << endl;
         }
     }
     cout << endl;
