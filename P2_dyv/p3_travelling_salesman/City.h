@@ -44,9 +44,14 @@ struct City
         return a.x == b.x && a.y == b.y;
     }
 
+    friend bool operator!=(const City & a, const City & b){
+        return !(a == b);
+    }
+
     // I/O operators
     friend std::istream & operator>>(std::istream & is, City & p){
-        is >> p.x >> p.y;
+        char c;
+        is >> c >> p.x >> c >> p.y >> c;
         return is;
     }
     friend std::ostream & operator<<(std::ostream & os, const City &p){
@@ -83,6 +88,18 @@ void printCycle(const std::vector<int> & cycle, int origin = 0){
     }
     for(int i=0; i<ini; ++i){
         std::cout << cycle[i] << " ";
+    }
+    std::cout << origin << std::endl;
+}
+
+void printCycle(const std::vector<int> & cycle, const City & origin, const City v[]){
+    int ini = 0;
+    while(v[cycle[ini]] != origin) ++ini;
+    for(int i=ini; i<(int)cycle.size(); ++i){
+        std::cout << v[cycle[i]] << " ";
+    }
+    for(int i=0; i<ini; ++i){
+        std::cout << v[cycle[i]] << " ";
     }
     std::cout << origin << std::endl;
 }

@@ -230,12 +230,12 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     }
     path.push_back(path2[finish_z]);
 
+    //cout << path << endl;
     for (int i=0; i < path.size(); ++i) {
         path[i] -= ini;
     }
     path.push_back(0);
 
-    // cout << path << endl;
 }
 
 int main(){
@@ -247,7 +247,6 @@ int main(){
     int n;
     cin >> n;
     City v[n];
-    
     for(int i=0; i<n; ++i)
         cin >> v[i];
     City home = v[0];
