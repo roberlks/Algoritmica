@@ -38,9 +38,10 @@ int main(){
     vector<int> ans = bruteFoce(n,v);
 
     // OUTPUT
-    cout << cycleDistance(ans,v) << endl;
-    for(int i : ans){
+    //cout << cycleDistance(ans,v) << endl;
+    /*for(int i : ans){
         cout << i << " ";
     }
-    cout << endl;
+    cout << endl;*/
+    printCycle(ans);
 }

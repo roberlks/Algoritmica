@@ -3,7 +3,7 @@
 using namespace std;
 
 // Maximum error percentage tolerated
-const double EPS = 30;
+const double EPS = 1e-3;
 
 /**
  * @brief Checks the solution for Travelling Salesman Problem problem.
@@ -73,6 +73,7 @@ int main(int argc, char * argv[]){
         cout << "WA: not the minimum distance" << endl;
         cout << "ans: " << ans_sum << endl;
         cout << "correct: " << cor_sum << endl;
+        cout << "error: " << error_percentage << "%" << endl;
         return -1;
     }
     fin.close();ans.close();cor.close();
