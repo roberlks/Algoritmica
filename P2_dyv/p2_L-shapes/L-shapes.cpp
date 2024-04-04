@@ -147,12 +147,13 @@ int main(){
     lineal(n,r,c,0,0,v,start_tile);
 
     // OUTPUT
-    for(int i=0; i<n; ++i){
-        for(int j=0; j<n; ++j){
-            cout << setw(3) << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+    // for(int i=0; i<n; ++i){
+    //     for(int j=0; j<n; ++j){
+    //         cout << setw(3) << v[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    cout << "Last tile: " << start_tile-1 << endl;
     // Codeforces's Output (for testing)
     // https://codeforces.com/problemset/gymProblem/101845/L
     /*for(int i=0; i<n; ++i){

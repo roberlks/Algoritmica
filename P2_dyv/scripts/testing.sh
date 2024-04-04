@@ -10,7 +10,7 @@
 
 #!/bin/bash
 
-if (($# < 2)) 
+if (($# < 1)) 
 then
     echo "./testing.sh <dir> <code> <brute force> <gen> <checker> "
     echo "<dir>          The directory where all codes will be found"

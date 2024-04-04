@@ -27,8 +27,12 @@ struct City
     }
 
     // Sort by x axis
-    bool operator<(const City & other){
-        return x < other.x;
+    friend bool operator<(const City & a, const City & b){
+        return a.x < b.x;
+    }
+
+    friend bool operator==(const City & a, const City & b){
+        return a.x == b.x && a.y == b.y;
     }
 
     // I/O operators
