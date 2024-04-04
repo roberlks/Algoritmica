@@ -59,7 +59,7 @@ ld TSP_brute_path(int n,City p,City v[],bool visited[], vector<int> & path){
 
 void dyv(int ini, int fin, City v[], vector<int> & path){
     // Base case 
-    // cout << ini << " " << fin << endl;
+    // // cout << ini << " " << fin << endl;
 
     if(fin - ini <= UMBRAL){
         // cout << "base case\n";
@@ -79,6 +79,10 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     dyv(ini,mid, v, path1);
     dyv(mid,fin, v, path2);
 
+    for (int i=0; i < mid-ini+1; ++i) {
+        path1[i] += ini;
+    }
+
     for (int i=0; i < fin-mid+1; ++i) {
         path2[i] += mid;
     }
@@ -89,13 +93,13 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     // cout << "Path1: " << path1 << endl;
     // cout << "Path2: " << path2 << endl;
 
-    // cout << "path1" <<endl;
+    //  // cout << "path1" <<endl;
     // for(int i : path1){
-    //     cout << i << endl;
+    //     // cout << i << endl;
     // }
-    // cout << "path2" <<endl;
+    //  // cout << "path2" <<endl;
     // for(int i : path2){
-    //     cout << i << endl;
+    //     // cout << i << endl;
     // }
     // return ;
     //Fusion
@@ -105,7 +109,10 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
 
     bool found_first = false, found_second = false;
     int x;
-    // cout << "Searching in path1[" << path1.size() << "]" << endl;
+    // cout << "ini = " << ini << endl;
+    // cout << "fin = " << fin << endl;
+    // cout << "mid = " << mid << endl;
+    // cout << "Searching " << l_nearest_city << " in path1[" << path1.size() << "]" << endl;
     for (int i=0; i < mid-ini; ++i) {
         // cout << "Accessing element " << i << endl;
         if (path1[i] == l_nearest_city) {
@@ -124,6 +131,10 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     int z;
     // cout << "Searching in path2[" << path2.size() << "]" << endl;
 
+
+    // ? Se podría cambiar z por el elemento más cercano a x en
+    // ? en lado derecho
+    // ? Creo que no afecta a la eficiencia
     for (int i=0; i < fin-mid; ++i) {
         // cout << "Accessing element " << i << endl;
 
@@ -139,47 +150,60 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
         // }
         // if(found_first && found_second) break;
     }
-    int inc_x = -1;
+    int inc_x = 1;
     int y1 = (x+1)%(mid-ini), y2 = (x+mid-ini-1)%(mid-ini), y = y1;
-    if (v[y1].x < v[y2].x) {
-        inc_x = 1;
+    if (path1[y1] < path1[y2]) {
+        inc_x = -1;
         y = y2;
     }
+    // y = x + inc_x
+    // cout << "y1 = " << y1 << endl;
+    // cout << "y2 = " << y2 << endl;
+    // cout << "inc_x = " << inc_x << endl;
 
-    int inc_z = -1;
+    int inc_z = 1;
+    
     int t1 = (z+1)%(fin-mid), t2 = (z+fin-mid-1)%(fin-mid), t = t1;
-    if (v[t1].x < v[t2].x) {
-        inc_z;
+    if (path2[t2] < path2[t1]) {
+        inc_z = -1;
         t = t2;
     }
 
+    // cout << "x " << x << " --> " << path1[x] << endl;
+    // cout << "y " << y << " --> " << path1[y] << endl;
+    // cout << "z " << z << " --> " << path2[z] << endl;
+    // cout << "t " << t << " --> " << path2[t] << endl;
+
     bool link_xz = true;
-    int xz = v[x].dist(v[z]);
-    int xt = v[x].dist(v[t]);
-    int yz = v[y].dist(v[z]);
-    int yt = v[y].dist(v[t]);
+    ld xz = v[path1[x]].dist(v[path2[z]]);
+    // cout << "x --> z (" << v[path1[x]] << " --> " << v[path2[z]] << ") : " << xz << endl;
+    ld xt = v[path1[x]].dist(v[path2[t]]);
+    // cout << "x --> t (" << v[path1[x]] << " --> " << v[path2[t]] << ") : " << xt << endl;
+    ld yz = v[path1[y]].dist(v[path2[z]]);
+    // cout << "y --> z (" << v[path1[y]] << " --> " << v[path2[z]] << ") : " << yz << endl;
+    ld yt = v[path1[y]].dist(v[path2[t]]);
+    // cout << "y --> t (" << v[path1[y]] << " --> " << v[path2[t]] << ") : " << yt << endl;
+
+    // cout << xt << " + " << yz << " < " << xz << " + " << yt << " ? " << boolalpha << (xt + yz < xz + yt) << endl;
 
     if (xt + yz < xz + yt) {
         link_xz = false;
     }
 
-    // cout << "x " << x << endl;
-    // cout << "y " << y << endl;
-    // cout << "z " << z << endl;
-    // cout << "t " << t << endl;
+    // cout << "Link x and z ? " << boolalpha << link_xz << endl;
 
     // cout << "Pushing from path1[" << path1.size() << "]" << endl;
 
-    int start_x  = inc_x == 1 ? y : x;
-    int finish_x = inc_x == 1 ? x : y;
+    int start_x  = inc_x == 1 ? y : x; // y = x + 1 : y = x - 1
+    int finish_x = inc_x == 1 ? x : y; 
 
     // cout << "Pushing from " << start_x << " to " << finish_x << " (jump: " << inc_x << ")" << endl;
     for (int i=start_x; i != finish_x; i = (i+mid-ini+inc_x)%(mid-ini)) {
-        // cout << "Pushing element path[" << i << "] = " << path1[i] << endl;
+        //// cout << "Pushing element path[" << i << "] = " << path1[i] << endl;
         path.push_back(path1[i]);
     }
     path.push_back(path1[finish_x]);
-    // cout << "Pushing from path2[" << path1.size() << "]" << endl;
+    // cout << "Pushing from path2[" << path2.size() << "]" << endl;
 
     int start_z;
     if(finish_x == x) {
@@ -188,14 +212,30 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     else { // finish_x == y
         start_z = link_xz ? t : z;
     }
+
+    // cout << "starts z ? " << boolalpha << (start_z == z) << endl;
     int finish_z = start_z == z ? t : z;
+
+    // cout << "inc_z = " << inc_z << endl;
+
+    inc_z = start_z == z ? -inc_z : inc_z;
+
+    // cout << "inc_z = " << inc_z << endl;
+
+    // cout << "Pushing from " << start_z << " to " << finish_z << " (jump: " << inc_z << ")" << endl;
+
     for (int i=start_z; i != finish_z; i = (i+fin-mid+inc_z)%(fin-mid)) {
         // cout << "Pushing element path[" << i << "] = " << path2[i] << endl;
         path.push_back(path2[i]);
     }
     path.push_back(path2[finish_z]);
 
-    cout << path << endl;
+    for (int i=0; i < path.size(); ++i) {
+        path[i] -= ini;
+    }
+    path.push_back(0);
+
+    // cout << path << endl;
 }
 
 int main(){
@@ -207,22 +247,30 @@ int main(){
     int n;
     cin >> n;
     City v[n];
-    City home = v[0];
+    
     for(int i=0; i<n; ++i)
         cin >> v[i];
-
+    City home = v[0];
     // Sort by x axis
     sort(v,v+n,[&](const City & a, const City & b){
-        return a.x < b.x;
+        if (a.x < b.x) {
+            return true;
+        }
+        else if (a.x == b.x) {
+            return a.y < b.y;
+        }
+        return false;
     });
 
-    // for(City c : v){
-    //     cout << c << endl;
-    // }
+    for(City c : v){
+        // cout << c << endl;
+    }
 
     vector<int> path;
 
     dyv(0,n,v,path);
+
+    path.pop_back();
     
     int pos_ini = 0;
     ld long_path = 0.0;
@@ -244,7 +292,7 @@ int main(){
     }
     cout << v[path[pos_ini]] << endl; // Cycle
 
-    cout << "Long path: " << long_path << endl;
+    // cout << "Path length: " << long_path << endl;
 
     return 0;
 }
