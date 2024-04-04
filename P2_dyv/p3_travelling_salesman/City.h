@@ -31,7 +31,13 @@ struct City
 
     // Sort by x axis
     friend bool operator<(const City & a, const City & b){
-        return a.x < b.x;
+        if (a.x < b.x) {
+            return true;
+        }
+        else if (a.x == b.x) {
+            return a.y < b.y;
+        }
+        return false;
     }
 
     friend bool operator==(const City & a, const City & b){
