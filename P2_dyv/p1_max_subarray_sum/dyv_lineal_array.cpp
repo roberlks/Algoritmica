@@ -6,11 +6,15 @@ typedef long long ll;
 const int UMBRAL = 10;
 
 // [ini,fin)
-struct index{
+struct subsequent{
     ll val,ini,fin;
-    index(ll val = 0, ll ini  = 0, ll fin = 0) : val(val), ini(ini), fin(fin) {}
+    subsequent(ll val = 0, ll ini  = 0, ll fin = 0) : val(val), ini(ini), fin(fin) {}
 
-    friend ostream & operator<<(ostream & os, const index & ind){
+    friend bool operator<(const subsequent & a,const subsequent & b){
+        return a.val < b.val;
+    }
+
+    friend ostream & operator<<(ostream & os, const subsequent & ind){
         os << ind.val << " [" << ind.ini << ", " << ind.fin << "]"; 
         return os;
     }
@@ -18,10 +22,10 @@ struct index{
 
 struct tupla
 {
-    index mcss,max_prefix,max_sufix;
+    subsequent mcss,max_prefix,max_sufix;
     ll total;
 
-    tupla(index mcss = index(), index p = index(), index s = index(), ll t = 0) :
+    tupla(subsequent mcss = subsequent(), subsequent p = subsequent(), subsequent s = subsequent(), ll t = 0) :
      mcss(mcss), max_prefix(p), max_sufix(s), total(t) {}
 
     friend ostream & operator<<(ostream & os, const tupla & t){
@@ -53,7 +57,7 @@ tupla lineal(int ini, int fin, ll a[]){
             ans.mcss.fin = i+1;
             ans.mcss.ini = loc_ini;
         }
-        if(a[max_array_ind] < a[i]){ // Calculating index of the maximum element of the array
+        if(a[max_array_ind] < a[i]){ // Calculating subsequent of the maximum element of the array
             max_array_ind = i;
         }
         ans.total += a[i]; // Calculating total of the array
@@ -88,7 +92,7 @@ tupla lineal(int ini, int fin, ll a[]){
 tupla dyv(int ini, int fin, ll a[]){
     // Base case
     if(fin - ini <= UMBRAL){
-        //return tupla(index(a[ini],ini,fin),index(a[ini],ini,fin),index(a[ini],ini,fin),a[ini]);
+        //return tupla(subsequent(a[ini],ini,fin),subsequent(a[ini],ini,fin),subsequent(a[ini],ini,fin),a[ini]);
         return lineal(ini,fin,a);
     }
 
@@ -106,11 +110,12 @@ tupla dyv(int ini, int fin, ll a[]){
     // the prefix of the right side
 
     // ans.mcss = max(max(t1.mcss,t2.mcss),t1.max_sufix + t2.max_prefix)
-    if(t1.mcss.val > t2.mcss.val){ // ans.mcss = max(t1.mcss, t2.mcss)
+     ans.mcss = max(t1.mcss, t2.mcss);
+    /*if(t1.mcss.val > t2.mcss.val){ // ans.mcss = max(t1.mcss, t2.mcss)
         ans.mcss = t1.mcss;
     }else{
         ans.mcss = t2.mcss;
-    }
+    }*/
     if(t1.max_sufix.val + t2.max_prefix.val > ans.mcss.val){
         ans.mcss = t1.max_sufix.val + t2.max_prefix.val;
         ans.mcss.ini = t1.max_sufix.ini;
@@ -159,7 +164,7 @@ int main(){
     for(int i=0; i<n; ++i) cin >> a[i];
 
     // MCSS
-    index ans = dyv(0,n,a).mcss;
+    subsequent ans = dyv(0,n,a).mcss;
     
     // OUTPUT
     cout << ans.fin-ans.ini << endl;

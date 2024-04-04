@@ -2,8 +2,6 @@
 #include "City.h"
 using namespace std;
 
-const ld INF = 1e18;
-
 //TODO Divide and conquer implementation
 //TODO Since we will be using the Euclidean Distance, its probably useful to order the points
 //TODO either by this distance or one of the coordinates
@@ -18,7 +16,7 @@ const ld INF = 1e18;
  * @param visited whether city i has been visited or not
 */
 ld TSP_brute_path(int n,City p,const City v[],bool visited[], vector<int> & path){
-    ld sol = 1e18; // INF
+    ld sol = INF; // INF
     bool all_visited = true;
     for(int i=0; i<n; ++i){
         if(!visited[i]){ // If we haven't visited the city
