@@ -1,5 +1,8 @@
 #include <iostream>
+#include <set>
 using namespace std;
+
+typedef long double ld;
 
 // Maximum size of the array
 const int MAXN = 10;
@@ -7,8 +10,9 @@ const int MAXN = 10;
 /**
  * @brief Returns a random int x € [a,b)
 */
-int rnd(int a, int b){
-    return a + rand() % (b - a + 1);
+ld rnd(ld a, ld b){
+    ld f = (ld)rand() / RAND_MAX;
+    return a + f*(b-a);
 }
 
 /**
@@ -21,10 +25,15 @@ int main(int argc, char * argv[]){
     int n = rnd(1,MAXN+1);
     // OUTPUT
     cout << n << endl;
-    for(int i=0; i<n; ++i){
-        // Generate random positive and negative numbers
-        //cout << (rand() - RAND_MAX/2) << " " << (rand() - RAND_MAX/2) << endl;
-        cout << "(" << rnd(-3,3) << ", " << rnd(-3,3) << ")" << endl;
+    set<pair<ld,ld>> s;
+    for(int i=0; s.size() < n; ++i){
+        pair<ld,ld> elem(rnd(-3,3),rnd(-3,3));
+        if(!s.count(elem)) {
+            s.insert(elem);
+            // Generate random positive and negative numbers
+            //cout << (rand() - RAND_MAX/2) << " " << (rand() - RAND_MAX/2) << endl;
+            cout << "(" << rnd(-3,3) << ", " << rnd(-3,3) << ")" << endl;
+        }
     }
     cout << endl;
     return 0;

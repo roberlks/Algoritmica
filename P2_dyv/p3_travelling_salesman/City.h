@@ -12,11 +12,11 @@ const ld INF = 1e18;
 // Input and output operator are also implemented
 struct City
 {
-    ll x,y;
+    ld x,y;
     //? maybe añadir id para que se mas facil luego imprimir ciudad 0, ciudad 2 etc para el ciclo
 
     // Constructor
-    City(ll x=0,ll y=0) : x(x), y(y) {}
+    City(ld x=0,ld y=0) : x(x), y(y) {}
 
     // Euclidean distance (symetrical)
     ld operator-(const City & other) const{
@@ -24,8 +24,8 @@ struct City
     }
 
     ld dist(const City & other) const{
-        ll dx = x - other.x;
-        ll dy = y - other.y;
+        ld dx = x - other.x;
+        ld dy = y - other.y;
         return sqrt(dx*dx+dy*dy);
     }
 
@@ -65,7 +65,7 @@ struct City
  * @brief Calculates the distance of the given cycle (cycle)
  * @param cycle the cycle to calculate the distance from
  * @param v the cities
- * @return the distance between all the consecutive cities of the cycle
+ * @return the distance between ald the consecutive cities of the cycle
 */
 ld cycleDistance(const std::vector<int> & cycle,const City v[])
 {

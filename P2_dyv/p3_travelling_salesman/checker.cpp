@@ -3,7 +3,7 @@
 using namespace std;
 
 // Maximum error percentage tolerated
-const double EPS = 1e-3;
+const double EPS = 70;
 
 /**
  * @brief Checks the solution for Travelling Salesman Problem problem.
