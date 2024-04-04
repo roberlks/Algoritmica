@@ -51,6 +51,6 @@ int main(){
     memset(visited,false,sizeof(visited));
     vector<int> ans;
     TSP_branch_bound(n,0,0,v,visited,0,best_dist,ans,ans);
-    printCycle(ans);
-    //printCycle(ans,v[0],v);
+    //printCycle(ans);
+    printCycle(ans,v[0],v);
 }

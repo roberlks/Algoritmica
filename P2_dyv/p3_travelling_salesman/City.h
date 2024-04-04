@@ -44,7 +44,8 @@ struct City
 
     // I/O operators
     friend std::istream & operator>>(std::istream & is, City & p){
-        is >> p.x >> p.y;
+        char c;
+        is >> c >> p.x >> c >> p.y >> c;
         return is;
     }
     friend std::ostream & operator<<(std::ostream & os, const City &p){
