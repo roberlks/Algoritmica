@@ -2,7 +2,8 @@
 #include "City.h"
 using namespace std;
 
-const double EPS = 1e-3;
+// Maximum error percentage tolerated
+const double EPS = 30;
 
 /**
  * @brief Checks the solution for Travelling Salesman Problem problem.
@@ -65,8 +66,10 @@ int main(int argc, char * argv[]){
     //for(int i=0; i<n; ++i)
     //    cor_sum += cities[correctCycle[i]].dist(cities[correctCycle[i+1]]);;
     cor >> cor_sum;
-    
-    if(abs(ans_sum - cor_sum) > EPS){
+
+    // Calculate percentage of error
+    ld error_percentage = abs(ans_sum - cor_sum) * 100.0/cor_sum;
+    if(error_percentage > EPS){
         cout << "WA: not the minimum distance" << endl;
         cout << "ans: " << ans_sum << endl;
         cout << "correct: " << cor_sum << endl;

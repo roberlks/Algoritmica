@@ -2,6 +2,7 @@
 #include "City.h"
 #include <list>
 #include <utility>
+#include <algorithm>
 
 using namespace std;
 
@@ -107,8 +108,8 @@ void dyv (City *v, int init, int fin, list<int>& ciclo) {
     dyv(v, init, mid, c1);
     dyv(v, mid, fin, c2);
 
-    cout << "\nC1: " << c1;
-    cout << "\nC2: " << c2;
+    //cout << "\nC1: " << c1;
+    //cout << "\nC2: " << c2;
 
     // Combinar las soluciones 
 
@@ -139,8 +140,8 @@ void dyv (City *v, int init, int fin, list<int>& ciclo) {
     // Insertar un ciclo en otro
 
 
-    cout << "\nElegidos_1: " << puntos_dist_min.to_s();
-    cout << "\nElegidos_2: " << otros_puntos_dist_min.to_s();
+    //cout << "\nElegidos_1: " << puntos_dist_min.to_s();
+    //cout << "\nElegidos_2: " << otros_puntos_dist_min.to_s();
 
     // Ciclos a combinar son los indicados en puntos_dist_min y otros_puntos_dist_min
 
@@ -163,7 +164,7 @@ void dyv (City *v, int init, int fin, list<int>& ciclo) {
         it_fusion = acceso(sentido, c1, it_fusion);
     } while (insertados < c1.size() && it_fusion != puntos_dist_min.it1);
 
-    cout << "\nInsertado_fase1: " << ciclo;
+    //cout << "\nInsertado_fase1: " << ciclo;
 
     // Se inserta la siguiente lista
 
@@ -180,7 +181,7 @@ void dyv (City *v, int init, int fin, list<int>& ciclo) {
 
     } while (insertados < c2.size() && it_fusion != otros_puntos_dist_min.it2);
 
-   cout << "\nInsertado_fase2: " << ciclo;
+   //cout << "\nInsertado_fase2: " << ciclo;
 }
 
 int main() {
@@ -198,7 +199,7 @@ int main() {
     // sort(vector, vector+n); Falta definir el operador relacional  
 
     for (int i = 0; i < n; i++) {
-        cout << vector[i] << " ";
+        //cout << vector[i] << " ";
     }
 
 
@@ -206,18 +207,33 @@ int main() {
 
     dyv(vector, 0, n, ciclo_resultado);
 
-    cout << "\nSe imprimirá el ciclo obtenido ( size = " << ciclo_resultado.size() << "): \n";
+    //cout << "\nSe imprimirá el ciclo obtenido ( size = " << ciclo_resultado.size() << "): \n";
 
     cout << ciclo_resultado;
 
     cout << endl;
 }
 
-ostream& operator<<(ostream& os,const list<int>& l) {
+/*ostream& operator<<(ostream& os,const list<int>& l) {
 
     for (typename list<int>::const_iterator it = l.cbegin(); 
                                                         it != l.cend(); ++it) {
         cout << *it << " ";
     }
+    return os;
+}*/
+
+ostream& operator<<(ostream& os,const list<int>& l) {
+
+    auto it_origin = find(l.cbegin(),l.cend(),0);
+    for (typename list<int>::const_iterator it = it_origin; 
+                                                        it != l.cend(); ++it) {
+        cout << *it << " ";
+    }
+    for (typename list<int>::const_iterator it = l.cbegin(); 
+                                                        it != it_origin; ++it) {
+        cout << *it << " ";
+    }
+    cout << *it_origin;
     return os;
 }

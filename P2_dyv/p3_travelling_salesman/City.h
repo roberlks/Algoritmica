@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 typedef long long ll;
 typedef long double ld;
@@ -42,3 +43,22 @@ struct City
     }
 
 };
+
+/**
+ * @brief Calculates the distance of the given cycle (cycle)
+ * @param cycle the cycle to calculate the distance from
+ * @param v the cities
+ * @return the distance between all the consecutive cities of the cycle
+*/
+ld cycleDistance(std::vector<int> cycle, City v[])
+{
+    if(cycle.size() < 2) return 0;
+    ld total = 0;
+    for (int i = 0; i < (int)cycle.size()-1; i++)
+    {
+        total += (v[cycle[i+1]] - v[cycle[i]]);
+    }
+    total += (v[cycle[0]] - v[cycle[cycle.size() - 1]]);
+
+    return total;
+}
