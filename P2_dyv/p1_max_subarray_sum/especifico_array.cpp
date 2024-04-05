@@ -1,12 +1,21 @@
-struct index{
-    ll val,ini,fin;
-    index(ll val = 0, ll ini  = 0, ll fin = 0) : val(val), ini(ini), fin(fin) {}
+#include <iostream>
+#include <cassert>
+using namespace std;
 
-    friend bool operator<(const index & a,const index & b){
+typedef long long ll;
+const int MINIMO = 5000, MAXIMO = 10000;
+
+const int UMBRAL = 10;
+
+struct subsequent{
+    ll val,ini,fin;
+    subsequent(ll val = 0, ll ini  = 0, ll fin = 0) : val(val), ini(ini), fin(fin) {}
+
+    friend bool operator<(const subsequent & a,const subsequent & b){
         return a.val < b.val;
     }
 
-    friend ostream & operator<<(ostream & os, const index & ind){
+    friend ostream & operator<<(ostream & os, const subsequent & ind){
         os << ind.val << " [" << ind.ini << ", " << ind.fin << "]"; 
         return os;
     }
@@ -14,10 +23,10 @@ struct index{
 
 struct tupla
 {
-    index mcss,max_prefix,max_sufix;
+    subsequent mcss,max_prefix,max_sufix;
     ll total;
 
-    tupla(index mcss = index(), index p = index(), index s = index(), ll t = 0) :
+    tupla(subsequent mcss = subsequent(), subsequent p = subsequent(), subsequent s = subsequent(), ll t = 0) :
      mcss(mcss), max_prefix(p), max_sufix(s), total(t) {}
 
     friend ostream & operator<<(ostream & os, const tupla & t){
@@ -49,7 +58,7 @@ tupla lineal(int ini, int fin, ll a[]){
             ans.mcss.fin = i+1;
             ans.mcss.ini = loc_ini;
         }
-        if(a[max_array_ind] < a[i]){ // Calculating index of the maximum element of the array
+        if(a[max_array_ind] < a[i]){ // Calculating subsequent of the maximum element of the array
             max_array_ind = i;
         }
         ans.total += a[i]; // Calculating total of the array
@@ -79,4 +88,38 @@ tupla lineal(int ini, int fin, ll a[]){
     }
 
     return ans;
+}
+
+int main(int argc, char *argv[]) {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    int n;
+    if (argc == 2)
+        n = atoi(argv[1]);
+    else {
+        cout << "Introduce número de elementos del vector: ";
+        cin >> n;
+    }
+
+    ll *a = new ll[n];
+    assert(a);
+
+    srand(time(0));
+
+    for (int i = 0; i < n; ++i) {
+        a[i] = (rand() - RAND_MAX/2); // Random pos and neg values
+    }
+
+    clock_t t_antes = clock();
+
+    subsequent ans = lineal(0, n, a).mcss;
+
+    clock_t t_despues = clock();
+
+    delete[] a;
+
+    cout << n << " " << ((double)(t_despues - t_antes)) / CLOCKS_PER_SEC << endl;
+
+    return 0;
 }
