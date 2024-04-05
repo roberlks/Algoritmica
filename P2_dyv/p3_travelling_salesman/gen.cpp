@@ -5,9 +5,9 @@ using namespace std;
 typedef long double ld;
 
 // Maximum size of the array
-const int MAXN = 10;
+const int MAXN = 12;
 // Side of the map
-const int N = 1;
+const int N = 1000;
 
 /**
  * @brief Returns a random int x € [a,b)

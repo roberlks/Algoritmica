@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Necessity
+export LC_NUMERIC="en_US.UTF-8"
+
 if (($# < 1)) 
 then
     echo "./error.sh <dir> <code> <brute force> <gen> <checker> "
@@ -12,7 +15,7 @@ then
 fi;
 
 #Variables
-N=10 #Maximum number of tests made
+N=100 #Maximum number of tests made
 dir=$1
 
 code=${2:-$1/code.cpp}
@@ -38,8 +41,8 @@ g++ $brute -o "$output_dir/brute"
 g++ $gen -o "$output_dir/gen" 
 g++ $error -o "$output_dir/error" 
 
-sum=0
-local=0
+sum=0.0
+local=0.0
 #Testing
 for((i=0;i<N;++i)); do 
     "$output_dir/gen" $i > $input
@@ -54,9 +57,8 @@ for((i=0;i<N;++i)); do
     echo "Test "$i": "$local"%"
     
     sum=$(awk "BEGIN {printf \"%.9f\", $sum + $local}")
-    echo "$sum"
 done
 
 average=$(awk "BEGIN {printf \"%.9f\", $sum / $N}")
 
-echo "Average error: " $average
+echo "Average error: " $average "%"
