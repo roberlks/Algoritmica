@@ -10,7 +10,7 @@ const int MAXN = 12;
 const int N = 1000;
 
 /**
- * @brief Returns a random int x € [a,b)
+ * @brief Returns a random float x € [a,b)
 */
 ld rnd(ld a, ld b){
     ld f = (ld)rand() / RAND_MAX;

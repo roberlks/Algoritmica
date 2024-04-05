@@ -175,6 +175,7 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     // cout << "Pushing from " << y << " to " << x << " (jump: " << inc_x << ")" << endl;
     
     // Push path1 to path
+    path.reserve(fin-ini);
     for (int i=y; i != x; i = (i+mid-ini+inc_x)%(mid-ini)) {
         //cout << "Pushing element path[" << i << "] = " << path1[i] << endl;
         path.push_back(path1[i]);

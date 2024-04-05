@@ -5,6 +5,7 @@
 typedef long long ll;
 typedef long double ld;
 
+// Infinity (biggest possible number)
 const ld INF = 1e18;
 
 // Represents a city with coordinates (x,y)
