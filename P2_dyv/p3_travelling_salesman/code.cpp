@@ -11,15 +11,6 @@ ostream & operator<<(ostream & os, const vector<int> & v) {
     return os;
 }
 
-void closestNeighbour(const list<City> & path1, const list<City> & path2){
-    double min_dist = 0;
-    for(auto it1 = path1.begin(); it1 != path1.end(); ++it1){
-        for(auto it2 = path2.begin(); it2 != path2.end(); ++it2){
-            
-        }
-    }
-}
-
 /**
  * @brief Brute force solution to the Travelling Salesman Problem (path).
  * @param n number of cities to visit
@@ -53,15 +44,55 @@ ld TSP_brute_path(int n,City p,City v[],bool visited[], vector<int> & path){
     return sol;
 }
 
+/**
+ * @brief Brute force solution to the Travelling Salesman Problem (only value).
+ * @param n number of cities to visit
+ * @param cnt number of visited cities
+ * @param prev index of the previous city
+ * @param v array of cities to visit
+ * @param visited whether city i has been visited or not
+*/
+void TSP_branch_bound(int n,int prev, int cnt,const City v[],bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
+    if(cnt == n){ // Base case
+        ld new_dist = dist + v[prev].dist(v[0]);
+        if(new_dist < best_dist){
+            best_dist = new_dist;
+            best_cycle = cur_cycle;
+        }
+        return;
+    }
 
+    for(int i=0; i<n; ++i){
+        if(!visited[i]){
+            visited[i] = true;
+            ld new_dist = dist + v[i].dist(v[prev]);
+            if(new_dist < best_dist){
+                cur_cycle.push_back(i);
+                TSP_branch_bound(n,i,cnt+1,v,visited,new_dist,best_dist,cur_cycle,best_cycle);
+                cur_cycle.pop_back();
+            }
+            visited[i] = false;
+        }
+    }
+}
 
-// [ini,fin)
-
+/**
+ * @brief Divide and conquer approximated solution to the
+ * Travelling Salesman Problem (path).
+ * @param ini index of first city in @p v
+ * @param fin one plus the index of the last city in @p v
+ * @param v array of cities to visit
+ * @param path Output parameter. Contains the indexes
+ * of the vector in cycle-order to visit, and a 0 at the end
+ * for compatibility with brute force algorithm (base case)
+*/
 void dyv(int ini, int fin, City v[], vector<int> & path){
 
     if(fin - ini <= UMBRAL){
-        bool visited[fin-ini] = {false};
-        TSP_brute_path(fin-ini, v[0], v, visited, path);
+        ld best_dist = INF;
+        bool visited[fin-ini] = {false}; // for compatibility
+        //TSP_branch_bound(fin-ini,0,0,v,visited,0,best_dist,path, path);
+        TSP_brute_path(fin-ini,v[0],v,visited,path);
         return;
     }
 
@@ -85,21 +116,21 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     path1.pop_back();
     path2.pop_back();
 
-    // cout << "Path1: " << path1 << endl;
-    // cout << "Path2: " << path2 << endl;
+    cout << "Path1: " << path1 << endl;
+    cout << "Path2: " << path2 << endl;
 
-    //Fusion
+    // Most x-centered cities
 
     int r_nearest_city = mid;
     int l_nearest_city = mid-1;
 
     int x;
-    // cout << "ini = " << ini << endl;
-    // cout << "fin = " << fin << endl;
-    // cout << "mid = " << mid << endl;
-    // cout << "Searching " << l_nearest_city << " in path1[" << path1.size() << "]" << endl;
+    cout << "ini = " << ini << endl;
+    cout << "fin = " << fin << endl;
+    cout << "mid = " << mid << endl;
+    cout << "Searching " << l_nearest_city << " in path1[" << path1.size() << "]" << endl;
     for (int i=0; i < mid-ini; ++i) {
-        // cout << "Accessing element " << i << endl;
+        cout << "Accessing element " << i << endl;
         if (path1[i] == l_nearest_city) {
             x = i;
             break;
@@ -107,7 +138,7 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     }
 
     int z;
-    // cout << "Searching in path2[" << path2.size() << "]" << endl;
+    cout << "Searching in path2[" << path2.size() << "]" << endl;
 
 
     // ? Se podría cambiar z por el elemento más cercano a x en
@@ -115,7 +146,7 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     // ? Creo que no afecta a la eficiencia
     // ? Probado: suelen salir peores resultados
     for (int i=0; i < fin-mid; ++i) {
-        // cout << "Accessing element " << i << endl;
+        cout << "Accessing element " << i << endl;
 
         if (path2[i] == r_nearest_city) {
             
@@ -140,9 +171,9 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
         y = y2;
     }
 
-    // cout << "y1 = " << y1 << endl;
-    // cout << "y2 = " << y2 << endl;
-    // cout << "inc_x = " << inc_x << endl;
+    cout << "y1 = " << y1 << endl;
+    cout << "y2 = " << y2 << endl;
+    cout << "inc_x = " << inc_x << endl;
 
     int inc_z = 1;
     
@@ -153,10 +184,10 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
         t = t2;
     }
 
-    // cout << "x " << x << " --> " << path1[x] << endl;
-    // cout << "y " << y << " --> " << path1[y] << endl;
-    // cout << "z " << z << " --> " << path2[z] << endl;
-    // cout << "t " << t << " --> " << path2[t] << endl;
+    cout << "x " << x << " --> " << path1[x] << endl;
+    cout << "y " << y << " --> " << path1[y] << endl;
+    cout << "z " << z << " --> " << path2[z] << endl;
+    cout << "t " << t << " --> " << path2[t] << endl;
 
 
     ld xz = v[path1[x]].dist(v[path2[z]]);
@@ -164,15 +195,15 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     ld yz = v[path1[y]].dist(v[path2[z]]);
     ld yt = v[path1[y]].dist(v[path2[t]]);
 
-    // cout << xt << " + " << yz << " < " << xz << " + " << yt << " ? " << boolalpha << (xt + yz < xz + yt) << endl;
+    cout << xt << " + " << yz << " < " << xz << " + " << yt << " ? " << boolalpha << (xt + yz < xz + yt) << endl;
 
     bool link_xz = xt + yz > xz + yt;
 
-    // cout << "Link x and z ? " << boolalpha << link_xz << endl;
+    cout << "Link x and z ? " << boolalpha << link_xz << endl;
 
-    // cout << "Pushing from path1[" << path1.size() << "]" << endl;
+    cout << "Pushing from path1[" << path1.size() << "]" << endl;
 
-    // cout << "Pushing from " << y << " to " << x << " (jump: " << inc_x << ")" << endl;
+    cout << "Pushing from " << y << " to " << x << " (jump: " << inc_x << ")" << endl;
     
     // Push path1 to path
     path.reserve(fin-ini);
@@ -181,29 +212,29 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
         path.push_back(path1[i]);
     }
     path.push_back(path1[x]);
-    // cout << "Pushing from path2[" << path2.size() << "]" << endl;
+    cout << "Pushing from path2[" << path2.size() << "]" << endl;
 
     int start_z = link_xz ? z : t;
 
-    // cout << "starts z ? " << boolalpha << (start_z == z) << endl;
+    cout << "starts z ? " << boolalpha << (start_z == z) << endl;
     int finish_z = start_z == z ? t : z;
 
-    // cout << "inc_z = " << inc_z << endl;
+    cout << "inc_z = " << inc_z << endl;
 
     inc_z = start_z == z ? -inc_z : inc_z;
 
-    // cout << "inc_z = " << inc_z << endl;
+    cout << "inc_z = " << inc_z << endl;
 
-    // cout << "Pushing from " << start_z << " to " << finish_z << " (jump: " << inc_z << ")" << endl;
+    cout << "Pushing from " << start_z << " to " << finish_z << " (jump: " << inc_z << ")" << endl;
 
     // Push path2 to path
     for (int i=start_z; i != finish_z; i = (i+fin-mid+inc_z)%(fin-mid)) {
-        // cout << "Pushing element path[" << i << "] = " << path2[i] << endl;
+        cout << "Pushing element path[" << i << "] = " << path2[i] << endl;
         path.push_back(path2[i]);
     }
     path.push_back(path2[finish_z]);
 
-    // cout << path << endl;
+    cout << path << endl;
 
     // Adjust like brute_force format
     for (int i=0; i < path.size(); ++i) {
@@ -238,7 +269,7 @@ int main(){
     });
 
     for(City c : v){
-        // cout << c << endl;
+        cout << c << endl;
     }
 
     vector<int> path;
