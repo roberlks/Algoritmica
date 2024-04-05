@@ -10,7 +10,7 @@ TITLE=ARG2
 ETIQUETA_X=ARG3
 NOMBRE_IMAGEN=ARG4
 
-set terminal jpeg
+set terminal png
 set output NOMBRE_IMAGEN
 
 set xlabel ETIQUETA_X
