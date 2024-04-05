@@ -12,7 +12,7 @@ then
 fi;
 
 #Variables
-N=1000 #Maximum number of tests made
+N=10 #Maximum number of tests made
 dir=$1
 
 code=${2:-$1/code.cpp}
@@ -51,10 +51,10 @@ for((i=0;i<N;++i)); do
         exit 1
     fi
     local=$(head -1 $log)
-    # echo "Test "$i": "$local"%"
+    echo "Test "$i": "$local"%"
     sum=$(awk "BEGIN {printf \"%.2f\", $sum + $local}")
 done
 
-average=$(echo "scale=5; $sum/$N" | bc)
+average=$(awk "BEGIN {printf \"%.6f\", $sum / $N}")
 
 echo "Average error: " $average
