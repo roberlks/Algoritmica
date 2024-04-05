@@ -2,8 +2,6 @@
 #include "City.h"
 using namespace std;
 
-const ld INF = 1e18;
-
 /**
  * @brief Brute force solution to the Travelling Salesman Problem (only value).
  * @param n number of cities to visit

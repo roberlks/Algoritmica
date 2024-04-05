@@ -2,7 +2,7 @@
 using namespace std;
 
 // Max k of n = 2^k
-const int MAXK = 10;
+const int MAXK = 14;
 
 /**
  * @brief Returns a random int x € [a,b)
