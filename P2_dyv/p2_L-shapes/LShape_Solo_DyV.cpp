@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <chrono>
 using namespace std;
 
 // For easy debugging
@@ -49,14 +50,31 @@ int main(){
 
     // Se toma r,c un valor entre [1,n]
 
+    
     cin >> n >> r >> c;
     r--; c--;
     vector<vector<int>> v(n,vector<int>(n));
     int start_tile = 0;
     v[r][c] = start_tile++;
+
+    // Estudio eficiencia empírica, calculo de tiempos
+
+    chrono::high_resolution_clock::time_point t_antes, t_despues; 
+    chrono::duration<double> transcurrido;
+
+    t_antes = chrono::high_resolution_clock::now();
+
     dyv(n,r,c,0,0,v,start_tile);
 
+    t_despues = chrono::high_resolution_clock::now();
+
+    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
+
+    cout << endl << setw(10) << left << n << " " << transcurrido.count();
+    
     // OUTPUT
+
+    /*
     cout << endl;
     for(int i=0; i<n; ++i){
         for(int j=0; j<n; ++j){
@@ -64,4 +82,8 @@ int main(){
         }
         cout << endl;
     }
+
+    */
+
+   
 }
