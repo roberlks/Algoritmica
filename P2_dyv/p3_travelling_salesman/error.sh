@@ -38,8 +38,8 @@ g++ $brute -o "$output_dir/brute"
 g++ $gen -o "$output_dir/gen" 
 g++ $error -o "$output_dir/error" 
 
-sum=0.0
-local=0.0
+sum=0
+local=0
 #Testing
 for((i=0;i<N;++i)); do 
     "$output_dir/gen" $i > $input
@@ -52,9 +52,11 @@ for((i=0;i<N;++i)); do
     fi
     local=$(head -1 $log)
     echo "Test "$i": "$local"%"
-    sum=$(awk "BEGIN {printf \"%.2f\", $sum + $local}")
+    
+    sum=$(awk "BEGIN {printf \"%.9f\", $sum + $local}")
+    echo "$sum"
 done
 
-average=$(awk "BEGIN {printf \"%.6f\", $sum / $N}")
+average=$(awk "BEGIN {printf \"%.9f\", $sum / $N}")
 
 echo "Average error: " $average
