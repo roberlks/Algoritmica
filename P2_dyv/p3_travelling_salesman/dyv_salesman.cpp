@@ -77,10 +77,6 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
         path2[i] += mid;
     }
 
-    // Pop last zero of each path
-    path1.pop_back();
-    path2.pop_back();
-
     // Most x-centered cities
 
     int r_nearest_city = mid;
@@ -148,11 +144,10 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     }
     path.push_back(path2[finish_z]);
 
-    // Adjust like brute_force format
+    // Adjust indexes to v size
     for (int i=0; i < path.size(); ++i) {
         path[i] -= ini;
     }
-    path.push_back(0);
 
     // Know the cycle, not the order
 }
@@ -174,8 +169,7 @@ int main(){
 
     vector<int> path;
 
-    dyv(0,n,v,path);
-    path.pop_back(); // remove last zero  
+    dyv(0,n,v,path); 
     printCycle(path,home,v); // print path
 
     return 0;

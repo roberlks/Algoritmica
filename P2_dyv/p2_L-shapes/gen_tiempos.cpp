@@ -2,8 +2,7 @@
 using namespace std;
 
 // Max k of n = 2^k
-const int MAXK = 8;
-const int MINK = 2;
+const int MAXK = 15;
 
 /**
  * @brief Returns a random int x € [a,b)
@@ -17,14 +16,13 @@ int rnd(int a, int b){
  * @param argv[0] -> the seed for the random numbers
 */
 int main(int argc, char * argv[]){
-    int seed = atoi(argv[1]);
-    srand(seed);
-    int k = rnd(1,MAXK+1);
+
+    int k = (atoi(argv[1]) % MAXK);
     // n must be a power of 2 (size of the square)
     int n = 1 << k;
     // (r,c) -> position of the square tile (NOT zero base)
-    int r = rnd(0,n-1);
-    int c = rnd(0,n-1);
+    int r = rnd(1,n);
+    int c = rnd(1,n);
     // OUTPUT
     cout << n << endl;
     cout << r << " " << c << endl;
