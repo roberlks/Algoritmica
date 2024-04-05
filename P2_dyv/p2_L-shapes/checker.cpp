@@ -60,7 +60,6 @@ int main(int argc, char * argv[]){
     ifstream ans(argv[2]);
     int n,r,c;
     fin >> n >> r >> c;
-    r--;c--;
     vector<vector<int>> v(n,vector<int>(n));
     for(int i=0; i<n; ++i){
         for(int j=0; j<n; ++j){
