@@ -6,8 +6,9 @@ typedef long double ld;
 
 // Maximum size of the array
 const int MAXN = 12;
+const int MINN = 7;
 // Side of the map
-const int N = 1000;
+const int R = 1;
 
 /**
  * @brief Returns a random float x € [a,b)
@@ -24,12 +25,12 @@ ld rnd(ld a, ld b){
 int main(int argc, char * argv[]){
     int seed = atoi(argv[1]);
     srand(seed);
-    int n = rnd(1,MAXN+1);
+    int n = rnd(MINN,MAXN+1);
     // OUTPUT
     cout << n << endl;
     set<pair<ld,ld>> s;
     for(int i=0; s.size() < n; ++i){
-        pair<ld,ld> elem(rnd(-N,N),rnd(-N,N));
+        pair<ld,ld> elem(rnd(-R,R),rnd(-R,R));
         if(!s.count(elem)) {
             s.insert(elem);
             // Generate random positive and negative numbers
