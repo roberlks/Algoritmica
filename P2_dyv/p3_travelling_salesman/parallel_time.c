@@ -36,7 +36,7 @@ int main(int argc, char * argv[]){
     //printf("Number of executions: %d\n",(fin-ini)/step);
 
     #pragma omp parallel for
-    for(int i=ini; i<fin; i+=step){
+    for(int i=ini; i<=fin; i+=step){
         //printf("Hebra %d ejecuta la iteración %d del bucle\n",omp_get_thread_num(),i);
 
         int pidproxy;

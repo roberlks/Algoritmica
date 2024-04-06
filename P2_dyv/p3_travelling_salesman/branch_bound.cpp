@@ -39,6 +39,8 @@ int main(){
     for(int i=0; i<n; ++i)
         cin >> v[i];
 
+    sort(v,v+n); // sort by x axis
+
     ld best_dist = INF;
     bool visited[n];
     memset(visited,false,sizeof(visited));

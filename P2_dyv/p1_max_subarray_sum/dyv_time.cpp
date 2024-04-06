@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
         cin >> n;
     }
 
-    ofstream fout(argv[2],ios::out);
+    ofstream fout(argv[2],ios::out|ios::app);
 
     ll *a = new ll[n];
     assert(a);

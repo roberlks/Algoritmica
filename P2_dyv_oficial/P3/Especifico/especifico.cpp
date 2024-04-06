@@ -45,6 +45,9 @@ int main(){
     City v[n];
     for(int i=0; i<n; ++i)
         cin >> v[i];
+    City home = v[0];
+
+    sort(v,v+n); // sort by x axis
 
     ld best_dist = INF;
     bool visited[n];
@@ -52,5 +55,5 @@ int main(){
     vector<int> ans;
     TSP_branch_bound(n,0,0,v,visited,0,best_dist,ans,ans);
     //printCycle(ans);
-    printCycle(ans,v[0],v);
+    printCycle(ans,home,v);
 }
