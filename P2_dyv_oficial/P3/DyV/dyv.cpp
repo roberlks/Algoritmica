@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
 #include "City.h"
+#include <chrono>
+
 using namespace std;
 
 const int UMBRAL = 2;
@@ -169,8 +171,20 @@ int main(){
 
     vector<int> path;
 
+    chrono::high_resolution_clock::time_point t_antes, t_despues; 
+    chrono::duration<double> transcurrido;
+
+    t_antes = chrono::high_resolution_clock::now();
+
     dyv(0,n,v,path); 
-    printCycle(path,home,v); // print path
+
+    t_despues = chrono::high_resolution_clock::now();
+
+    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
+
+    cout << endl << setw(10) << left << n << " " << transcurrido.count() << endl;
+
+    // printCycle(path,home,v); // print path
 
     return 0;
 }
