@@ -21,7 +21,7 @@ mkdir -p $output_dir
 
 make -f $makefile $gen
 
-for((i=ini; i<fin; i+=step)); do
+for((i=ini; i<=fin; i+=step)); do
     let index=i-ini
     let index=index/step
     let ++index

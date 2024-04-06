@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <chrono>
 using namespace std;
 
 /**
@@ -121,8 +122,20 @@ int main(){
     cin >> n >> r >> c;
     vector<vector<int>> v(n,vector<int>(n));
     int start_tile = 0;
-    v[r][c] = start_tile++;
+    v[r][c] = start_tile++; 
+
+    chrono::high_resolution_clock::time_point t_antes, t_despues; 
+    chrono::duration<double> transcurrido;
+
+    t_antes = chrono::high_resolution_clock::now();
+
     fill_L(v,n,r,c,start_tile);
+
+    t_despues = chrono::high_resolution_clock::now();
+
+    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
+
+    cout << endl << setw(10) << left << n << " " << transcurrido.count();
 
     // OUTPUT
     // for(int i=0; i<n; ++i){
@@ -131,17 +144,5 @@ int main(){
     //     }
     //     cout << endl;
     // }
-    cout << "Last tile: " << start_tile-1 << endl;
-    // Codeforces's Output (for testing)
-    // https://codeforces.com/problemset/gymProblem/101845/L
-    /*for(int i=0; i<n; ++i){
-        for(int j=0; j<n; ++j){
-            if(!v[i][j]){
-                cout << ".";
-            }else{
-                cout << (char)((v[i][j]%26) + 'A');
-            }
-        }
-        cout << endl;
-    }*/
+    // cout << "Last tile: " << start_tile-1 << endl;
 }
