@@ -23,17 +23,20 @@
 
 int main(int argc, char * argv[]){
     // Check parameters
-    if(argc < 3){
+    if(argc < 6){
         printf("Error: missing parameters\n");
-        printf("%s <program> <number of executions>\n",argv[0]);
+        printf("%s <program> <ini> <fin> <step> <outputfile>\n",argv[0]);
         return -1;
     }
 
-    int n = atoi(argv[2]);
-    printf("Number of executions: %d\n",n);
+    int ini = atoi(argv[2]);
+    int fin = atoi(argv[3]);
+    int step = atoi(argv[4]);
+
+    //printf("Number of executions: %d\n",(fin-ini)/step);
 
     #pragma omp parallel for
-    for(int i=0; i<n; ++i){
+    for(int i=ini; i<fin; i+=step){
         //printf("Hebra %d ejecuta la iteración %d del bucle\n",omp_get_thread_num(),i);
 
         int pidproxy;
@@ -47,7 +50,7 @@ int main(int argc, char * argv[]){
         
         // Proxy se encarga de gestionar la petición 
         if(!pidproxy)
-            execl(argv[1],argv[1],arg,NULL);
+            execl(argv[1],argv[1],arg,argv[5],NULL);
     }
 
     return 0;

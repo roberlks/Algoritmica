@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cassert>
 using namespace std;
 
@@ -157,12 +158,14 @@ int main(int argc, char *argv[]) {
     cin.tie(0);
 
     int n;
-    if (argc == 2)
+    if (argc > 2)
         n = atoi(argv[1]);
     else {
-        cout << "Introduce número de elementos del vector: ";
+        //cout << "Introduce número de elementos del vector: ";
         cin >> n;
     }
+
+    ofstream fout(argv[2],ios::out);
 
     ll *a = new ll[n];
     assert(a);
@@ -181,7 +184,7 @@ int main(int argc, char *argv[]) {
 
     delete[] a;
 
-    cout << n << " " << ((double)(t_despues - t_antes)) / (CLOCKS_PER_SEC*TIMES) << endl;
+    fout << n << " " << ((double)(t_despues - t_antes)) / (CLOCKS_PER_SEC*TIMES) << endl;
 
     return 0;
 }

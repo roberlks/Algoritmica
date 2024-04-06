@@ -28,7 +28,7 @@ int main(int argc, char * argv[]){
     }
 
     int n = atoi(argv[1]);
-    char output_file[80] = "../Instancias/"; // Path of the output file
+    char output_file[80] = "."; // Path of the output file
     strcat(output_file,argv[2]);
     // Open/create output file (truncate if it existed befores)
     ofstream fout(output_file,ios::out|ios::trunc);

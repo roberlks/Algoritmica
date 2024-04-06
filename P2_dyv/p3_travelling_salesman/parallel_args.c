@@ -1,7 +1,5 @@
 /**
  * @brief This code purpose is to parallelise multiples execution of the same program.
- * The argument received by the program must be a number n (for 1..n)
- *! @note you may need to sort the output
 */
 
 #include <stdio.h>
@@ -23,7 +21,7 @@
 
 int main(int argc, char * argv[]){
     // Check parameters
-    if(argc < 3){
+    if(argc < 2){
         printf("Error: missing parameters\n");
         printf("%s <program> <number of executions>\n",argv[0]);
         return -1;
