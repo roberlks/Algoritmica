@@ -33,13 +33,21 @@ int main(int argc, char * argv[]){
     // Open/create output file (truncate if it existed befores)
     ofstream fout(output_file,ios::out|ios::trunc);
     // Check for errors opening the file
+    if(!fout){
+        cerr << "Error: no se pudo abrir el archivo " << output_file << endl;
+        return -1;
+    }
     // n must be a power of 2 (size of the square)
     int n = 1 << k;
+
+    srand(n);
     // (r,c) -> position of the square tile (zero base)
     int r = rnd(0,n-1);
     int c = rnd(0,n-1);
     // OUTPUT
     fout << n << endl;
-    fout << r << " " << c << endl;
+    fout << r << " " << c;
+
+    fout.close();
     return 0;
 }

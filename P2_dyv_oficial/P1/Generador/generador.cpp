@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstring>
+#include <fstream>
 using namespace std;
 
 // Maximum size of the array
@@ -12,19 +14,37 @@ int rnd(int a, int b){
 }
 
 /**
- * @brief Generator for problem L-shape
- * @param argv[0] -> the seed for the random numbers
+ * @brief Generator for problem subsequence
+ * @param argv[0] -> the number of elements of the vector
+ * @param argv[1] -> name of instance created
 */
 int main(int argc, char * argv[]){
-    int seed = atoi(argv[1]);
-    srand(seed);
-    int n = rnd(1,MAXN+1);
+
+    // Check arguments
+    if(argc < 2){
+        cerr << "Error: faltan parametros\n";
+        cerr << "<tamaño instancia> <nombre_fichero_salida>" << endl;
+        return -1;
+    }
+
+    int n = atoi(argv[1]);
+    char output_file[80] = "../Instancias/"; // Path of the output file
+    strcat(output_file,argv[2]);
+    // Open/create output file (truncate if it existed befores)
+    ofstream fout(output_file,ios::out|ios::trunc);
+    // Check for errors opening the file
+    if(!fout){
+        cerr << "Error: no se pudo abrir el archivo " << output_file << endl;
+        return -1;
+    }
     // OUTPUT
-    cout << n << endl;
+    srand(n);
+    fout << n << endl;
     for(int i=0; i<n; ++i){
         // Generate random positive and negative numbers
-        cout << (rand() - RAND_MAX/2) << " ";
+        fout << rnd(-MAXN,MAXN+1) << " ";
     }
-    cout << endl;
+
+    fout.close();
     return 0;
 }

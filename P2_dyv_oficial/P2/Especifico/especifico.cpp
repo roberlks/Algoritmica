@@ -91,7 +91,7 @@ void add_slab_m(vector<vector<int>> & v, int m, int i, int j, int orientation, i
  * @see add_slab_m
 */
 void fill_L(vector<vector<int>> & v,int n,int r, int c, int & tile){
-
+    
     // Add log_2(n) - 1 slabs from level 1 to level n/2
     for (int m = 1; m < n; m *= 2)
     {

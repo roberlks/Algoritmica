@@ -39,11 +39,14 @@ int main(int argc, char * argv[]){
     }
 
     // OUPUT
+    srand(n);
     fout << n << endl; // Number of cities
     // Generate n random cities
     for(int i=0; i<n; ++i){
         City random_city(rnd(-MAX_COORDINATE,MAX_COORDINATE),rnd(-MAX_COORDINATE,MAX_COORDINATE));
         fout << random_city << endl;
     }
+
+    fout.close();
     return 0;
 }
