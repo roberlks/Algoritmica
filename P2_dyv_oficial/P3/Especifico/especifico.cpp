@@ -47,8 +47,6 @@ int main(){
         cin >> v[i];
     City home = v[0];
 
-    sort(v,v+n); // sort by x axis
-
     ld best_dist = INF;
     bool visited[n];
     memset(visited,false,sizeof(visited));
