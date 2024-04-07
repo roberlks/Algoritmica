@@ -182,7 +182,7 @@ int main(){
 
     transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
 
-    cout << endl << setw(10) << left << n << " " << transcurrido.count() << endl;
+    cout << endl << setw(10) << left << n << " " << transcurrido.count();
 
     // printCycle(path,home,v); // print path
 

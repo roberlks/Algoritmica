@@ -44,8 +44,14 @@ for filename in $input_dir/in*.txt
 do  
     echo "Fichero input $filename" >> $log
     echo "Contenido fichero: " >> $log
-    cat $filename >> $log
+    head $filename >> $log
     echo "" >> $log
 
     "$output_dir/code" < $filename >> $results
 done
+
+aux=aux.txt
+touch $aux
+sort -n -k 1 $results > $aux
+cat $aux > $results
+rm $aux
