@@ -1,4 +1,6 @@
 #include <iostream>
+#include <chrono>
+#include <iomanip>
 using namespace std;
 
 typedef long long ll;
@@ -163,12 +165,25 @@ int main(){
     ll a[n];
     for(int i=0; i<n; ++i) cin >> a[i];
 
+    // Efficienty study (empitic)
+
+    chrono::high_resolution_clock::time_point t_antes, t_despues; 
+    chrono::duration<double> transcurrido;
+
+    t_antes = chrono::high_resolution_clock::now();
+
     // MCSS
     subsequent ans = dyv(0,n,a).mcss;
+
+    t_despues = chrono::high_resolution_clock::now();
+
+    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
+
+    cout << endl << setw(10) << left << n << " " << transcurrido.count();
     
     // OUTPUT
-    cout << ans.fin-ans.ini << endl;
+    /*cout << ans.fin-ans.ini << endl;
     for(int i=ans.ini; i<ans.fin; ++i)
         cout << a[i] << " ";
-    cout << endl;
+    cout << endl;*/
 }
