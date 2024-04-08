@@ -7,12 +7,13 @@ using namespace std;
  * @param n number of cities to visit
  * @param cnt number of visited cities
  * @param prev index of the previous city
+ * @param home_ind index of the home (origin) city 
  * @param v array of cities to visit
  * @param visited whether city i has been visited or not
 */
-void TSP_branch_bound(int n,int prev, int cnt,const City v[],bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
-    if(cnt == n){ // Base case
-        ld new_dist = dist + v[prev].dist(v[0]);
+void TSP_branch_bound(int n,int prev,int home_ind, int cnt,const City v[],bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
+    if(cnt == n-1){ // Base case
+        ld new_dist = dist + v[prev].dist(v[home_ind]);
         if(new_dist < best_dist){
             best_dist = new_dist;
             best_cycle = cur_cycle;
@@ -26,7 +27,7 @@ void TSP_branch_bound(int n,int prev, int cnt,const City v[],bool visited[], ld 
             ld new_dist = dist + v[i].dist(v[prev]);
             if(new_dist < best_dist){
                 cur_cycle.push_back(i);
-                TSP_branch_bound(n,i,cnt+1,v,visited,new_dist,best_dist,cur_cycle,best_cycle);
+                TSP_branch_bound(n,i,home_ind,cnt+1,v,visited,new_dist,best_dist,cur_cycle,best_cycle);
                 cur_cycle.pop_back();
             }
             visited[i] = false;
@@ -47,11 +48,17 @@ int main(){
         cin >> v[i];
     City home = v[0];
 
+    sort(v,v+n); // sort by x axis
+    int home_ind = 0;
+    while(v[home_ind] != home) ++home_ind;
     ld best_dist = INF;
     bool visited[n];
     memset(visited,false,sizeof(visited));
+    visited[home_ind] = true;
     vector<int> ans;
-    TSP_branch_bound(n,0,0,v,visited,0,best_dist,ans,ans);
+    ans.reserve(n);
+    ans.push_back(home_ind);
+    TSP_branch_bound(n,home_ind,home_ind,0,v,visited,0,best_dist,ans,ans);
     //printCycle(ans);
     printCycle(ans,home,v);
 }

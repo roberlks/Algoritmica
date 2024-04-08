@@ -5,8 +5,8 @@ using namespace std;
 typedef long double ld;
 
 // Maximum size of the array
-const int MAXN = 12;
-const int MINN = 7;
+const int MAXN = 15;
+const int MINN = 3;
 // Side of the map
 const int R = 1;
 
