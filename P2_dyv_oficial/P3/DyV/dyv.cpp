@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// TODO compatibilidad entre el brute force y el eficiente
+
 const int UMBRAL = 2;
 
 /**

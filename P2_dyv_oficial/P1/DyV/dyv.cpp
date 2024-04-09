@@ -5,6 +5,7 @@ using namespace std;
 
 typedef long long ll;
 
+const int NUM_TIMES = 100;
 const int UMBRAL = 10;
 
 // [ini,fin)
@@ -167,19 +168,15 @@ int main(){
 
     // Efficienty study (empitic)
 
-    chrono::high_resolution_clock::time_point t_antes, t_despues; 
-    chrono::duration<double> transcurrido;
-
-    t_antes = chrono::high_resolution_clock::now();
+    clock_t t_antes = clock();
 
     // MCSS
-    subsequent ans = dyv(0,n,a).mcss;
+    for(int time=0; time<NUM_TIMES; ++time)
+        subsequent ans = dyv(0,n,a).mcss;
 
-    t_despues = chrono::high_resolution_clock::now();
+    clock_t t_despues = clock();
 
-    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
-
-    cout << endl << setw(10) << left << n << " " << transcurrido.count();
+    cout << endl << setw(10) << left << n << " " << ((double)(t_despues - t_antes)) / (CLOCKS_PER_SEC * NUM_TIMES);
     
     // OUTPUT
     /*cout << ans.fin-ans.ini << endl;
