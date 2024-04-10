@@ -2,7 +2,7 @@
 #include "City.h"
 using namespace std;
 
-const int UMBRAL = 2;
+const int UMBRAL = 4;
 
 ostream & operator<<(ostream & os, const vector<int> & v) {
     for (int i=0; i < v.size(); ++i) {
@@ -91,8 +91,8 @@ void dyv(int ini, int fin, City v[], vector<int> & path){
     if(fin - ini <= UMBRAL){
         ld best_dist = INF;
         bool visited[fin-ini] = {false}; // for compatibility
-        TSP_branch_bound(fin-ini,0,0,v,visited,0,best_dist,path, path);
-        //TSP_brute_path(fin-ini,v[0],v,visited,path);
+        //TSP_branch_bound(fin-ini,0,0,v,visited,0,best_dist,path, path);
+        TSP_brute_path(fin-ini,v[0],v,visited,path);
         // path.push_back(0);
         return;
     }

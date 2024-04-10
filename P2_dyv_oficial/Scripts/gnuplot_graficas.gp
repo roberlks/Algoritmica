@@ -10,16 +10,16 @@ datos2=ARG3
 titulo1=ARG4
 titulo2=ARG5
 
-set xlabel 'Numero de ciudades'		# Titulo del eje x
+set xlabel 'Tamaño (n)'		# Titulo del eje x
 set ylabel 'Tiempo(seg)'
 
 if (ARG1 == 1) {		# Si no comparar
 
-	set terminal 'jpeg'
-	set output 'Salida_ajustada1.jpeg'
+	set terminal 'png'
+	set output 'Salida_ajustada1.png'
 	
-	f(x)=a0 *x * log(x)
-	fit f(x) datos1 via a0
+	f(x)=a0*x*x+b0*x+c0
+	fit f(x) datos1 via a0,b0,c0
 	
 	plot datos1 title "DyV", f(x) title 'Curva ajustada'
 	
@@ -27,21 +27,34 @@ if (ARG1 == 1) {		# Si no comparar
 	
 	if(ARG1 == 2){
 
-		set terminal 'jpeg'
-		set output 'Salida_comparativa.jpeg'
+		set terminal 'png'
+		set output 'Salida_comparativa.png'
 		
         # Determinar el tamaño de los ejes
-		#set xrange [0:56]
+		
 		#set yrange [0:400]
 		
 		# Cómo ajustar las funciones 
-		f(x)=a0* (2**x)
-		fit f(x) datos1 via a0
+		f(x)=a0*x*x+b0*x+c0
+		fit f(x) datos1 via a0,b0,c0
 		
-		g(x)=a1* ((1.618034)**x)
-		fit g(x) datos2 via a1
+		g(x)=a1*x*x+b1*x+c1
+		fit g(x) datos2 via a1,b1,c1
+		
+		solucion_x=((b1-b0)+sqrt((b0-b1)*(b0-b1)-4*(a0-a1)*(c0-c1)))/(2*(a0-a1))
+		solucion_y=f(solucion_x)
+		
+		solucion2_x=((b1-b0)-sqrt((b0-b1)*(b0-b1)-4*(a0-a1)*(c0-c1)))/(2*(a0-a1))
+		solucion2_y=f(solucion2_x)
+		
+		set xrange [0:200]
 		
 		plot datos1 title titulo1, datos2 title titulo2, f(x) title 'Ajuste1', g(x) title 'Ajuste2'
+		
+		print sprintf("Punto de intersección 1: (%.2f, %.2f)", solucion_x, solucion_y)
+		print sprintf("Punto de intersección 2: (%.2f, %.2f)", solucion2_x, solucion2_y)
+		
+		set label 1 sprintf("(%.2f, %.2f)", solucion_x, solucion_y) at solucion_x, solucion_y point pt 7 offset 0.5,0.5
 		
 	}
 }
