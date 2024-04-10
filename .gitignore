@@ -42,5 +42,8 @@ output/
 *.js
 *.css
 *output/*
+Instancias/
+*.png
+*.dat
 
 

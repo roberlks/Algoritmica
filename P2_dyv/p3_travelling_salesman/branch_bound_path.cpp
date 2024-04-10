@@ -61,4 +61,5 @@ int main(){
     TSP_branch_bound(n,home_ind,home_ind,0,v,visited,0,best_dist,ans,ans);
     //printCycle(ans);
     printCycle(ans,home,v);
+    cout << cycleDistance(ans,v) << endl;
 }
