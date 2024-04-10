@@ -1,10 +1,8 @@
 #include <bits/stdc++.h>
-#include "../City.h"
+#include "City.h"
 #include <chrono>
 
 using namespace std;
-
-// TODO compatibilidad entre el brute force y el eficiente
 
 const int UMBRAL = 2;
 
@@ -184,9 +182,9 @@ int main(){
 
     transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
 
-    cout << endl << setw(10) << left << n << " " << transcurrido.count();
+    // cout << endl << setw(10) << left << n << " " << transcurrido.count();
 
-    // printCycle(path,home,v); // print path
+    printCycle(path,home,v); // print path
 
     return 0;
 }
