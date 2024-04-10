@@ -6,7 +6,7 @@ using namespace std;
 typedef long long ll;
 
 const int NUM_TIMES = 100;
-const int UMBRAL = 10;
+const int UMBRAL = 1;
 
 // [ini,fin)
 struct subsequent{

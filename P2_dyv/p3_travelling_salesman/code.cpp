@@ -301,7 +301,7 @@ int main(){
     }
     cout << v[path[pos_ini]] << endl; // Cycle
 
-    // cout << "Path length: " << long_path << endl;
+    cout << "Path length: " << long_path << endl;
 
     return 0;
 }
