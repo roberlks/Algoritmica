@@ -4,7 +4,7 @@
 #include <chrono>
 using namespace std;
 
-const int UMBRAL = 8;
+const int UMBRAL =16;
 
 /**
  * @brief Adds 3 @p m x @p m squares forming an L slab with orientation @p orientation
@@ -209,10 +209,10 @@ int main(){
     cout << endl << setw(10) << left << n << " " << transcurrido.count();
 
     // OUTPUT
-    for(int i=0; i<n; ++i){
-        for(int j=0; j<n; ++j){
-            cout << setw(3) << v[i][j] << " ";
-        }
-        cout << endl;
-    }
+    // for(int i=0; i<n; ++i){
+    //     for(int j=0; j<n; ++j){
+    //         cout << setw(3) << v[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 }

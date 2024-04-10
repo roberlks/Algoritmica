@@ -17,10 +17,10 @@ step=$4
 
 if [[ $5 == "dyv" ]]; then
     alg="$1/DyV/dyv"
-    output_dir="$1/DyV"
+    output_dir="$1/DyV/data"
 elif [[ $5 == "especifico" ]]; then 
         alg="$1/Especifico/especifico"
-        output_dir="$1/Especifico"
+        output_dir="$1/Especifico/data"
 else
     echo "Error: invalid arguments"
     echo "$0 <P[1..3]> <ini> <fin> <step> <dyv/especifico>"
@@ -42,9 +42,10 @@ echo " " > "$output_dir/$output_name"
 make -f $makefile $alg
 
 for((i=ini; i<=fin; i+=step)); do
-    let index=i-ini
-    let index=index/step
-    let ++index
+    let index=i
+    #let index=index/step
+    #let ++index
     input_name="in$index.txt"
+    echo $input_name
     cat "$input_dir/$input_name" | "$alg" >> "$output_dir/$output_name"
 done

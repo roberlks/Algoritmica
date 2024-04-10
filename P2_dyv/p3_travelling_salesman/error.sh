@@ -15,7 +15,7 @@ then
 fi;
 
 #Variables
-N=100 #Maximum number of tests made
+N=1000 #Maximum number of tests made
 dir=$1
 
 code=${2:-$1/code.cpp}
