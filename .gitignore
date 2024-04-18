@@ -34,11 +34,16 @@
 
 # Extra
 *tmp*
-*.vscode/*
+.vscode/
+.cph/
+output/
 # *.pdf
 *.html
 *.js
 *.css
 *output/*
+Instancias/
+*.png
+*.dat
 
 
