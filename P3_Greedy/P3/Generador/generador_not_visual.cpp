@@ -6,7 +6,7 @@
 #include "../../Include/City.h"
 using namespace std;
 
-const ld MAX_COORDINATE = 1;
+const ld MAX_COORDINATE = 1e9;
 
 void make_set(int node,vector<int> & parent, vector<int> & rank){
     parent[node] = node;
@@ -71,16 +71,11 @@ int main(int argc, char * argv[]){
 
     // OUPUT
     srand(n);
-    #ifndef VISUAL
-        fout << n << endl; // Number of cities
-    #endif
+    fout << n << endl; // Number of cities
     // Generate n random cities
-    vector<City> cities(n);
     for(int i=0; i<n; ++i){
-        cities[i] =  City(rnd(-MAX_COORDINATE,MAX_COORDINATE),rnd(-MAX_COORDINATE,MAX_COORDINATE));
-        #ifndef VISUAL
-            fout << cities[i] << endl;
-        #endif
+        City random_city(rnd(-MAX_COORDINATE,MAX_COORDINATE),rnd(-MAX_COORDINATE,MAX_COORDINATE));
+        fout << random_city << endl;
     }
 
     // Generate random edges
@@ -102,19 +97,9 @@ int main(int argc, char * argv[]){
         }
     }
 
-    #ifndef VISUAL
-        fout << m << endl; // Number of edges
-    #endif
-    for(auto it = edges.begin(); it != edges.end(); ++it){
-        #ifndef VISUAL
-            fout << it->first << " " << it->second << endl;
-        #else
-            //fout << cities[it->first] << " " << cities[it->second] << endl;
-            fout << cities[it->first] << endl;
-            fout << cities[it->second] << endl;
-            fout << endl;
-        #endif
-    }
+    fout << m << endl; // Number of edges
+    for(auto it = edges.begin(); it != edges.end(); ++it)
+        fout << it->first << " " << it->second << endl;
     fout.close();
     return 0;
 }
