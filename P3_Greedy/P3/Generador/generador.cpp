@@ -6,7 +6,7 @@
 #include "../../Include/City.h"
 using namespace std;
 
-const ld MAX_COORDINATE = 1;
+const ld MAX_COORDINATE = 1e9;
 
 void make_set(int node,vector<int> & parent, vector<int> & rank){
     parent[node] = node;

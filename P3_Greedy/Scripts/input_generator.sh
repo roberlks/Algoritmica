@@ -14,9 +14,11 @@ ini=$2
 fin=$3
 step=$4
 
-gen="$1/Generador/generador"
-output_dir="$1/Instancias"
-makefile="$1/Makefile"
+cd $1
+
+gen="Generador/generador"
+output_dir="Instancias"
+makefile="Makefile"
 
 mkdir -p $output_dir
 
