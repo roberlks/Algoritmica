@@ -45,7 +45,7 @@ int main(int argc, char * argv[]){
         return -1;
     }
 
-    srand(time(NULL));
+    srand(n);
 
 
     int h,m;        // h:m --> hour:minutes ( the start time of the exam) 

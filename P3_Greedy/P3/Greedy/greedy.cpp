@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-#include "../City.h"
+#include "../../Include/City.h"
 
 using namespace std;
 
@@ -11,7 +11,7 @@ void Dijkstra (const vector<vector<pair<int,ld>>> & g, vector<ld> & dist,
     q.push({0,0});
     dist[0] = path[0] = 0;
     while(!q.empty()) {
-        auto p = q.front();
+        auto p = q.top();
         q.pop();
         int node = p.second;
         for (auto u : g[node]) {
@@ -65,9 +65,6 @@ int main (int argc, char** argv) {
     vector<int> path;
     
     Dijkstra(roads,dist,path);
-
-    
-
 
     return 0;
 }
