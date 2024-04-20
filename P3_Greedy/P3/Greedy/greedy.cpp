@@ -30,7 +30,7 @@ ostream& operator<<(ostream& os, vector<City> v) {
  * @param prev The vector which will store index of the previous node in 
  * the minimum path for each node to recover the minimum path.
  * Initialized to -1.
- * @param origin The index of the node from which we are calculating the distance.
+ * @param origin The index of the node from which we are calculating the minimum paths.
  * 
  * @pre The graph must be connected. It rather has cycles.
 */
@@ -59,19 +59,21 @@ void Dijkstra (const vector<vector<pair<int,ld>>> & g, vector<ld> & dist,
         // Index (distance is not necessary, we only need the minimum distance)
         int node = p.second; 
 
-        // For each adjacent node u
-        
+        // Visited node: add to selected set
+        selected[node] = true;
+
+        // For each adjacent node u      
         for (auto u : g[node]) {
             int v = u.first; // Index of u 
 
             // For not to visit already selected nodes
             if (!selected[v]) {
 
-                // Distance from node to v (euclidean distance previously calculated)
+                // Distance from "node" to "v" (euclidean distance previously calculated)
                 ld d = u.second; 
 
-                // Compare the original distance dist[v] with the
-                // distance through the new path dist[node] + d
+                // Compare the original distance "dist[v]" with the
+                // distance through the new path "dist[node] + d"
                 if (dist[node] + d < dist[v]) {
 
                     // Update distance and previous node if necessary
@@ -83,13 +85,21 @@ void Dijkstra (const vector<vector<pair<int,ld>>> & g, vector<ld> & dist,
                 }
             }
         }
-        // Visited node: add to selected set
-        selected[node] = true;
     }
 }
 
 int main (int argc, char** argv) {  
 
+    // Faster I/O
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    if (argc < 2) {
+        cout << "Uso: ./greedy <input_file>" << endl;
+        return 1;
+    }
+
+    // INPUT
 /*
     Input format:
     3 --> number of cities
@@ -99,13 +109,6 @@ int main (int argc, char** argv) {
     0 1 (road between (1,2) and (2,0))
     1 2 (road between (2,0) and (0,0))
 */
-    if (argc < 1) {
-        cout << "Uso: ./greedy <input_file>" << endl;
-        return 1;
-    }
-
-    // INPUT
-
     char input_file[80] = "";
     strcat(input_file,argv[1]);   
     ifstream fin(input_file,ios::in);

@@ -4,7 +4,7 @@
 #include "../../Include/City.h"
 using namespace std;
 
-const ld MAX_COORDINATE = 1e9;
+const ld MAX_COORDINATE = 1;
 
 /**
  * @brief Returns a random float x € [a,b)
@@ -40,10 +40,12 @@ int main(int argc, char * argv[]){
 
     // OUPUT
     srand(n);
-    fout << n << endl; // Number of cities
+    #ifndef VISUAL
+        fout << n << endl; // Number of cities
+    #endif
     // Generate n random cities
     for(int i=0; i<n; ++i){
-        City random_city(rnd(-MAX_COORDINATE,MAX_COORDINATE),rnd(-MAX_COORDINATE,MAX_COORDINATE));
+        City random_city(rnd(0,MAX_COORDINATE),rnd(0,MAX_COORDINATE));
         fout << random_city << endl;
     }
 

@@ -6,13 +6,14 @@
 # <data> path of the file with the points
 # <title> title of the graph
 # <output> path of the output image
+# <mode> points, linespoints,...
 
-# Execution: gnuplot -c plot_graph.gp <data> <title> <output>
+# Execution: gnuplot -c plot_graph.gp <data> <title> <output> <mode>
 
 DATA=ARG1
 TITLE=ARG2
 IMAGE_NAME=ARG3
-COLOR=ARG4
+MODE=ARG4
 
 set terminal png
 set output IMAGE_NAME
@@ -24,7 +25,8 @@ set datafile separator "(,)"
 
 set xrange[0:1]
 set yrange[0:1]
-plot DATA using 2:3 with linespoints pointtype 7 title TITLE
+
+plot DATA using 2:3 with @MODE pointtype 7 title TITLE
 #short version:
 #using -> u
 #with -> w

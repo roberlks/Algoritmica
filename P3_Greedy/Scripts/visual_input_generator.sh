@@ -13,6 +13,11 @@ fi
 ini=$2
 fin=$3
 step=$4
+mode="linespoints"
+
+if [[ $1 == "P4" ]]; then
+    mode="points"
+fi
 
 cd $1
 
@@ -34,5 +39,5 @@ for((i=ini; i<=fin; i+=step)); do
     data_name="in$index.dat"
     ./$gen $i "$data_output_dir/$data_name"
     graph_name="graph$index.png"
-    gnuplot -c $plot_script "$data_output_dir/$data_name" "Graph" "$graph_output_dir/$graph_name"
+    gnuplot -c $plot_script "$data_output_dir/$data_name" "Graph" "$graph_output_dir/$graph_name" "$mode"
 done

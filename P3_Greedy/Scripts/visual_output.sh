@@ -2,8 +2,8 @@
 
 if (($# < 4)); then
     echo "Error: missing paremeters"
-    echo "$0 <P[1..3]> <ini> <fin> <step>"
-    echo "<P[1..3]>: main folder of the problem"
+    echo "$0 <P[1..4]> <ini> <fin> <step> [<version>]"
+    echo "<P[1..4]>: main folder of the problem"
     echo "<ini> initial size of the output to generate"
     echo "<fin> final size of the output to generate"
     echo "<step> incremental size of the output to generate"
@@ -14,12 +14,25 @@ ini=$2
 fin=$3
 step=$4
 
+path_mode="linespoints"
+graph_mode="linespoints"
+
+if [[ $1 == "P4" ]]; then
+    graph_mode="points"
+
+    if (($# < 4)); then
+        echo "Please especify version of TSP:"
+        echo "$0 <P[1..4]> <ini> <fin> <step> [1..3]"
+    version=V$5
+fi
+
+
 cd $1
 
 ../Scripts/input_generator.sh . $ini $fin $step
 ../Scripts/visual_input_generator.sh . $ini $fin $step
 
-greedy="Greedy/greedy"
+greedy="Greedy/$version/greedy"
 instances_dir="Instancias"
 data_input_dir="Visual/Data/Input"
 data_output_dir="Visual/Data/Output"
@@ -39,7 +52,7 @@ for((i=ini; i<=fin; i+=step)); do
     instance="ni$index.txt"
     input_name="in$index.dat"
     output_name="out$index.dat"
-    image_name="graph$index.png"
+    image_name="path$index.png"
     "$greedy" "$instances_dir/$instance" > "$data_output_dir/$output_name"
-    gnuplot -c $plot_script "$data_input_dir/$input_name" "$data_output_dir/$output_name" "Graph" "Path" "$graph_output_dir/$image_name"
+    gnuplot -c $plot_script "$data_input_dir/$input_name" "$data_output_dir/$output_name" "Graph" "Path" "$graph_mode" "$path_mode" "$graph_output_dir/$image_name" 
 done
