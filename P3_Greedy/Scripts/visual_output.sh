@@ -23,14 +23,15 @@ if [[ $1 == "P4" ]]; then
     if (($# < 4)); then
         echo "Please especify version of TSP:"
         echo "$0 <P[1..4]> <ini> <fin> <step> [1..3]"
+    fi
     version=V$5
 fi
 
 
-cd $1
+./Scripts/input_generator.sh $1 $ini $fin $step
+./Scripts/visual_input_generator.sh $1 $ini $fin $step
 
-../Scripts/input_generator.sh . $ini $fin $step
-../Scripts/visual_input_generator.sh . $ini $fin $step
+cd $1
 
 greedy="Greedy/$version/greedy"
 instances_dir="Instancias"
