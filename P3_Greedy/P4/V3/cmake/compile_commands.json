@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/daniel/Daniel/University/DGIIM/II/segundo_cuatrimestre/ALG/practica/repo_Algoritmica/Algoritmica/P3_Greedy/P4/V3/cmake",
+  "command": "/usr/bin/c++  -I/home/daniel/Daniel/University/DGIIM/II/segundo_cuatrimestre/ALG/practica/repo_Algoritmica/Algoritmica/P3_Greedy/P4/V3/{CMAKE_SOURCE_DIR}/include  -o CMakeFiles/greedy.dir/src/v3.cpp.o -c /home/daniel/Daniel/University/DGIIM/II/segundo_cuatrimestre/ALG/practica/repo_Algoritmica/Algoritmica/P3_Greedy/P4/V3/src/v3.cpp",
+  "file": "/home/daniel/Daniel/University/DGIIM/II/segundo_cuatrimestre/ALG/practica/repo_Algoritmica/Algoritmica/P3_Greedy/P4/V3/src/v3.cpp"
+}
+]
