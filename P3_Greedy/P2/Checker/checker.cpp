@@ -199,7 +199,7 @@ int main (int argc, char* argv[]) {
         all_exams.push_back(aux);
     }
 
-    std::cout << greedy(all_exams);
+    std::cout << endl << greedy(all_exams) << endl;
 
     return 0;
 
