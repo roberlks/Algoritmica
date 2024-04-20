@@ -7,6 +7,7 @@ if (($# < 4)); then
     echo "<ini> initial size of the output to generate"
     echo "<fin> final size of the output to generate"
     echo "<step> incremental size of the output to generate"
+    exit -1
 fi
 
 ini=$2

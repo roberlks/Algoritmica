@@ -14,9 +14,11 @@ ini=$2
 fin=$3
 step=$4
 
-gen="$1/Generador/generador"
-output_dir="$1/Instancias"
-makefile="$1/Makefile"
+cd $1
+
+gen="Generador/generador"
+output_dir="Instancias"
+makefile="Makefile"
 
 mkdir -p $output_dir
 
@@ -26,6 +28,6 @@ for((i=ini; i<=fin; i+=step)); do
     let index=i-ini
     let index=index/step
     let ++index
-    output_name="in$index.txt"
+    output_name="ni$index.txt"
     ./$gen $i "$output_dir/$output_name"
 done
