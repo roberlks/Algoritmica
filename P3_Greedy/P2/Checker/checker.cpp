@@ -1,11 +1,8 @@
-#include <iostream>
-#include <istream>
-#include <ostream>
-#include <algorithm>
-#include <vector>
-#include <iomanip>
-#include <list>
 #include <utility>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -153,48 +150,6 @@ struct info_exam {
 
 };
 
-
-
-/**
- * @brief Algoritmo greedy que obtiene dado unos exámenes obtiene la programación óptima 
- * para utilizar el mínimo número de aulas 
- * @param all_exams representa los exámenes que se van a realizar 
- * @param used_classroom estructura de dato que va a almacenar la programación completa 
- * de los exámenes y sus aulas correspondientes
-*/
-
-void greedy(vector<info_exam> & all_exams, vector<list<info_exam>>& used_classroom) {
-
-    // Ordena los examenes según tiempo de inicio
-
-    sort(all_exams.begin(), all_exams.end());
-
-    // Asigna a cada aula un examen --> función solución
-    // hasta que no se asigne una aula a cada examen no es una solución
-    for (int i = 0; i < all_exams.size(); ++i) {
-
-        bool foundAClass = false;
-
-        // Función selector: primero busca una aula libre entre las ya reservadas
-        for (int j = 0; j < used_classroom.size() && !foundAClass; ++j) {
-
-            // Función de factibilidad (implícita): si es compatible colocarlo en una determinada aula
-            if(used_classroom[j].back().canGoAfter(all_exams[i])) {     
-                used_classroom[j].push_back(all_exams[i]);
-                foundAClass = true;
-            }
-        }
-
-        // Si no encuentra, reserva una nueva
-        if (!foundAClass) {
-            list<info_exam> new_classroom;
-            new_classroom.push_back(all_exams[i]);
-            used_classroom.push_back(new_classroom);
-        }
-        
-    }
-}
-
 /**
  * @brief Algoritmo greedy que determina el máximo número de exámenes que se solapan 
  * en el tiempo, que también coincide con el mínimo número de aulas a reservar.
@@ -230,11 +185,7 @@ int greedy(vector<info_exam> & all_exams) {
     return max_count;
 }
 
-int main(int argc, char* argv[]) 
-{
-
-    // Lectura de datos: Número de exámenes
-    // y los datos relativos a los exámenes
+int main (int argc, char* argv[]) {
 
     int n;
 
@@ -248,19 +199,7 @@ int main(int argc, char* argv[])
         all_exams.push_back(aux);
     }
 
-    vector<list<info_exam>> solution;
-
-    greedy(all_exams, solution);
-
-    // Función objetivo: Muestra la programación completa 
-    for (int i=0; i < solution.size(); ++i) {
-        cout << "Classroom " << i << " : " << endl;
-        for (typename list<info_exam>::iterator  it = solution[i].begin(); it != solution[i].end(); ++it) {
-            cout << *it << " ";
-        }
-
-        cout << endl;
-    }
+    std::cout << greedy(all_exams);
 
     return 0;
 
