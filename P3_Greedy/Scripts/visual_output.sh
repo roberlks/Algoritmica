@@ -40,6 +40,6 @@ for((i=ini; i<=fin; i+=step)); do
     input_name="in$index.dat"
     output_name="out$index.dat"
     image_name="graph$index.png"
-    "$greedy" < "$instances_dir/$instance" > "$data_output_dir/$output_name"
+    "$greedy" "$instances_dir/$instance" > "$data_output_dir/$output_name"
     gnuplot -c $plot_script "$data_input_dir/$input_name" "$data_output_dir/$output_name" "Graph" "Path" "$graph_output_dir/$image_name"
 done

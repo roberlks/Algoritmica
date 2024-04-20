@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <queue>
+#include <cstring>
 #include "../../Include/City.h"
 
 using namespace std;
@@ -97,29 +99,43 @@ int main (int argc, char** argv) {
     0 1 (road between (1,2) and (2,0))
     1 2 (road between (2,0) and (0,0))
 */
+    if (argc < 1) {
+        cout << "Uso: ./greedy <input_file>" << endl;
+        return 1;
+    }
+
+    // INPUT
+
+    char input_file[80] = "";
+    strcat(input_file,argv[1]);   
+    ifstream fin(input_file,ios::in);
 
     int n,origin,dest;
-    cin >> n >> origin >> dest;
+    fin >> n >> origin >> dest;
+
     vector<City> cities(n);
     vector<vector<pair<int,ld>>> roads(n);
 
     for (int i=0; i<n; i++) {
         City a;
-        cin >> a;
+        fin >> a;
         cities[i] = a;
     }
 
     int m;
-    cin >> m;
+    fin >> m;
     
     for (int i=0; i<m; i++) {
         int a,b;
-        cin >> a >> b;
+        fin >> a >> b;
         ld dist = cities[a]-cities[b];
 
         roads[a].push_back({b,dist});
         roads[b].push_back({a,dist});
     }
+
+    fin.close();
+
     vector<ld> dist(n,INF);
     vector<int> prev(n,-1);
     
@@ -133,9 +149,7 @@ int main (int argc, char** argv) {
     
     // OUTPUT
 
-    // cout << "Shortest path from " << cities[origin] << " to " << cities[dest] << ": " << endl;
     cout << path << endl;
-    // cout << "Distance: " << dist[dest] << endl;
 
     return 0;
 }
