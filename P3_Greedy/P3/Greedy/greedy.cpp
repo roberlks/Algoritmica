@@ -5,23 +5,84 @@
 
 using namespace std;
 
+// For shorter notation
+template<typename T>
+using min_priority_queue = priority_queue< T, vector<T>, greater<T> >;
+
+// operator << for vector<City>
+ostream& operator<<(ostream& os, vector<City> v) {
+    for (int i=0; i < v.size(); i++) {
+        os << v[i] << endl;
+    }
+    return os;
+}
+
+/**
+ * @brief Calculates the minimum path from @p g [ @p origin ] to @p g [i] for i=1..n-1.
+ * 
+ * @param g The graph with the nodes. @p g [ @p origin ] is the node from which we are
+ * calculating the minimum paths. Nodes are stored as indexes of a vector
+ * of cities (first) and its euclidean distance to @p g [ @p origin ] (second).
+ * @param dist The vector which will store the minimum distances from @p g [ @p origin ]
+ * to every node. Initialized to INF for each node.
+ * @param prev The vector which will store index of the previous node in 
+ * the minimum path for each node to recover the minimum path.
+ * Initialized to -1.
+ * @param origin The index of the node from which we are calculating the distance.
+ * 
+ * @pre The graph must be connected. It rather has cycles.
+*/
 void Dijkstra (const vector<vector<pair<int,ld>>> & g, vector<ld> & dist, 
-                vector<int> & path) {
-    priority_queue<pair<ld,int>> q;
-    q.push({0,0});
-    dist[0] = path[0] = 0;
+                vector<int> & prev, int origin) {
+
+    // Auxiliar priority queue data structure with unreached
+    // nodes (modified to let the first element be the minimum)
+    min_priority_queue<pair<ld,int>> q; 
+
+    // Auxiliar boolean vector which informs whether a node has been
+    // visited or not (selected set in greedy algorithm)
+    vector<bool> selected = {false};
+
+    // First node (distance 0)
+    q.push({0,origin}); 
+    dist[origin] = 0;
+
+    // While there are unreached nodes in q
     while(!q.empty()) {
-        auto p = q.top();
+        
+        // First unreached node (with minimum distance)
+        auto p = q.top(); 
         q.pop();
-        int node = p.second;
+
+        // Index (distance is not necessary, we only need the minimum distance)
+        int node = p.second; 
+
+        // For each adjacent node u
+        
         for (auto u : g[node]) {
-            int v = u.first;
-            int c = u.second;
-            if (dist[node] + c < dist[v]) {
-                dist[v] = dist[node]+c;
-                q.push({-dist[v],v});
+            int v = u.first; // Index of u 
+
+            // For not to visit already selected nodes
+            if (!selected[v]) {
+
+                // Distance from node to v (euclidean distance previously calculated)
+                ld d = u.second; 
+
+                // Compare the original distance dist[v] with the
+                // distance through the new path dist[node] + d
+                if (dist[node] + d < dist[v]) {
+
+                    // Update distance and previous node if necessary
+                    dist[v] = dist[node]+d;
+                    prev[v] = node;
+
+                    // Reached v --> explore it
+                    q.push({dist[v],v});
+                }
             }
         }
+        // Visited node: add to selected set
+        selected[node] = true;
     }
 }
 
@@ -30,14 +91,15 @@ int main (int argc, char** argv) {
 /*
     Input format:
     3 --> number of cities
+    1 2 --> origin and destination indexes
     (1,2) (2,0) (0,0) --> cities
     2 --> number of roads
     0 1 (road between (1,2) and (2,0))
     1 2 (road between (2,0) and (0,0))
 */
 
-    int n,m;
-    cin >> n;
+    int n,origin,dest;
+    cin >> n >> origin >> dest;
     vector<City> cities(n);
     vector<vector<pair<int,ld>>> roads(n);
 
@@ -47,24 +109,33 @@ int main (int argc, char** argv) {
         cities[i] = a;
     }
 
+    int m;
     cin >> m;
     
     for (int i=0; i<m; i++) {
-        int a,b,dist;
+        int a,b;
         cin >> a >> b;
-        dist = a-b;
+        ld dist = cities[a]-cities[b];
 
         roads[a].push_back({b,dist});
         roads[b].push_back({a,dist});
     }
     vector<ld> dist(n,INF);
-    for (auto city : roads[0]) {
-        dist[city.first] = city.second;
-    }
-
-    vector<int> path;
+    vector<int> prev(n,-1);
     
-    Dijkstra(roads,dist,path);
+    Dijkstra(roads,dist,prev,origin);
+
+    vector<City> path;
+
+    for (int i=dest; i!=-1; i=prev[i]) {
+        path.insert(path.begin(),cities[i]);
+    }
+    
+    // OUTPUT
+
+    // cout << "Shortest path from " << cities[origin] << " to " << cities[dest] << ": " << endl;
+    cout << path << endl;
+    // cout << "Distance: " << dist[dest] << endl;
 
     return 0;
 }

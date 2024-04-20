@@ -17,8 +17,8 @@ step=$4
 cd $1
 
 gen="Generador/visual_generator"
-data_output_dir="Visual/Data"
-graph_output_dir="Visual/Graph"
+data_output_dir="Visual/Data/Input"
+graph_output_dir="Visual/Graph/Input"
 makefile="Makefile"
 plot_script="../Scripts/plot_graph.gp"
 

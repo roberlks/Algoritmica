@@ -6,7 +6,7 @@
 #include "../../Include/City.h"
 using namespace std;
 
-const ld MAX_COORDINATE = 1e9;
+const ld MAX_COORDINATE = 1;
 
 void make_set(int node,vector<int> & parent, vector<int> & rank){
     parent[node] = node;
@@ -71,13 +71,16 @@ int main(int argc, char * argv[]){
 
     // OUPUT
     srand(n);
+    int origin = rnd(0,n);
+    int dest = rnd(0,n);
     #ifndef VISUAL
         fout << n << endl; // Number of cities
+        fout << origin << " " << dest << endl; // Origin and destination
     #endif
     // Generate n random cities
     vector<City> cities(n);
     for(int i=0; i<n; ++i){
-        cities[i] =  City(rnd(-MAX_COORDINATE,MAX_COORDINATE),rnd(-MAX_COORDINATE,MAX_COORDINATE));
+        cities[i] =  City(rnd(0,MAX_COORDINATE),rnd(0,MAX_COORDINATE));
         #ifndef VISUAL
             fout << cities[i] << endl;
         #endif

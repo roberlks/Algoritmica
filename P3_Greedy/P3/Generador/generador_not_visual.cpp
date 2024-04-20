@@ -72,9 +72,10 @@ int main(int argc, char * argv[]){
     // OUPUT
     srand(n);
     fout << n << endl; // Number of cities
+    fout << (int)rnd(0,n) << " " << (int)rnd(0,n) << endl; // Origin and destination
     // Generate n random cities
     for(int i=0; i<n; ++i){
-        City random_city(rnd(-MAX_COORDINATE,MAX_COORDINATE),rnd(-MAX_COORDINATE,MAX_COORDINATE));
+        City random_city(rnd(0,MAX_COORDINATE),rnd(0,MAX_COORDINATE));
         fout << random_city << endl;
     }
 
