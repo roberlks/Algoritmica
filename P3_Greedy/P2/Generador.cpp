@@ -52,7 +52,7 @@ int main(int argc, char * argv[]){
     int duration;   // duration of the exam
 
     // horas y duracion de los examenes
-    fout << n << endl << endl;
+    fout << n << endl <<endl;
 
     for (int i = 0; i < n; ++i) {
         h = rnd(0,24);      // hour
