@@ -5,6 +5,8 @@
 #include <vector>
 #include <iomanip>
 #include <list>
+#include <queue>
+#include <utility>
 
 using namespace std;
 
@@ -193,6 +195,42 @@ void greedy(vector<info_exam> & all_exams, vector<list<info_exam>>& used_classro
         
     }
 }
+
+/**
+ * @brief Algoritmo greedy que determina el máximo número de exámenes que se solapan 
+ * en el tiempo, que también coincide con el mínimo número de aulas a reservar.
+ * @param all_exams Los examenes a realizar
+ * @return el número máximo de examenes que se solapan en el tiempo
+*/
+
+int greegy(vector<info_exam> & all_exams) {
+
+    // Construir estructura de eventos
+
+    vector<pair<int,int>> events;
+
+    for (int i=0; i < all_exams.size(); ++i) {
+        events.emplace_back(all_exams[i].start_time, 1);            // 1: Empieza un examen
+        events.emplace_back(all_exams[i].get_finish_time(), -1);    //-1: Termina un examen
+    }
+
+    // Se ordenan los eventos 
+    sort(events.begin(), events.end(), [](pair<int,int> a, pair<int,int> b)->bool{ return a.first < b.first;});    
+
+    int count = 0;          // Número de exámenes que se solapan en el momento
+    int max_count = 0;      // Máximo número de examenes que se han solapado hasta el momento
+
+    for (int i=0; i < events.size(); ++i) {
+        count += events[i].second;
+
+        if (count > max_count) {
+            max_count = count;
+        }
+    }
+
+    return max_count;
+}
+
 int main(int argc, char* argv[]) 
 {
 
