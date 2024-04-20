@@ -13,7 +13,6 @@ using namespace std;
 */
 struct info_exam {
 
-
     int start_time;      // [0-minutos_del_día[ , indica en qué minuto 
                          // del día empieza el examen
     int duration;        // duración del examen
