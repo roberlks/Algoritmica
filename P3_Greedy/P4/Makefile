@@ -16,19 +16,19 @@ V3_SRC = $(SRC_DIR)/V3/greedy.cpp
 # Compilación
 all: $(TARGETS)
 
-$(GEN_DIR)/generador: $(GEN_SRC)
+$(GEN_DIR)/generador: $(GEN_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@
 
 $(GEN_DIR)/visual_generator: $(GEN_DIR)/generador.cpp $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@ -D VISUAL
 
-$(BIN_DIR)/V1/greedy: $(V1_SRC)
+$(BIN_DIR)/V1/greedy: $(V1_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@
 
-$(BIN_DIR)/V2/greedy: $(V2_SRC)
+$(BIN_DIR)/V2/greedy: $(V2_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@
 
-$(BIN_DIR)/V3/greedy: $(V3_SRC)
+$(BIN_DIR)/V3/greedy: $(V3_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@
 
 

@@ -19,4 +19,4 @@ $(GEN_EXE): $(GEN_DIR)/generador.cpp
 # Regla para limpiar los archivos generados
 clean:
 	rm -f $(GREEDY_EXE) $(GEN_EXE) 
-	rm -rf ./*/output*
+	rm -rf ./*/output

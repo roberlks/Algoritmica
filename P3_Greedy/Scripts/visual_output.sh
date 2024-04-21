@@ -20,9 +20,10 @@ graph_mode="linespoints"
 if [[ $1 == "P4" ]]; then
     graph_mode="points"
 
-    if (($# < 4)); then
+    if (($# < 5)); then
         echo "Please especify version of TSP:"
         echo "$0 <P[1..4]> <ini> <fin> <step> [1..3]"
+        exit -1
     fi
     version=V$5
 fi
