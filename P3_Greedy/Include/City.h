@@ -1,3 +1,5 @@
+#ifndef CITY_H
+#define CITY_H
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -109,3 +111,4 @@ void printCycle(const std::vector<int> & cycle, const City & origin, const City 
     }
     std::cout << origin << std::endl;
 }
+#endif
