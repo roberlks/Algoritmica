@@ -12,6 +12,31 @@ ostream& operator<<(ostream& os, vector<City> v) {
     return os;
 }
 
+// operator << for vector<int>
+ostream& operator<<(ostream& os, vector<int> v) {
+    os << "[";
+    for (int i=0; i < v.size()-1; i++) {
+        os << v[i] << ", "; 
+    }
+    os << v[v.size()-1] << "]" << endl;
+    return os;
+}
+
+ostream& operator<<(ostream& os, vector<pair<int,int>> v) {
+    for (int i=0; i < v.size()-1; i++) {
+        os << v[i].first << ", " << v[i].second << endl; 
+    }
+    os << v[v.size()-1].first << ", " << v[v.size()-1].second << endl; 
+    return os;
+}
+
+ostream& operator<<(ostream& os, vector<Edge> v) {
+    for (int i=0; i < v.size()-1; i++) {
+        os << "["<<v[i].A << ", " << v[i].B << "]"<< endl; 
+    }
+    return os;
+}
+
 // En cada paso escojo añadir al proyecto de camino
 // la arista que tenga mínimo coste (es decir, el par
 // de ciudades más cercanas), cumpliendo todo el rato
@@ -73,7 +98,6 @@ bool busca_camino(vector<pair<int,int>> v, int sig, int beg)
 
     if (!encontrado) return false; // El camino se corta
     else {
-	int other;
 	if (f) {
 	    sig = (*index).second; // El siguiente a buscar en la cadena
 	}
@@ -81,7 +105,7 @@ bool busca_camino(vector<pair<int,int>> v, int sig, int beg)
 	    sig = (*index).first;
 	}
 
-	if (sig == beg || other == beg) // Hemos encontardo el que veníamos buscando 
+	if (sig == beg) // Hemos encontardo el que veníamos buscando 
 	    return true;
 	else {
 	    v.erase(index); 
@@ -98,19 +122,27 @@ bool busca_camino(vector<pair<int,int>> v, int sig, int beg)
 // el grado, solo hay ciclo en el grafo si el grafo total
 // es un ciclo)
 
-bool hay_ciclo(vector<pair<int,int>> v)
+bool hay_ciclo(vector<pair<int,int>> vec)
 {
     // Es un ciclo si y solo
     // si podemos empezar en algun
     // nodo y terminar en ese mismo
     // siguiendo el camino que nos dan las aristas
 
-    if (v.size() > 0) {
-	int beg_node = v.at(0).first; // Por ejemplo
-	int sig = v.at(0).second;
-	v.erase(v.begin());
+    if (vec.size() > 0) {
+	bool ciclo = false;
+	for (int i = 0; i < vec.size() && !ciclo; i++) {
+	    vector<pair<int,int>> v = vec; 
+	    int beg_node = v.at(i).first; // Empezamos por el primero de cada arista
+	    int sig = v.at(i).second;
+	    auto it = v.begin() + i;
+	    v.erase(it);
+	    
+	    ciclo =  busca_camino(v,sig,beg_node);
+	}
 
-	return busca_camino(v,sig,beg_node);
+	return ciclo;
+
     } else return true;
 }
 
@@ -137,17 +169,17 @@ void rellenar_ciclo(vector <pair<int,int>> v, vector<int> &path, int sig, int be
 	} 
     }
 
-    if (!encontrado) return; // El camino se corta
+    if (!encontrado) {
+	return;
+    }
     else {
-	path.push_back(sig); // El que veníamos buscando
-	int other;
 	if (f)
 	    sig = (*index).second; // El siguiente a buscar en la cadena
 	else 
 	    sig = (*index).first;
+	path.push_back(sig); // El que buscamos en la siguiente
 
 	if (sig == beg) {// Hemos encontardo el que veníamos buscando 
-	    path.push_back(beg);
 	    return;
 	}
 	else {
@@ -162,24 +194,22 @@ void rellenar_ciclo(vector <pair<int,int>> v, vector<int> &path, int sig, int be
 
 void obtener_camino(vector<pair<int,int>> v, vector<int> &path) 
 {
-    if (hay_ciclo(v))
-    {
-	// Metemos el primer elemento y llamamos la función recursiva
-	if (v.size() > 0) {
-	    int beg = v.at(0).first;
-	    int sig = v.at(0).second;
+    // Metemos el primer elemento y llamamos la función recursiva
+    if (v.size() > 0) {
+	int beg = v.at(0).first;
+	int sig = v.at(0).second;
 
-	    path.push_back(beg);
-	    v.erase(v.begin());
-	    rellenar_ciclo(v,path,sig,beg);
-	}
+	path.push_back(beg);
+	path.push_back(sig);
+	v.erase(v.begin());
+	rellenar_ciclo(v,path,sig,beg);
     }
 }
 
 
 void TSP_greedy_v3(int ini, int fin, City v[], vector<City> &path) {
 
-    int n_cities = fin-ini+1; // Numero de ciudades
+    int n_cities = fin-ini; // Numero de ciudades
     vector<pair<int,int>> res_arist;
 
     // Guardamos en un vector todas las aristas y las ordenamos
@@ -191,15 +221,19 @@ void TSP_greedy_v3(int ini, int fin, City v[], vector<City> &path) {
 
     int n_edges = vec_todas_arist.size();
     sort(vec_todas_arist.begin(),vec_todas_arist.end());
+    reverse(vec_todas_arist.begin(), vec_todas_arist.end());
+
+    // cout << "VECTOR DE ARISTAS EN ORDEN DE CERCANÍA: " << endl;
+    // cout << vec_todas_arist;
 
     vector<int> deg(n_cities); // Vector con los grados de cada ciudad
 
     int n = 0;
     bool bad_degree = false;
 
-    for (int i = 0; i < n_edges; i++) {
-	Edge min_arist = vec_todas_arist.at(i);
 
+    for (int i = 0; (i < n_edges) && (res_arist.size() < n_cities); i++) {
+	Edge min_arist = vec_todas_arist.at(i);
 	// Tomamos los índices de las ciudades de la arista en el vector City
 	int index_A;
 	int index_B;
@@ -210,40 +244,52 @@ void TSP_greedy_v3(int ini, int fin, City v[], vector<City> &path) {
 
 	bad_degree = deg.at(index_A) > 1 || deg.at(index_B) > 1;
 
+	//cout << "ARISTA: [" << index_A << ", " << index_B << "]" << endl;
 	if (!bad_degree)
 	{
+	    //cout << " (GOOD DEGREE) INTENTO AÑADIR" << endl;
 	    res_arist.push_back(pair(index_A, index_B)); // Intentamos meter la siguiente arista con menos coste
 	    
 	    bool cycle = hay_ciclo(res_arist);
 
-	    if (cycle && (i != n_edges-1))  // Si hemos metido un ciclo indebido, quitamos esa arista
-		vec_todas_arist.pop_back();
+	    if (cycle && (res_arist.size() != n_cities)) {
+		//cout << "NO AÑADO PORQUE ME SALE CICLO ANTICIPADO" << endl;
+		res_arist.pop_back();
+	    }  // Si hemos metido un ciclo indebido, quitamos esa arista
 	    else { // Si no, dejamos la arista y actualizamos el grado de las ciudades en el vector
+		//cout << "AÑADO" << endl;
 		deg.at(index_A)++;
 		deg.at(index_B)++;
 	    }
 	}
-    } // for
+    }  // for
 
     // Paso el vector final de aristas a un vector de índices y relleno el vector de ciudades
     vector<int> index_path;
     obtener_camino(res_arist, index_path);
-    for (int i = 0; i < n_cities; i++)
-	path.push_back(v[index_path.at(i)]);
+    for (int i = 0; i < index_path.size(); i++)
+	path.push_back(v[index_path[i]]);
+    path.push_back(v[index_path[0]]);
 }
 
 
 int main(int argc, char** argv) {
     // Faster I/O
     ios::sync_with_stdio(false);
-    cin.tie(0);
+
+    if (argc < 2) {
+        cout << "Uso: ./greedy <input_file>" << endl;
+        return 1;
+    }
 
     // INPUT
+
+    ifstream fin(argv[1], ios::in);
     int n;
-    cin >> n;
+    fin >> n;
     City v[n];
     for(int i=0; i<n; ++i)
-        cin >> v[i];
+        fin >> v[i];
 
     // Answer
     vector<City> ans;
@@ -255,4 +301,3 @@ int main(int argc, char** argv) {
     // OUTPUT
     cout << ans << endl;
 }
-

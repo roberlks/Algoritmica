@@ -34,6 +34,8 @@ fi
 
 cd $1
 
+echo "VERSION: $version"
+
 greedy="Greedy/$version/greedy"
 instances_dir="Instancias"
 data_input_dir="Visual/Data/Input"
