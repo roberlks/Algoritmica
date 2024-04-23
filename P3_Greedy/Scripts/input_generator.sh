@@ -28,6 +28,6 @@ for((i=ini; i<=fin; i+=step)); do
     let index=i-ini
     let index=index/step
     let ++index
-    output_name="ni$index.txt"
+    output_name="in$index.txt"
     ./$gen $i "$output_dir/$output_name"
 done

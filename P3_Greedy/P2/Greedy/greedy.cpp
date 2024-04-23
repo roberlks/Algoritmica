@@ -5,7 +5,9 @@
 #include <vector>
 #include <iomanip>
 #include <list>
+#include <queue>
 #include <utility>
+#include <chrono>
 
 using namespace std;
 
@@ -67,16 +69,6 @@ struct info_exam {
     void get_finish_time(int &h, int &m) const{
         int aux = start_time + duration;
         min2hourFormat(aux, h, m);
-    }
-
-    /**
-     * @brief Indica si el examen @p e puede realizarse/tiene lugar tras 
-     * la finalización examen implícito
-     * @return true si se puede, false en caso contrario
-    */
-
-    bool canGoAfter(info_exam e) {
-        return get_finish_time() <= e.start_time;
     }
 
     /**
@@ -153,8 +145,6 @@ struct info_exam {
 
 };
 
-
-
 /**
  * @brief Algoritmo greedy que obtiene dado unos exámenes obtiene la programación óptima 
  * para utilizar el mínimo número de aulas 
@@ -168,66 +158,47 @@ void greedy(vector<info_exam> & all_exams, vector<list<info_exam>>& used_classro
     // Ordena los examenes según tiempo de inicio
 
     sort(all_exams.begin(), all_exams.end());
+    
+    // (finish_time, classIndex)
+    priority_queue <pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> examenes_en_proceso;
 
     // Asigna a cada aula un examen --> función solución
     // hasta que no se asigne una aula a cada examen no es una solución
+
     for (int i = 0; i < all_exams.size(); ++i) {
 
-        bool foundAClass = false;
+        bool couldFoundAClass = false;
 
         // Función selector: primero busca una aula libre entre las ya reservadas
-        for (int j = 0; j < used_classroom.size() && !foundAClass; ++j) {
+        // Función de factibilidad (implícita): si es compatible colocarlo en una determinada aula
+        
+        // Pregunta al primero que se queda libre
+        
+        if (!examenes_en_proceso.empty() && examenes_en_proceso.top().first <= all_exams[i].start_time) {
 
-            // Función de factibilidad (implícita): si es compatible colocarlo en una determinada aula
-            if(used_classroom[j].back().canGoAfter(all_exams[i])) {     
-                used_classroom[j].push_back(all_exams[i]);
-                foundAClass = true;
-            }
+            couldFoundAClass = true;
+
+            // [finish_time, classIndex]
+            pair<int, int> examen_acabado = examenes_en_proceso.top();  
+            examenes_en_proceso.pop();      
+
+            // O(nlogn) 
+            used_classroom[examen_acabado.second].push_back(all_exams[i]);
+            examenes_en_proceso.emplace(all_exams[i].get_finish_time(), examen_acabado.second);   
+            
         }
 
+           
         // Si no encuentra, reserva una nueva
-        if (!foundAClass) {
+        if (!couldFoundAClass) {
             list<info_exam> new_classroom;
             new_classroom.push_back(all_exams[i]);
             used_classroom.push_back(new_classroom);
-        }
-        
-    }
-}
 
-/**
- * @brief Algoritmo greedy que determina el máximo número de exámenes que se solapan 
- * en el tiempo, que también coincide con el mínimo número de aulas a reservar.
- * @param all_exams Los examenes a realizar
- * @return el número máximo de examenes que se solapan en el tiempo
-*/
-
-int greedy(vector<info_exam> & all_exams) {
-
-    // Construir estructura de eventos
-
-    vector<pair<int,int>> events;
-
-    for (int i=0; i < all_exams.size(); ++i) {
-        events.emplace_back(all_exams[i].start_time, 1);            // 1: Empieza un examen
-        events.emplace_back(all_exams[i].get_finish_time(), -1);    //-1: Termina un examen
-    }
-
-    // Se ordenan los eventos 
-    sort(events.begin(), events.end(), [](pair<int,int> a, pair<int,int> b)->bool{ return a.first < b.first;});    
-
-    int count = 0;          // Número de exámenes que se solapan en el momento
-    int max_count = 0;      // Máximo número de examenes que se han solapado hasta el momento
-
-    for (int i=0; i < events.size(); ++i) {
-        count += events[i].second;
-
-        if (count > max_count) {
-            max_count = count;
+            // Un examen más que se está realizandose
+            examenes_en_proceso.emplace(all_exams[i].get_finish_time(),used_classroom.size()-1);
         }
     }
-
-    return max_count;
 }
 
 int main(int argc, char* argv[]) 
@@ -250,9 +221,32 @@ int main(int argc, char* argv[])
 
     vector<list<info_exam>> solution;
 
+
+    // Estudio eficiencia empírica, calculo de tiempos
+
+    #ifdef OBTENER_TIEMPOS
+
+    chrono::high_resolution_clock::time_point t_antes, t_despues; 
+    chrono::duration<double> transcurrido;
+
+    t_antes = chrono::high_resolution_clock::now();
+
+    #endif
+
     greedy(all_exams, solution);
 
-    // Función objetivo: Muestra la programación completa 
+    #ifdef OBTENER_TIEMPOS
+
+    t_despues = chrono::high_resolution_clock::now();
+
+    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
+
+    #endif
+
+
+    // Función objetivo: Muestra la programación completa o el número de aulas según lo pedido 
+    #ifdef PROGRAMACION
+
     for (int i=0; i < solution.size(); ++i) {
         cout << "Classroom " << i << " : " << endl;
         for (typename list<info_exam>::iterator  it = solution[i].begin(); it != solution[i].end(); ++it) {
@@ -261,6 +255,15 @@ int main(int argc, char* argv[])
 
         cout << endl;
     }
+    #endif 
+
+    #ifdef NUM_AULAS
+    cout << "Number of classrooms: " << solution.size() << endl; 
+    #endif
+
+    #ifdef OBTENER_TIEMPOS
+    cout << endl << setw(10) << left << n << " " << transcurrido.count();
+    #endif
 
     return 0;
 
