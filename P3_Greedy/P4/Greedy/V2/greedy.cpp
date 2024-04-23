@@ -3,7 +3,19 @@
 using namespace std;
 
 #define D(x) cerr << #x << ": " << x << endl
+
 //#define MST
+#define TIME
+#define COST
+#define TSP
+
+#ifndef TIME 
+    #ifndef COST
+        #ifndef MST
+            #define TSP
+        #endif
+    #endif
+#endif
 
 /**
  * @brief Prim's algorithm. 
@@ -119,8 +131,20 @@ int main(int argc, char** argv) {
     vector<int> ans;
 
     // TSP
+    clock_t t_before = clock();
     TSP_greedy_v2(origin_index,n,cities,ans);
+    clock_t t_after = clock();
 
     // OUTPUT
+    #ifdef TSP
     printCycle(ans,cities[origin_index],cities);
+    #endif
+
+    #ifdef COST
+    cout << n << " " << cycleDistance(ans,cities) << endl;
+    #endif
+
+    #ifdef TIME
+    cout << n << " " << ((double)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
+    #endif
 }

@@ -19,7 +19,7 @@ all: $(TARGETS)
 $(GEN_DIR)/generador: $(GEN_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@
 
-$(GEN_DIR)/visual_generator: $(GEN_DIR)/generador.cpp $(INC_DIR)/City.h
+$(GEN_DIR)/visual_generator: $(GEN_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@ -D VISUAL
 
 $(BIN_DIR)/V1/greedy: $(V1_SRC) $(INC_DIR)/City.h
@@ -31,6 +31,24 @@ $(BIN_DIR)/V2/greedy: $(V2_SRC) $(INC_DIR)/City.h
 $(BIN_DIR)/V3/greedy: $(V3_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@
 
+time:
+	$(BIN_DIR)/V1/greedy: $(V1_SRC) $(INC_DIR)/City.h
+	g++ -I$(INC_DIR) $< -o $@ -D TIME
 
+	$(BIN_DIR)/V2/greedy: $(V2_SRC) $(INC_DIR)/City.h
+		g++ -I$(INC_DIR) $< -o $@ -D TIME
+
+	$(BIN_DIR)/V3/greedy: $(V3_SRC) $(INC_DIR)/City.h
+		g++ -I$(INC_DIR) $< -o $@ -D TIME
+
+cost:
+	$(BIN_DIR)/V1/greedy: $(V1_SRC) $(INC_DIR)/City.h
+	g++ -I$(INC_DIR) $< -o $@ -D COST
+
+	$(BIN_DIR)/V2/greedy: $(V2_SRC) $(INC_DIR)/City.h
+		g++ -I$(INC_DIR) $< -o $@ -D COST
+
+	$(BIN_DIR)/V3/greedy: $(V3_SRC) $(INC_DIR)/City.h
+		g++ -I$(INC_DIR) $< -o $@ -D COST
 clean:
 	rm -f $(TARGETS)
