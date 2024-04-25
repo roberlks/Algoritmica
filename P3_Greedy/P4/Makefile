@@ -35,6 +35,9 @@ $(BIN_DIR)/V3/greedy: $(V3_SRC) $(INC_DIR)/City.h
 
 time: $(TIME_TARGETS)
 
+$(BIN_DIR)/V1/greedy_time: $(V1_SRC) $(INC_DIR)/City.h
+	g++ -I$(INC_DIR) $< -o $@ -D TIME
+
 $(BIN_DIR)/V2/greedy_time: $(V2_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@ -D TIME
 
@@ -42,6 +45,9 @@ $(BIN_DIR)/V3/greedy_time: $(V3_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@ -D TIME
 
 cost: $(COST_TARGETS)
+
+$(BIN_DIR)/V1/greedy_cost: $(V1_SRC) $(INC_DIR)/City.h
+	g++ -I$(INC_DIR) $< -o $@ -D COST
 
 $(BIN_DIR)/V2/greedy_cost: $(V2_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $< -o $@ -D COST

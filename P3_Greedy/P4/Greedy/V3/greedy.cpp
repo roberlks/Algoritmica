@@ -91,7 +91,7 @@ void TSP_greedy_v3(int origin, int n, City cities[], vector<int> & ans) {
         }
     }
 
-    dfs(1,-1,tree,ans);
+    dfs(origin,-1,tree,ans);
 }
 
 int main(int argc, char** argv) {
