@@ -192,7 +192,7 @@ void rellenar_ciclo(vector <pair<int,int>> v, vector<int> &path, int sig, int be
 // Función que pasa un vector de aristas con un ciclo a un vector
 // de índices 
 
-void obtener_camino(vector<pair<int,int>> v, vector<int> &path) 
+void edges_to_vector(vector<pair<int,int>> v, vector<int> &path) 
 {
     // Metemos el primer elemento y llamamos la función recursiva
     if (v.size() > 0) {
@@ -266,7 +266,7 @@ void TSP_greedy_v3(int ini, int fin, City v[], vector<City> &path) {
 
     // Paso el vector final de aristas a un vector de índices y relleno el vector de ciudades
     vector<int> index_path;
-    obtener_camino(res_arist, index_path);
+    edges_to_vector(res_arist, index_path);
     for (int i = 0; i < index_path.size(); i++)
 	path.push_back(v[index_path[i]]);
     path.push_back(v[index_path[0]]);
@@ -299,5 +299,16 @@ int main(int argc, char** argv) {
     TSP_greedy_v3(0,n,v,ans);
 
     // OUTPUT
+
+    #ifdef TSP
     cout << ans << endl;
+    #endif
+
+    #ifdef COST
+    cout << n << " " << cycleDistance(ans,cities) << endl;
+    #endif
+
+    #ifdef TIME
+    cout << n << " " << ((double)(t_after - t_before)/CLOCKS_PER_SEC) << endl;
+    #endif
 }
