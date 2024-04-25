@@ -12,7 +12,7 @@ struct Edge
     Edge(City _A, City _B) : A(_A), B(_B) {}
 
     friend bool operator<(const Edge &e1, const Edge &e2) {
-	return ((e1.A - e1.B)>(e2.A - e2.B));
+	return ((e1.A - e1.B)<(e2.A - e2.B));
     }
 };
 

@@ -5,9 +5,9 @@ using namespace std;
 #define D(x) cerr << #x << ": " << x << endl
 
 //#define MST
-#define TIME
-#define COST
-#define TSP
+//#define TIME
+//#define COST
+//#define TSP
 
 #ifndef TIME 
     #ifndef COST
@@ -98,8 +98,6 @@ void TSP_greedy_v2(int origin, int n, City cities[], vector<int> & ans) {
     // Construction of the Minimum Spanning Tree with Prim's algorithm
     vector<vector<int>> mst;
     Prim(origin,n,cities,mst);
-
-    //? Maybe ordenar los vecinos de los nodos por cercania al nodo
     
     // The given tree is listed in preorder (turning the tree into a cycle)
     ans.reserve(n);
