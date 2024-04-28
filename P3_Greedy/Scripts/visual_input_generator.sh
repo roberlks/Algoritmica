@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LC_NUMERIC="en_US.UTF-8"
+
 if (($# < 4)); then
     echo "Error: missing paremeters"
     echo "$0 <P[1..3]> <ini> <fin> <step>"

@@ -15,6 +15,8 @@ Donde N es la cantidad de bienes, k es el número de bienes que puede llevar un 
 
 using namespace std;
 
+#define DEBUG_PRINT 0 // If 1, prints the values of the goods, otherwise prints the time elapsed. Default is time elapsed.
+
 int main (int argc, char *argv[]) {
     #include <fstream> // Include the necessary header file for std::ifstream
     #include <ios> // Include the necessary header file for std::ios::in
@@ -30,6 +32,8 @@ int main (int argc, char *argv[]) {
         std::cerr << "Error: no se pudo abrir el archivo " << argv[1] << std::endl;
         return -1;
     }
+
+    clock_t tStart = clock();
 
     int N, k;
     fin >> N >> k;
@@ -65,20 +69,30 @@ int main (int argc, char *argv[]) {
         }
     }
 
-    //Imprimimos los valores
-    std::cout << N << " " << k << std::endl;
-    int sumaNPS = 0, sumaPS = 0;
-    for (int i = 0; i < notPreSon.size(); ++i){
-        std::cout << notPreSon[i] << " ";
-        sumaNPS += notPreSon[i];
+    clock_t tEnd = clock();
+    double elapsed = double(tEnd - tStart) / CLOCKS_PER_SEC;
+
+
+    //Imprimimos los valores 
+    if (DEBUG_PRINT){
+        std::cout << N << " " << k << std::endl;
+        int sumaNPS = 0, sumaPS = 0;
+        for (int i = 0; i < notPreSon.size(); ++i){
+            std::cout << notPreSon[i] << " ";
+            sumaNPS += notPreSon[i];
+        }
+        cout << endl << "Suma no predilecto: " << sumaNPS << endl;
+        std::cout << std::endl << "PRESON" << std::endl;
+        for (int i = 0; i < preSon.size(); ++i){
+            std::cout << preSon[i] << " ";
+            sumaPS += preSon[i];
+        }
+        std::cout << std::endl << "Suma predilecto: " << sumaPS << std::endl;
     }
-    cout << endl << "Suma no predilecto: " << sumaNPS << endl;
-    std::cout << std::endl << "PRESON" << std::endl;
-    for (int i = 0; i < preSon.size(); ++i){
-        std::cout << preSon[i] << " ";
-        sumaPS += preSon[i];
+    else{
+        std::cout << N << " " <<  elapsed << std::endl;
     }
-    std::cout << std::endl << "Suma predilecto: " << sumaPS << std::endl;
+    
 
 
 

@@ -14,13 +14,9 @@ ini=$2
 fin=$3
 step=$4
 
-path_mode="linespoints"
-graph_mode="linespoints"
-
 version="."
 
 if [[ $1 == "P4" ]]; then
-    graph_mode="points"
 
     if (($# < 5)); then
         echo "Please especify version of TSP:"
@@ -30,35 +26,37 @@ if [[ $1 == "P4" ]]; then
     version=V$5
 fi
 
-
-./Scripts/input_generator.sh $1 $ini $fin $step
-./Scripts/visual_input_generator.sh $1 $ini $fin $step
+# ./Scripts/input_generator.sh $1 $ini $fin $step
 
 cd $1
 
-echo "VERSION: $version"
-
 greedy="Greedy/$version/greedy"
 instances_dir="Instancias"
-data_input_dir="Visual/Data/Input"
-data_output_dir="Visual/Data/Output"
-graph_output_dir="Visual/Graph/Output"
+data_output_dir="Times/Data"
+graph_output_dir="Times/Graph"
+image_name="regresion-lin-log$1.png"
+output_name="regresion-lin-log$1.dat"
+log_dir="Times/Log"
+log_name="log_lin_log"
 makefile="Makefile"
-plot_script="../Scripts/plot_path.gp"
+plot_script="../Scripts/g1.gp"
+regresion_script="../Scripts/regresion.gp"
 
 mkdir -p $data_output_dir
 mkdir -p $graph_output_dir
+mkdir -p $log_dir
 
 make -f $makefile $greedy
 
+echo " " > "$data_output_dir/$output_name"
 for((i=ini; i<=fin; i+=step)); do
     let index=i-ini
     let index=index/step
     let ++index
     instance="ni$index.txt"
-    input_name="ni$index.dat"
-    output_name="out$index.dat"
-    image_name="path$index.png"
-    "$greedy" "$instances_dir/$instance" > "$data_output_dir/$output_name"
-    gnuplot -c $plot_script "$data_input_dir/$input_name" "$data_output_dir/$output_name" "Graph" "Path" "$graph_mode" "$path_mode" "$graph_output_dir/$image_name" 
+    "$greedy" "$instances_dir/$instance" >> "$data_output_dir/$output_name"
+    
 done
+
+gnuplot -c $plot_script "$data_output_dir/$output_name" "Eficiencia $1" "Nº ciudades" "$graph_output_dir/$image_name" "linespoints"
+gnuplot -c $regresion_script "$data_output_dir/$output_name" "Eficiencia $1" "Nº ciudades" "$graph_output_dir/$image_name" "$log_dir/$log_name"

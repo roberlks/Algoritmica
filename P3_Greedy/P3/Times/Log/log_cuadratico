@@ -1,0 +1,30 @@
+
+
+*******************************************************************************
+Sun Apr 28 22:35:49 2024
+
+
+FIT:    data read from DATOS
+        format = z
+        #datapoints = 25
+        residuals are weighted equally (unit weight)
+
+function used for fitting: f(x)
+	f(x)=a*x*x
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a            
+   0 1.3460281249e+21   0.00e+00  7.34e+09    1.000000e+00
+   5 5.7157562654e-02  -1.43e-08  7.34e+04    4.745548e-11
+
+After 5 iterations the fit converged.
+final sum of squares of residuals : 0.0571576
+rel. change during last iteration : -1.42766e-13
+
+degrees of freedom    (FIT_NDF)                        : 24
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.0488013
+variance of residuals (reduced chisquare) = WSSR/ndf   : 0.00238157
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 4.74555e-11      +/- 1.33e-12     (2.803%)
