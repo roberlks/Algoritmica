@@ -3,6 +3,8 @@
 #include <vector>
 #include <queue>
 #include <cstring>
+#include <chrono>
+#include <iomanip>
 #include "../../Include/City.h"
 
 using namespace std;
@@ -41,10 +43,6 @@ void Dijkstra (const vector<vector<pair<int,ld>>> & g, vector<ld> & dist,
     // nodes (modified to let the first element be the minimum)
     min_priority_queue<pair<ld,int>> q; 
 
-    // Auxiliar boolean vector which informs whether a node has been
-    // visited or not (selected set in greedy algorithm)
-    vector<bool> selected = {false};
-
     // First node (distance 0)
     q.push({0,origin}); 
     dist[origin] = 0;
@@ -52,37 +50,30 @@ void Dijkstra (const vector<vector<pair<int,ld>>> & g, vector<ld> & dist,
     // While there are unreached nodes in q
     while(!q.empty()) {
         
-        // First unreached node (with minimum distance)
+        // Next unreached node (with minimum distance)
         auto p = q.top(); 
         q.pop();
 
         // Index (distance is not necessary, we only need the minimum distance)
         int node = p.second; 
 
-        // Visited node: add to selected set
-        selected[node] = true;
-
         // For each adjacent node u      
         for (auto u : g[node]) {
             int v = u.first; // Index of u 
 
-            // For not to visit already selected nodes
-            if (!selected[v]) {
+            // Distance from "node" to "v" (euclidean distance previously calculated)
+            ld d = u.second; 
 
-                // Distance from "node" to "v" (euclidean distance previously calculated)
-                ld d = u.second; 
+            // Compare the original distance "dist[v]" with the
+            // distance through the new path "dist[node] + d"
+            if (dist[node] + d < dist[v]) {
 
-                // Compare the original distance "dist[v]" with the
-                // distance through the new path "dist[node] + d"
-                if (dist[node] + d < dist[v]) {
+                // Update distance and previous node if necessary
+                dist[v] = dist[node]+d;
+                prev[v] = node;
 
-                    // Update distance and previous node if necessary
-                    dist[v] = dist[node]+d;
-                    prev[v] = node;
-
-                    // Reached v --> explore it
-                    q.push({dist[v],v});
-                }
+                // Reached v --> explore it
+                q.push({dist[v],v});
             }
         }
     }
@@ -103,7 +94,7 @@ int main (int argc, char** argv) {
 /*
     Input format:
     3 --> number of cities
-    1 2 --> origin and destination indexes
+    0 2 --> origin and destination indexes
     (1,2) (2,0) (0,0) --> cities
     2 --> number of roads
     0 1 (road between (1,2) and (2,0))
@@ -141,8 +132,19 @@ int main (int argc, char** argv) {
 
     vector<ld> dist(n,INF);
     vector<int> prev(n,-1);
-    
+
+    chrono::high_resolution_clock::time_point t_antes, t_despues; 
+    chrono::duration<double> transcurrido;
+
+    t_antes = chrono::high_resolution_clock::now();
+
     Dijkstra(roads,dist,prev,origin);
+
+    t_despues = chrono::high_resolution_clock::now();
+
+    transcurrido = chrono::duration_cast<chrono::duration<double>>(t_despues-t_antes);
+
+    cout << endl << setw(10) << left << n << " " << transcurrido.count();
 
     vector<City> path;
 
@@ -152,7 +154,7 @@ int main (int argc, char** argv) {
     
     // OUTPUT
 
-    cout << path << endl;
+    // cout << path << endl;
 
     return 0;
 }

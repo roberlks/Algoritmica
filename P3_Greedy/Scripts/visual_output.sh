@@ -17,6 +17,8 @@ step=$4
 path_mode="linespoints"
 graph_mode="linespoints"
 
+version="."
+
 if [[ $1 == "P4" ]]; then
     graph_mode="points"
 

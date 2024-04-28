@@ -71,8 +71,11 @@ int main(int argc, char * argv[]){
 
     // OUPUT
     srand(n);
-    int origin = rnd(0,n);
-    int dest = rnd(0,n);
+    int origin = rnd(0,n), dest;
+    do { // Self edges not allowed
+            dest = rnd(0,n);
+    }while(origin == dest);
+    
     #ifndef VISUAL
         fout << n << endl; // Number of cities
         fout << origin << " " << dest << endl; // Origin and destination
