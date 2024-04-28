@@ -6,16 +6,13 @@ using namespace std;
 
 typedef pair<int,int> Edge;
 
-//#define MST
 //#define TIME
 //#define COST
 //#define TSP
 
 #ifndef TIME 
     #ifndef COST
-        #ifndef MST
-            #define TSP
-        #endif
+        #define TSP
     #endif
 #endif
 
@@ -44,6 +41,14 @@ bool union_sets(int u, int v, vector<int> & parent, vector<int> & rank){
     return true;
 }
 
+/**
+ * @brief Depht First Search algorithm. 
+ * Lists the tree in preorder
+ * @param node current node
+ * @param parent parent of the current node
+ * @param tree tree to process
+ * @param ans where the preorder of the tree will be saved
+*/
 void dfs(int node, int parent,vector<vector<int>> & tree, vector<int> & ans){
     ans.push_back(node); // Add the node to the answer
     for(int neighbour : tree[node]){ // Visit the node's neighbours

@@ -36,7 +36,7 @@ for((i=ini; i<=fin; i+=step)); do
     let index=i-ini
     let index=index/step
     let ++index
-    data_name="in$index.dat"
+    data_name="ni$index.dat"
     ./$gen $i "$data_output_dir/$data_name"
     graph_name="graph$index.png"
     gnuplot -c $plot_script "$data_output_dir/$data_name" "Graph" "$graph_output_dir/$graph_name" "$mode"

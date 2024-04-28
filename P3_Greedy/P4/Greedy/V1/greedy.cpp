@@ -2,6 +2,16 @@
 #include "../../../Include/City.h"
 using namespace std;
 
+//#define TIME
+//#define COST
+//#define TSP
+
+#ifndef TIME 
+    #ifndef COST
+        #define TSP
+    #endif
+#endif
+
 // operator << for vector<City>
 template <typename T>
 ostream& operator<<(ostream& os, vector<T> v) {
@@ -27,7 +37,7 @@ void remove(vector<T> & v, const T & elem) {
  * @param v array of cities to visit
  * @param path current path
 */
-void TSP_greedy_v1(int n, int home_ind, const City v[], vector<City> & path){
+void TSP_greedy_v1(int n, int home_ind, const City v[], vector<int> & path){
 
     vector<int> not_visited(n);
 
@@ -37,7 +47,7 @@ void TSP_greedy_v1(int n, int home_ind, const City v[], vector<City> & path){
 
     int current = home_ind;
     while (not_visited.size() > 0) {
-        path.push_back(v[current]);
+        path.push_back(current);
         remove(not_visited,current);
         ld min_dist = INF, dist;
         int next;
@@ -50,7 +60,7 @@ void TSP_greedy_v1(int n, int home_ind, const City v[], vector<City> & path){
         }
         current = next;
     }
-    path.push_back(v[home_ind]);
+    path.push_back(home_ind);
 }
 
 int main(int argc, char** argv) {
@@ -76,12 +86,24 @@ int main(int argc, char** argv) {
         fin >> v[i];
 
     // Answer
-    vector<City> ans;
+    vector<int> ans;
     ans.reserve(n);
 
     // TSP
+    clock_t t_before = clock();
     TSP_greedy_v1(n,0,v,ans);
+    clock_t t_after = clock();
 
     // OUTPUT
-    cout << ans << endl;
+    #ifdef TSP
+    printCycle(ans,v[0],v);
+    #endif
+
+    #ifdef COST
+    cout << n << " " << cycleDistance(ans,v) << endl;
+    #endif
+
+    #ifdef TIME
+    cout << n << " " << ((double)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
+    #endif
 }

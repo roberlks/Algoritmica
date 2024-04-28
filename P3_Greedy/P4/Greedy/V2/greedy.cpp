@@ -30,7 +30,7 @@ void Prim(int origin, int n, City cities[], vector<vector<int>> & mst){
     vector<vector<ld>> dist(n,vector<ld>(n)); 
     for(int i = 0; i < n; ++i){
         for (int j = 0; j < n; ++j){
-            dist[i][j] = dist[j][i] = cities[i] - cities[j];
+            dist[i][j] = cities[i] - cities[j];
         }
     }
     
@@ -60,7 +60,7 @@ void Prim(int origin, int n, City cities[], vector<vector<int>> & mst){
 
         #ifdef MST
             cout << cities[v] << endl;
-            cout << cities[nearest_visited_node[v]] << endl;
+            cout << cities[nearest_visited_city[v]] << endl;
             cout << endl;
         #endif
 
@@ -94,6 +94,15 @@ void dfs(int node, int parent,vector<vector<int>> & tree, vector<int> & ans){
     }
 }
 
+/**
+ * @brief Travelling Salesman's Problem solving algorithm.
+ * Provides an **aproximate** answer to the TSP for a given array of cities and origint city
+ * @param origin Index of the origin city (in the array @p cities )
+ * @param n Total number of cities to visit
+ * @param cities the cities given and its coordinates
+ * @param ans vector of index in which the answer to the problem will be given in the form
+ * of index of the @p cities array (and **without** the origin city index at the end)
+*/
 void TSP_greedy_v2(int origin, int n, City cities[], vector<int> & ans) {
     // Construction of the Minimum Spanning Tree with Prim's algorithm
     vector<vector<int>> mst;

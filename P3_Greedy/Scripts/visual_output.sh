@@ -54,7 +54,7 @@ for((i=ini; i<=fin; i+=step)); do
     let index=index/step
     let ++index
     instance="ni$index.txt"
-    input_name="in$index.dat"
+    input_name="ni$index.dat"
     output_name="out$index.dat"
     image_name="path$index.png"
     "$greedy" "$instances_dir/$instance" > "$data_output_dir/$output_name"
