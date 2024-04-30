@@ -28,3 +28,12 @@ variance of residuals (reduced chisquare) = WSSR/ndf   : 0.00238157
 Final set of parameters            Asymptotic Standard Error
 =======================            ==========================
 a               = 4.74555e-11      +/- 1.33e-12     (2.803%)
+
+
+*******************************************************************************
+Sun Apr 28 23:03:55 2024
+
+
+FIT:    data read from DATOS
+        format = z
+BREAK: No data to fit

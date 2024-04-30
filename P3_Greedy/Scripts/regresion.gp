@@ -18,7 +18,7 @@ set xlabel XLABEL
 set ylabel "Tiempo (seg)"
 
 # Cambiar para cambiar ajuste
-f(x)=a*x*log(x)
+f(x)=a*x*x
 
 # Cambiar si se van a usar más parámetros
 fit f(x) DATOS via a
