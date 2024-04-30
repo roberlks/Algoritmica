@@ -85,9 +85,9 @@ int main(int argc, char** argv) {
 
     int n;
     fin >> n;
-    City cities[n];
+    City v[n];
     for(int i=0; i<n; ++i)
-        fin >> cities[i];
+        fin >> v[i];
 
     int origin_index = 0; // Origin city index
 
