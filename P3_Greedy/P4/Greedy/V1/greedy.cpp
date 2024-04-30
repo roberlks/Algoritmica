@@ -2,11 +2,13 @@
 #include "../../../Include/City.h"
 using namespace std;
 
+//#define TIME
+//#define COST
+//#define TSP
+
 #ifndef TIME 
     #ifndef COST
-        #ifndef MST
-            #define TSP
-        #endif
+        #define TSP
     #endif
 #endif
 
@@ -48,10 +50,7 @@ void TSP_greedy_v1(int n, int home_ind, const City v[], vector<int> & path){
     int current = home_ind;
 
     while (not_visited.size() > 0) {
-        // Add current city
         path.push_back(current);
-        
-        // Remove it from not_visited cities
         remove(not_visited,current);
 
         // Calculate the closest neighbour
@@ -93,20 +92,21 @@ int main(int argc, char** argv) {
     int origin_index = 0; // Origin city index
 
     // Answer
-    vector<int> ans(n);
+    vector<int> ans;
+    ans.reserve(n);
 
     // TSP
     clock_t t_before = clock();
-    TSP_greedy_v1(n,origin_index,cities,ans);
+    TSP_greedy_v1(n,0,v,ans);
     clock_t t_after = clock();
 
     // OUTPUT
     #ifdef TSP
-    printCycle(ans,cities[origin_index],cities);
+    printCycle(ans,v[0],v);
     #endif
 
     #ifdef COST
-    cout << n << " " << cycleDistance(ans,cities) << endl;
+    cout << n << " " << cycleDistance(ans,v) << endl;
     #endif
 
     #ifdef TIME
