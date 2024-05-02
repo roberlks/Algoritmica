@@ -10,6 +10,9 @@ datos2=ARG3
 titulo1=ARG4
 titulo2=ARG5
 
+datos3=ARG6
+titulo3=ARG7
+
 set xlabel 'Num ciudades (n)'		# Titulo del eje x
 set ylabel 'Tiempo (seg)'
 
@@ -56,6 +59,22 @@ if (ARG1 == 1) {		# Si no comparar
 		
 		set label 1 sprintf("(%.2f, %.2f)", solucion_x, solucion_y) at solucion_x, solucion_y point pt 7 offset 0.5,0.5
 		
+	}else {
+		if(ARG1 == 3){
+		set terminal 'png'
+		set output 'Salida_comparativa.png'
+
+		f(x)=a0*x*x+b0*x+c0
+		fit f(x) datos1 via a0,b0,c0
+		
+		g(x)=a1*x*x+b1*x+c1
+		fit g(x) datos2 via a1,b1,c1
+
+		h(x)=a2*x*x*x+b2*x*x+c2*x + d
+		fit h(x) datos3 via a2,b2,c2,d
+
+		plot datos1 title titulo1, datos2 title titulo2,  datos3 title titulo3, f(x) title 'Ajuste1', g(x) title 'Ajuste2', h(x) title 'Ajuste3'
+		}
 	}
 }
 
