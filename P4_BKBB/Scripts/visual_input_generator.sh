@@ -4,6 +4,7 @@ export LC_NUMERIC="en_US.UTF-8"
 
 if (($# < 4)); then
     echo "Error: missing paremeters"
+    echo "IMPORTANTE: Ejecutar desde la carpeta padre"
     echo "$0 <BK/BB> <ini> <fin> <step>"
     echo "<BK/BB>: main folder of the problem"
     echo "<ini> initial size of the output to generate"

@@ -2,6 +2,12 @@
 #include "../../Include/City.h"
 using namespace std;
 
+#ifndef TIME 
+    #ifndef COST
+        #define TSP
+    #endif
+#endif
+
 /**
  * @brief Backtracking solution to the Travelling Salesman Problem 
  * @param n number of cities to visit
@@ -51,17 +57,25 @@ void TSP_backtracking(int n,int prev,int home_ind, int cnt,const City v[],bool v
     }
 }
 
-int main(){
+int main(int argc, char **argv){
     // Faster I/O
     ios::sync_with_stdio(false);
     cin.tie(0);
 
+    // Check given paremeters
+    if (argc < 2) {
+        cout << "Uso: ./greedy <input_file>" << endl;
+        return 1;
+    }
+
     // INPUT
+    ifstream fin(argv[1],ios::in);
+
     int n;
-    cin >> n;
+    fin >> n;
     City v[n];
     for(int i=0; i<n; ++i)
-        cin >> v[i];
+        fin >> v[i];
 
     City home = v[0];
     sort(v,v+n); // sort by x axis
@@ -82,8 +96,20 @@ int main(){
     ans.push_back(home_ind); // Already visited origin city
 
     // TSP
+    clock_t t_before = clock();
     TSP_backtracking(n,home_ind,home_ind,0,v,visited,0,best_dist,ans,ans);
+    clock_t t_after = clock();
 
     // OUTPUT
-    printCycle(ans,home,v);
+    #ifdef TSP
+    printCycle(ans,v[0],v);
+    #endif
+
+    #ifdef COST
+    cout << n << " " << cycleDistance(ans,v) << endl;
+    #endif
+
+    #ifdef TIME
+    cout << n << " " << ((double)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
+    #endif
 }
