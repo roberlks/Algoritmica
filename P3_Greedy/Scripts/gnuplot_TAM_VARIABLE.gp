@@ -14,9 +14,11 @@
 # <"dato1 dato2...dato_n"> <"titulo1 titulo2...titulo_n"> <fichero_salida.jpeg> <TITULO_X> <TITULO_Y>
 
 set terminal 'png'
-set output ARG3
+set output ARG3."_line.png"
 
 set xlabel ARG4
 set ylabel ARG5
 
-plot for [i=1:words(ARG1)] word(ARG1, i) title word(ARG2, i) with lines 
+plot for [i=1:words(ARG1)] word(ARG1, i) title word(ARG2, i) with lines
+set output ARG3."_points.png"
+plot for [i=1:words(ARG1)] word(ARG1, i) title word(ARG2, i) with points 

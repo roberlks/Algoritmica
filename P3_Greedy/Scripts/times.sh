@@ -26,27 +26,29 @@ if [[ $1 == "P4" ]]; then
     version=V$5
 fi
 
-# ./Scripts/input_generator.sh $1 $ini $fin $step
+./Scripts/input_generator.sh $1 $ini $fin $step
 
 cd $1
 
-greedy="Greedy/$version/greedy"
+greedy="Greedy/$version/greedy_time"
 instances_dir="Instancias"
-data_output_dir="Times/Data"
-graph_output_dir="Times/Graph"
-image_name="regresion-lin-log$1.png"
-output_name="regresion-lin-log$1.dat"
-log_dir="Times/Log"
-log_name="log_lin_log"
+data_output_dir="Times/$version/Data"
+graph_output_dir="Times/$version/Graph"
+log_dir="Times/$version/Log"
+image_name="times$1.png"
+regresion_image="regresion_cuadratica$1.png"
+output_name="times$1.dat"
+log_name="log_cuadratico"
 makefile="Makefile"
 plot_script="../Scripts/g1.gp"
 regresion_script="../Scripts/regresion.gp"
 
+mkdir -p $instances_dir
 mkdir -p $data_output_dir
 mkdir -p $graph_output_dir
 mkdir -p $log_dir
 
-make -f $makefile $greedy
+make -f $makefile $greedy "time"
 
 echo " " > "$data_output_dir/$output_name"
 for((i=ini; i<=fin; i+=step)); do
@@ -59,4 +61,4 @@ for((i=ini; i<=fin; i+=step)); do
 done
 
 gnuplot -c $plot_script "$data_output_dir/$output_name" "Eficiencia $1" "Nº ciudades" "$graph_output_dir/$image_name" "linespoints"
-gnuplot -c $regresion_script "$data_output_dir/$output_name" "Eficiencia $1" "Nº ciudades" "$graph_output_dir/$image_name" "$log_dir/$log_name"
+gnuplot -c $regresion_script "$data_output_dir/$output_name" "Eficiencia $1" "Nº ciudades" "$graph_output_dir/$regresion_image" "$log_dir/$log_name"

@@ -39,16 +39,21 @@ void remove(vector<T> & v, const T & elem) {
 */
 void TSP_greedy_v1(int n, int home_ind, const City v[], vector<int> & path){
 
+    // Not visited cities
     vector<int> not_visited(n);
 
+    // Initializes with all cities
     for(int i=0; i < n; i++) {
         not_visited[i] = i;
     }
-
+    // Start with home city
     int current = home_ind;
+
     while (not_visited.size() > 0) {
         path.push_back(current);
         remove(not_visited,current);
+
+        // Calculate the closest neighbour
         ld min_dist = INF, dist;
         int next;
         for (int city : not_visited) {
@@ -58,6 +63,8 @@ void TSP_greedy_v1(int n, int home_ind, const City v[], vector<int> & path){
                 next = city;
             }
         }
+
+        // Next city
         current = next;
     }
     path.push_back(home_ind);
@@ -66,24 +73,23 @@ void TSP_greedy_v1(int n, int home_ind, const City v[], vector<int> & path){
 int main(int argc, char** argv) {
     // Faster I/O
     ios::sync_with_stdio(false);
-    cin.tie(0);
 
+    // Check given paremeters
     if (argc < 2) {
         cout << "Uso: ./greedy <input_file>" << endl;
         return 1;
     }
 
     // INPUT
-
-    char input_file[80] = "";
-    strcat(input_file,argv[1]);   
-    ifstream fin(input_file,ios::in);
+    ifstream fin(argv[1],ios::in);
 
     int n;
     fin >> n;
     City v[n];
     for(int i=0; i<n; ++i)
         fin >> v[i];
+
+    int origin_index = 0; // Origin city index
 
     // Answer
     vector<int> ans;
