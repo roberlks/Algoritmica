@@ -98,6 +98,7 @@ class TSP_solution
     {
         if(track.size() < 2) return 0;
 
+        //? Llamar cycleDistance
         ld cota_inf = 0;
         for (int i = 0; i < track.size()-1; i++)
         {
@@ -125,7 +126,7 @@ class TSP_solution
      * @param v the cities
      * @return the distance between ald the consecutive cities of the cycle
     */
-    ld cycleDistance(const std::vector<int> & cycle,const vector<City> v)
+    ld cycleDistance(const std::vector<int> & cycle,const vector<City> & v)
     {
         if(cycle.size() < 2) return 0;
         ld total = 0;
@@ -160,7 +161,7 @@ class TSP_solution
     double enter_min_cost(vector<City>& cities, vector<bool>& visited, int node)
     {   
         double min_enter = -1;
-        for(int i=0; i < visited.size(); ++i)
+        for(int i=0; i < cities.size(); ++i)
         {
             if (i == node) continue;
             if (!visited[i] && ((min_enter == -1) || cities[node].dist(cities[i]) < min_enter))
