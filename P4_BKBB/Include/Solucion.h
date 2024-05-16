@@ -36,6 +36,22 @@ public:
         return cost;
     }
 
+    vector<int>& getBestAns(){
+        return best_ans;
+    }
+
+    vector<City>& getCities(){
+        return cities;
+    }
+
+    const vector<int>& getBestAns() const{
+        return best_ans;
+    }
+
+    const vector<City>& getCities() const{
+        return cities;
+    }
+
     /*double f_cota(vector<bool>& visited, int node,int i){
         switch (i)
         {

@@ -28,16 +28,33 @@ void remove(vector<T> & v, const T & elem) {
     }
 }
 
+
+struct Track
+{
+    vector<int> track;
+    vector<bool> visited; 
+
+    ld aprox_cost;
+    Track(int n=0): visited(n, false), aprox_cost(0){}
+
+    Track(vector<int>& track, vector<bool>& visited, ld cost): track(track), visited(visited), aprox_cost(cost) {}
+    bool operator>(Track other) const {
+        return this->aprox_cost > other.aprox_cost;
+    }
+};
+
+
 class TSP_solution
 {
-    vector<int> best_ans;
-    double cost; 
 
     vector<City> cities;
+
+    vector<int> best_ans;
+    ld cost; 
+
     public: 
 
     TSP_solution(){};
-
 
     double getCost() const {
         return cost;
@@ -52,49 +69,92 @@ class TSP_solution
         cities = v;
 
         if (cities.empty()) return best_ans;
-        
-        // Se empieza desde el origen para pasar de n! a (n-1)!
-        vector<int> track;
-        track.push_back(0);                 
-        vector<bool> visited(cities.size(), false);
-        visited[0] = true;
 
         // Estable la primera cota 
         TSP_greedy_v1(cities.size(), 0, cities, best_ans);
         cost = cycleDistance(best_ans, cities);
 
-        backtracking(cities, track, visited);
+        branchAndBound();
         return best_ans; 
     }
 
-    void backtracking(vector<City>& cities, vector<int>& track, vector<bool>& visited)
-    {
-        if (track.size() >= cities.size())
+    void branchAndBound()
+    {  
+        
+        priority_queue<Track, vector<Track>,greater<Track>> nodos_vivos;
+        
+        // Se empieza desde el origen para pasar de n! a (n-1)!
+        vector<int> track;           
+        vector<bool> visited(cities.size(), false);
+
+        track.push_back(0);  
+        visited[0] = true;
+
+        nodos_vivos.emplace(track, visited, -1);
+
+        while (!nodos_vivos.empty())
         {
-            // Keep the best
-            double cost_aux = cycleDistance(track, cities);
-            if (cost_aux < cost) {
-                best_ans = track;
-                cost = cost_aux;
+            Track e_node = nodos_vivos.top();
+            nodos_vivos.pop();
+
+            // Funcion de factibilidad (Se compara con la cota)
+            if (e_node.aprox_cost >= cost) continue;
+
+            // Caso base
+            if (e_node.track.size() == cities.size())
+            {   
+                ld cost_aux = cycleDistance(e_node.track, cities); // Distancia real
+                if (cost_aux < cost) 
+                {
+                    best_ans = e_node.track;
+                    cost = cost_aux;
+                }
+                continue; 
             }
 
-            return;
-        }
-        // La primera ciudad se ignora
-        for (int i=1; i < cities.size(); ++i)
-        {
-            //if (visited[i]) continue;
-            if (visited[i] == true || podar(cities, track, visited, i)) continue;
 
-            track.push_back(i);
-            visited[i] = true;
-            backtracking(cities, track, visited);
-            track.pop_back();
-            visited[i] = false;
+            // Genero todos los hijos
+            for (int i = 1; i < cities.size(); ++i)
+            {   
+                pair<bool, double> viable = feasible(e_node, i);
+                if (viable.first == false) continue;
+
+                //cout << "viable < " << viable.first << ", " <<  viable.second <<">";
+                Track aux = e_node;
+                aux.track.push_back(i);
+                aux.aprox_cost = viable.second;
+                aux.visited[i] = true; 
+
+                //cout << aux.aprox_cost << "\n";
+                nodos_vivos.push(aux);
+            }
+
         }
+
     }
 
-    bool podar(vector<City>& cities, vector<int>& track, vector<bool>& visited, int node)
+    pair<bool, double> feasible(Track& t, int node)
+    {
+        
+        pair<bool, double>  viable(true, -1);
+        if (t.visited[node]) {
+            viable.first = false;
+        } 
+        else{
+            ld cota_inf = cota_local(cities, t.track, t.visited, node);
+            viable.second = cota_inf;
+
+            if (cota_inf >= cost) {
+                viable.first = false;
+            }
+            else {
+                viable.first = true;
+            }
+        } 
+        return viable;
+    }
+
+    ld cota_local(vector<City>& cities, vector<int>& track, vector<bool>& visited, int node)
     {
         if(track.size() < 2) return 0;
 
@@ -115,8 +175,8 @@ class TSP_solution
         
         // Coste para volver desde una ciudad
         cota_inf +=enter_min_cost(cities, visited, 0);
-
-        return (cota_inf >= cost);
+        
+        return cota_inf;
     }
 
     /**
