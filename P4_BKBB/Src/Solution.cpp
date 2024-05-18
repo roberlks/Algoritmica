@@ -104,7 +104,7 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
             cota_inf += f_cota3(e_node, node);
             break;
         case 4:
-            cota_inf += f_cota4(e_node, node);
+            cota_inf += f_cota4(e_node,node);
             break;
         default:
             cerr << "Invalid f_cota version (1, 2, or 3)" << endl;
@@ -179,7 +179,7 @@ ld TSP_solution::sumMinEnter(const vector<bool> & visited, int node) {
             dist += enter_min_cost(visited, i);
         }
     }
-    dist += enter_min_cost(visited, 0);
+    //dist += enter_min_cost(visited, 0);
     return dist;
 }
 
@@ -190,7 +190,7 @@ ld TSP_solution::sumMinExit(const vector<bool>& visited, int node) {
             dist += exit_min_cost(visited, i);
         }
     }
-    dist += exit_min_cost(visited, 0);
+    //dist += exit_min_cost(visited, 0);
     return dist;
 }
 
@@ -216,6 +216,7 @@ ld TSP_solution::exit_min_cost(const vector<bool>& visited, int node) {
 
 set<ld> TSP_solution::orderedEdges(const vector<bool> & visited, int node) {
     set<ld> edges;
+    edges.insert(cities[node] - cities[0]);
     for (int i=0; i < visited.size(); ++i) {
         if (i==node) continue;
         if (!visited[i]) {
