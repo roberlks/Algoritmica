@@ -82,13 +82,13 @@ void TSP_solution::printAns() {
 }
 
 pair<bool,ld> TSP_solution::feasible(Track & e_node, int node)
-    {
-        if(e_node.track.size() < 2) return {true,0};
+{
+    if(e_node.track.size() < 2) return {true,0};
 
-        ld cota_inf = f_cota(e_node, node);
+    ld cota_inf = f_cota(e_node, node);
 
-        return {(cota_inf < cost),cota_inf};
-    }
+    return {(cota_inf < cost),cota_inf};
+}
 
 ld TSP_solution::f_cota(Track& e_node, int node) {
     ld cota_inf = e_node.current_cost;
@@ -119,11 +119,6 @@ ld TSP_solution::f_cota1(Track& e_node, int node) {
     return num_not_visited * min_e;
 }
 
-ld TSP_solution::f_cota4(Track& e_node, int node) {
-    int num_not_visited = cities.size() - e_node.track.size();
-    return num_not_visited * min_edge(e_node);
-}
-
 ld TSP_solution::f_cota2(Track& e_node, int node) {
     return sumMinEnter(e_node.visited,node);
 }
@@ -132,9 +127,14 @@ ld TSP_solution::f_cota3(Track& e_node, int node) {
 
     ld cota_inf = (enter_min_cost(e_node.visited,e_node.track[0]) +
         enter_min_cost(e_node.visited,node)) / 2;
-    
-    cota_inf += (sumMinEnter(e_node.visited,node) + sumMinExit(e_node.visited,node)) / 2;
-    return cota_inf; // TODO: Implement f_cota3
+  
+    cota_inf += sumMinVisit(e_node.visited,node);
+    return cota_inf;
+}
+
+ld TSP_solution::f_cota4(Track& e_node, int node) {
+    int num_not_visited = cities.size() - e_node.track.size();
+    return num_not_visited * min_edge(e_node);
 }
 
 ld TSP_solution::trackDistance(const vector<int>& track) {
@@ -143,6 +143,69 @@ ld TSP_solution::trackDistance(const vector<int>& track) {
         dist += (cities[track[i + 1]] - cities[track[i]]);
     }
     return dist;
+}
+
+ld TSP_solution::sumMinEnter(const vector<bool> & visited, int node) {
+    ld dist = 0;
+    for (int i = 0; i < cities.size(); ++i) {
+        if ((node != i) && !visited[i]) {
+            dist += enter_min_cost(visited, i);
+        }
+    }
+    dist += enter_min_cost(visited, 0);
+    return dist;
+}
+
+ld TSP_solution::sumMinExit(const vector<bool>& visited, int node) {
+    ld dist = 0;
+    for (int i = 0; i < cities.size(); ++i) {
+        if ((node != i) && !visited[i]) {
+            dist += exit_min_cost(visited, i);
+        }
+    }
+    dist += exit_min_cost(visited, 0);
+    return dist;
+}
+
+ld TSP_solution::sumMinVisit(const vector<bool>& visited, int node) {
+    ld dist = 0;
+
+    for (int i = 0; i < cities.size(); ++i) {
+        if ((node != i) && !visited[i]) {
+            dist += visit_min_cost(visited,i);
+        }
+    }
+    dist += visit_min_cost(visited, 0);
+    return dist;
+}
+
+ld TSP_solution::enter_min_cost(const vector<bool>& visited, int node) {
+    set<ld> edges;
+    orderedEdges(visited,node,edges);
+    return *edges.begin();
+}
+
+ld TSP_solution::exit_min_cost(const vector<bool>& visited, int node) {
+    set<ld> edges;
+    orderedEdges(visited,node,edges);
+    return *(++edges.begin());
+}
+
+ld TSP_solution::visit_min_cost(const vector<bool>& visited, int node) {
+    set<ld> edges;
+    orderedEdges(visited,node,edges);
+    return (*(edges.begin()) + *(++edges.begin())) / 2;
+}
+
+void TSP_solution::orderedEdges(const vector<bool> & visited, int node, set<ld> & edges) {
+    edges.clear();
+    for (int i=0; i < visited.size(); ++i) {
+        if (i==node) continue;
+        if (!visited[i]) {
+            edges.insert(cities[node] - cities[i]);
+        }
+    }
+    edges.insert(cities[node] - cities[0]);
 }
 
 ld TSP_solution::min_edge() {
@@ -170,59 +233,6 @@ ld TSP_solution::min_edge(const Track& e_node){
         }
     }
     return cur_min_e;
-}
-
-ld TSP_solution::sumMinEnter(const vector<bool> & visited, int node) {
-    ld dist = 0;
-    for (int i = 0; i < cities.size(); ++i) {
-        if ((node != i) && !visited[i]) {
-            dist += enter_min_cost(visited, i);
-        }
-    }
-    dist += enter_min_cost(visited, 0);
-    return dist;
-}
-
-ld TSP_solution::sumMinExit(const vector<bool>& visited, int node) {
-    ld dist = 0;
-    for (int i = 0; i < cities.size(); ++i) {
-        if ((node != i) && !visited[i]) {
-            dist += exit_min_cost(visited, i);
-        }
-    }
-    dist += exit_min_cost(visited, 0);
-    return dist;
-}
-
-// ld TSP_solution::sumMinEnterExit(const vector<bool>& visited, int node) {
-//     ld dist = 0;
-
-//     for (int i = 0; i < cities.size(); ++i) {
-//         if ((node != i) && !visited[i]) {
-//             dist += exit_min_cost(visited, i);
-//         }
-//     }
-//     dist += exit_min_cost(visited, 0);
-//     return dist;
-// }
-
-ld TSP_solution::enter_min_cost(const vector<bool>& visited, int node) {
-    return *(orderedEdges(visited,node).begin());
-}
-
-ld TSP_solution::exit_min_cost(const vector<bool>& visited, int node) {
-    return *(++orderedEdges(visited,node).begin());
-}
-
-set<ld> TSP_solution::orderedEdges(const vector<bool> & visited, int node) {
-    set<ld> edges;
-    for (int i=0; i < visited.size(); ++i) {
-        if (i==node) continue;
-        if (!visited[i]) {
-            edges.insert(cities[node] - cities[i]);
-        }
-    }
-    return edges;
 }
 
 void TSP_solution::processSolution(const vector<int>& track) {

@@ -61,9 +61,11 @@ private:
     ld trackDistance(const std::vector<int>& track);
     ld sumMinEnter(const std::vector<bool>& visited, int node);
     ld sumMinExit(const std::vector<bool>& visited, int node);
+    ld sumMinVisit(const std::vector<bool>& visited, int node);
     ld enter_min_cost(const std::vector<bool>& visited, int node);
     ld exit_min_cost(const std::vector<bool>& visited, int node);
-    std::set<ld> orderedEdges(const std::vector<bool>& visited, int node);
+    ld visit_min_cost(const std::vector<bool>& visited, int node);
+    void orderedEdges(const std::vector<bool>& visited, int node, std::set<ld> & edges);
     ld min_edge();
     ld min_edge(const Track& e_node);
     void TSP_greedy();

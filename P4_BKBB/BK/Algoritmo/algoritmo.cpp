@@ -6,7 +6,9 @@ using namespace std;
 
 #ifndef TIME 
     #ifndef COST
-        #define TSP
+        #ifndef NODES
+            #define TSP
+        #endif
     #endif
 #endif
 
@@ -85,13 +87,16 @@ int main(int argc, char** argv){
     sol.solve();
     clock_t t_after = clock();
 
-    // cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
-    // cout << "podas: " << sol.getPodas() << endl;
     // cout << sol.getSol() << endl;
     // OUTPUT
     #ifdef TSP
     sol.printAns();
     // cout << n << " " << sol.getCost() << endl;
+    #endif
+
+    #ifdef NODES
+    cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
+    cout << "podas: " << sol.getPodas() << endl << endl;
     #endif
 
     #ifdef COST
