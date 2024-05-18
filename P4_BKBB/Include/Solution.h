@@ -3,6 +3,8 @@
 
 #include "City.h"
 
+#include <set>
+
 template <typename T>
 std::ostream& operator<<(std::ostream& os, std::vector<T> v);
 
@@ -52,8 +54,11 @@ private:
     ld f_cota2(Track& e_node, int node);
     ld f_cota3(Track& e_node, int node);
     ld trackDistance(const std::vector<int>& track);
-    ld minPossibleDistance(const std::vector<bool>& visited, int node);
-    ld enter_min_cost(const std::vector<City>& cities, const std::vector<bool>& visited, int node);
+    ld sumMinEnter(const std::vector<bool>& visited, int node);
+    ld sumMinExit(const std::vector<bool>& visited, int node);
+    ld enter_min_cost(const std::vector<bool>& visited, int node);
+    ld exit_min_cost(const std::vector<bool>& visited, int node);
+    std::set<ld> orderedEdges(const std::vector<bool>& visited, int node);
     void TSP_greedy();
 
 protected:

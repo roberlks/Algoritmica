@@ -110,7 +110,7 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
 }
 
 ld TSP_solution::f_cota1(Track& e_node, int node) {
-    ld cota_inf = trackDistance(e_node.track) + minPossibleDistance(e_node.visited, node);
+    ld cota_inf = trackDistance(e_node.track) + sumMinEnter(e_node.visited, node);
     cota_inf += (cities[node] - cities[e_node.track.back()]);
     return cota_inf;
 }
@@ -120,7 +120,12 @@ ld TSP_solution::f_cota2(Track& e_node, int node) {
 }
 
 ld TSP_solution::f_cota3(Track& e_node, int node) {
-    return 1; // TODO: Implement f_cota3
+
+    ld cota_inf = (enter_min_cost(e_node.visited,e_node.track[0]) +
+        enter_min_cost(e_node.visited,e_node.track.back())) / 2;
+    
+    cota_inf += (sumMinEnter(e_node.visited,node)) / 2;
+    return cota_inf; // TODO: Implement f_cota3
 }
 
 ld TSP_solution::trackDistance(const vector<int>& track) {
@@ -131,26 +136,57 @@ ld TSP_solution::trackDistance(const vector<int>& track) {
     return dist;
 }
 
-ld TSP_solution::minPossibleDistance(const vector<bool>& visited, int node) {
+ld TSP_solution::sumMinEnter(const vector<bool>& visited, int node) {
     ld dist = 0;
     for (int i = 0; i < cities.size(); ++i) {
         if ((node != i) && !visited[i]) {
-            dist += enter_min_cost(cities, visited, i);
+            dist += enter_min_cost(visited, i);
         }
     }
-    dist += enter_min_cost(cities, visited, 0);
+    dist += enter_min_cost(visited, 0);
     return dist;
 }
 
-ld TSP_solution::enter_min_cost(const vector<City>& cities, const vector<bool>& visited, int node) {
-    ld min_enter = -1;
-    for (int i = 0; i < visited.size(); ++i) {
-        if (i == node) continue;
-        if (!visited[i] && ((min_enter == -1) || cities[node].dist(cities[i]) < min_enter)) {
-            min_enter = cities[node].dist(cities[i]);
+ld TSP_solution::sumMinExit(const vector<bool>& visited, int node) {
+    ld dist = 0;
+    for (int i = 0; i < cities.size(); ++i) {
+        if ((node != i) && !visited[i]) {
+            dist += exit_min_cost(visited, i);
         }
     }
-    return min_enter;
+    dist += exit_min_cost(visited, 0);
+    return dist;
+}
+
+// ld TSP_solution::sumMinEnterExit(const vector<bool>& visited, int node) {
+//     ld dist = 0;
+
+//     for (int i = 0; i < cities.size(); ++i) {
+//         if ((node != i) && !visited[i]) {
+//             dist += exit_min_cost(visited, i);
+//         }
+//     }
+//     dist += exit_min_cost(visited, 0);
+//     return dist;
+// }
+
+ld TSP_solution::enter_min_cost(const vector<bool>& visited, int node) {
+    return *(orderedEdges(visited,node).begin());
+}
+
+ld TSP_solution::exit_min_cost(const vector<bool>& visited, int node) {
+    return *(++orderedEdges(visited,node).begin());
+}
+
+set<ld> TSP_solution::orderedEdges(const vector<bool> & visited, int node) {
+    set<ld> edges;
+    for (int i=0; i < visited.size(); ++i) {
+        if (i==node) continue;
+        if (!visited[i]) {
+            edges.insert(cities[node] - cities[i]);
+        }
+    }
+    return edges;
 }
 
 void TSP_solution::processSolution(const vector<int>& track) {
