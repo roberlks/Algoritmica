@@ -22,13 +22,14 @@ void remove(vector<T>& v, const T& elem) {
     }
 }
 
-TSP_solution::TSP_solution() : podas(0), generated(0), cost(INF) {}
+TSP_solution::TSP_solution() : podas(0), generated(0), cost(INF), min_e(0) {}
 
 TSP_solution::TSP_solution(const vector<City>& v) {
     podas = generated = 0;
     cities = v;
     TSP_greedy();
     cost = cycleDistance(best_ans, cities);
+    min_e = min_edge();
 }
 
 vector<City> TSP_solution::getCities() const {
@@ -90,16 +91,17 @@ pair<bool,ld> TSP_solution::feasible(Track & e_node, int node)
     }
 
 ld TSP_solution::f_cota(Track& e_node, int node) {
-    ld cota_inf;
+    ld cota_inf = e_node.current_cost;
+    cota_inf += (cities[node] - cities[e_node.track.back()]);
     switch (version) {
         case 1:
-            cota_inf = f_cota1(e_node, node);
+            cota_inf += f_cota1(e_node, node);
             break;
         case 2:
-            cota_inf = f_cota2(e_node, node);
+            cota_inf += f_cota2(e_node, node);
             break;
         case 3:
-            cota_inf = f_cota3(e_node, node);
+            cota_inf += f_cota3(e_node, node);
             break;
         default:
             cerr << "Invalid f_cota version (1, 2, or 3)" << endl;
@@ -110,13 +112,17 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
 }
 
 ld TSP_solution::f_cota1(Track& e_node, int node) {
-    ld cota_inf = trackDistance(e_node.track) + minPossibleDistance(e_node.visited, node);
-    cota_inf += (cities[node] - cities[e_node.track.back()]);
-    return cota_inf;
+    int num_not_visited = cities.size() - e_node.track.size();
+    return num_not_visited * min_e;
+}
+
+ld TSP_solution::f_cota4(Track& e_node, int node) {
+    int num_not_visited = cities.size() - e_node.track.size();
+    return num_not_visited * min_edge(e_node);
 }
 
 ld TSP_solution::f_cota2(Track& e_node, int node) {
-    return 1; // TODO: Implement f_cota2
+    return sum_min_enter(e_node.visited,node);
 }
 
 ld TSP_solution::f_cota3(Track& e_node, int node) {
@@ -131,7 +137,34 @@ ld TSP_solution::trackDistance(const vector<int>& track) {
     return dist;
 }
 
-ld TSP_solution::minPossibleDistance(const vector<bool>& visited, int node) {
+ld TSP_solution::min_edge() {
+    if(cities.size() < 2) return 0;
+    ld min_e = cities[0] - cities[1];
+    for(int i = 0; i < (int)cities.size(); ++i){
+        for(int j = i+1; j < (int)cities.size(); ++j){
+            min_e = min(min_e,cities[i] - cities[j]);
+        }
+    }
+    return min_e;
+}
+
+ld TSP_solution::min_edge(const Track& e_node){
+    if(cities.size() < 2) return 0;
+    if(e_node.track.empty()) return min_e;
+    ld cur_min_e = cities[0] - cities[e_node.track.back()];
+    for(int i = 0; i < (int)cities.size(); ++i){
+        if(e_node.visited[i]) continue;
+        cur_min_e = min(cur_min_e, cities[0] - cities[i]);
+        cur_min_e = min(cur_min_e, cities[e_node.track.back()] - cities[i]);
+        for(int j = i+1; j < (int)cities.size(); ++j){
+            if(!e_node.visited[j])
+                cur_min_e = min(min_e,cities[i] - cities[j]);
+        }
+    }
+    return cur_min_e;
+}
+
+ld TSP_solution::sum_min_enter(const vector<bool> & visited, int node) {
     ld dist = 0;
     for (int i = 0; i < cities.size(); ++i) {
         if ((node != i) && !visited[i]) {
