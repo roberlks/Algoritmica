@@ -20,28 +20,28 @@ CITY_SRC = $(SRC_DIR)/City.cpp
 # Compilación
 all: $(TARGETS)
 
-$(GEN_DIR)/generador: $(GEN_SRC) $(CITY_SRC) $(INC_DIR)/City.h
+$(GEN_DIR)/generador: $(GEN_SRC) $(CITY_SRC) $(INC_DIR)/City.h $(INC_DIR)/Solution.h
 	g++ -I$(INC_DIR) $(GEN_SRC) $(CITY_SRC) -o $@
 
-$(GEN_DIR)/visual_generator: $(GEN_SRC) $(CITY_SRC) $(INC_DIR)/City.h
+$(GEN_DIR)/visual_generator: $(GEN_SRC) $(CITY_SRC) $(INC_DIR)/City.h $(INC_DIR)/Solution.h
 	g++ -I$(INC_DIR) $(GEN_SRC) $(CITY_SRC) -o $@ -D VISUAL
 
-$(BIN_DIR)/algoritmo: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h
+$(BIN_DIR)/algoritmo: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h $(INC_DIR)/Solution.h
 	g++ -I$(INC_DIR) $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) -o $@
 
 time: $(TIME_TARGETS)
 
-$(BIN_DIR)/algoritmo_time: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h
+$(BIN_DIR)/algoritmo_time: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h $(INC_DIR)/Solution.h
 	g++ -I$(INC_DIR) $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) -o $@ -D TIME
 
 cost: $(COST_TARGETS)
 
-$(BIN_DIR)/algoritmo_cost: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h
+$(BIN_DIR)/algoritmo_cost: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h $(INC_DIR)/Solution.h
 	g++ -I$(INC_DIR) $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) -o $@ -D COST
 
 nodes: $(NODE_TARGETS)
 
-$(BIN_DIR)/algoritmo_nodes: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h
+$(BIN_DIR)/algoritmo_nodes: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h $(INC_DIR)/Solution.h
 	g++ -I$(INC_DIR) $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) -o $@ -D NODES
 
 clean:

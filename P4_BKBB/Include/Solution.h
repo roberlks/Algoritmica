@@ -15,9 +15,9 @@ struct Track {
     ld aprox_cost;
     ld current_cost;
 
-    Track(int n = 0) : visited(n, false), aprox_cost(0) {}
-    Track(std::vector<int>& track, std::vector<bool>& visited, ld cost) 
-    : track(track), visited(visited), aprox_cost(cost) {}
+    Track(int n = 0) : visited(n, false), aprox_cost(0), current_cost(0) {}
+    Track(std::vector<int>& track, std::vector<bool>& visited, ld cost, ld current_cost) 
+    : track(track), visited(visited), aprox_cost(cost), current_cost(current_cost) {}
     bool operator>(Track other) const {
         return this->aprox_cost > other.aprox_cost;
     }
