@@ -60,7 +60,7 @@ class TSP_solution
         return cost;
     }
 
-    void solve(vector<City>& v)
+    vector<int> solve(vector<City>& v)
     {   
         // Se limpia
         best_ans.clear();
@@ -68,14 +68,21 @@ class TSP_solution
 
         cities = v;
 
-        if (cities.empty()) return;
+        if (cities.empty()) return best_ans;
 
         // Estable la primera cota 
         TSP_greedy_v1(cities.size(), 0, cities, best_ans);
         cost = cycleDistance(best_ans, cities);
 
         branchAndBound();
-        return; 
+        return best_ans; 
+    }
+
+    /**
+     * @brief Prints the ans calling City::printCycle
+    */
+    void printAns(){
+        printCycle(best_ans,cities[0],cities);
     }
 
     void branchAndBound()
@@ -104,7 +111,7 @@ class TSP_solution
             if (e_node.track.size() == cities.size())
             {   
                 ld cost_aux = cycleDistance(e_node.track, cities); // Distancia real
-                if (cost_aux < cost) // Actualizar solución
+                if (cost_aux < cost) 
                 {
                     best_ans = e_node.track;
                     cost = cost_aux;
@@ -198,23 +205,6 @@ class TSP_solution
         return total;
     }
 
-    /**
-     * @brief Prints a cycle (index) starting and ending at origin
-    */
-    void printCycle(){
-
-        int origin = 0;
-        int ini = 0;
-        
-        for(int i=ini; i<(int)best_ans.size(); ++i){
-            std::cout << best_ans[i] << " ";
-        }
-        for(int i=0; i<ini; ++i){
-            std::cout << best_ans[i] << " ";
-        }
-        std::cout << origin << std::endl;
-    }
-
     private:
 
     double enter_min_cost(vector<City>& cities, vector<bool>& visited, int node)
@@ -275,25 +265,34 @@ class TSP_solution
     
 };
 
-int main(){
+int main(int argc, char** argv){
     // Faster I/O
     ios::sync_with_stdio(false);
     cin.tie(0);
 
+    ifstream fin(argv[1],ios::in);
+    int version;
+    if (argc == 3)
+        version = atoi(argv[2]);
+    else
+        version = 1;
+
     // INPUT
     int n;
-    cin >> n;
+    fin >> n;
     vector<City> v;
     v.reserve(n);
 
     for(int i=0; i<n; ++i) {
         City aux;
-        cin >> aux;
+        fin >> aux;
 
         v.push_back(aux);
     }
 
     TSP_solution sol;
+
+    // sol.setCotaVersion(version);
 
     // TSP
 
@@ -301,10 +300,13 @@ int main(){
     sol.solve(v);
     clock_t t_after = clock();
 
+    // cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
+    // cout << "podas: " << sol.getPodas() << endl;
+    // cout << sol.getSol() << endl;
     // OUTPUT
     #ifdef TSP
-    sol.printCycle();
-    cout << n << " " << sol.getCost() << endl;
+    sol.printAns();
+    // cout << n << " " << sol.getCost() << endl;
     #endif
 
     #ifdef COST
@@ -312,7 +314,7 @@ int main(){
     #endif
 
     #ifdef TIME
-    cout << n << " " << ((double)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
+    cout << n << " " << ((ld)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
     #endif
 
     return 0;

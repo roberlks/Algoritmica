@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include "../../Include/City.h"
+#include "../../Include/Solution.h"
 
 using namespace std;
 
@@ -15,7 +16,7 @@ using namespace std;
 template <typename T>
 ostream& operator<<(ostream& os, vector<T> v) {
     for (int i=0; i < v.size(); i++) {
-        os << v[i] << " ";
+        os << v[i] << endl;
     }
     return os;
 }
@@ -28,12 +29,13 @@ void remove(vector<T> & v, const T & elem) {
     }
 }
 
+
 struct Track
 {
     vector<int> track;
     vector<bool> visited; 
-
     ld aprox_cost;
+
     Track(int n=0): visited(n, false), aprox_cost(0){}
 
     Track(vector<int>& track, vector<bool>& visited, ld cost): track(track), visited(visited), aprox_cost(cost) {}
@@ -42,20 +44,21 @@ struct Track
     }
 };
 
-class TSP_solution
+
+class TSP_solution_BB : public TSP_solution
 {
 
-private:
-    vector<int> best_ans;
     vector<City> cities;
-    ld cost;
+    vector<int> best_ans;
+    ld cost; 
 
-    int podas; 
+    int podas;
     int generated;
     int version;
 
-public: 
-    TSP_solution() : podas(0), generated(0) {}
+    public: 
+
+    TSP_solution() : podas(0), generated(0) {};
 
     TSP_solution(const vector<City> & v) {
         podas = generated = 0;
@@ -83,7 +86,7 @@ public:
     ll getPossibleNodes() const {
         // return n + n*(n-1) + n*(n-1)*(n-2) + ... + n!/2 + n!/1 + n!
         int n=cities.size();
-        ll sum = 1;
+        ll sum = 0;
         for (int k=n; k>1; k--) {
             ll product = 1;
             for (int j=k; j<=n; j++) {
@@ -91,7 +94,7 @@ public:
             }
             sum += product;
         }
-        return sum;
+        return sum+1;
     }
 
     int getGeneratedNodes() const {
@@ -102,6 +105,15 @@ public:
         this->version = version;
     }
 
+    void solve()
+    {   
+        if (cities.empty()) return;
+        Track e_node(cities.size());
+        e_node.visited[0] = true;
+        e_node.track.push_back(0);
+        branchAndBound(e_node);
+    }
+
     /**
      * @brief Prints the ans calling City::printCycle
     */
@@ -109,48 +121,70 @@ public:
         printCycle(best_ans,cities[0],cities);
     }
 
-    void solve() {
-        if (cities.size() == 0) return;
-        Track e_node(cities.size());
-        e_node.visited[0] = true;
-        e_node.track.push_back(0);
-        backtracking(e_node);
-    }
+private: 
+    void branchAndBound(Track & first_node)
+    {  
+        
+        priority_queue<Track, vector<Track>,greater<Track>> nodos_vivos;
+        
+        // Se empieza desde el origen para pasar de n! a (n-1)!
+        nodos_vivos.push(first_node);
 
-private:
+        while (!nodos_vivos.empty())
+        {
+            Track e_node = nodos_vivos.top();
+            nodos_vivos.pop();
 
-    void backtracking(Track & e_node)
-    {
-        generated++;
-        if (e_node.track.size() == cities.size())
-        {
-            // Keep the best
-            processSolution(e_node.track);
-            return;
-        }
-        // La primera ciudad se ignora
-        for (int i=1; i < cities.size(); ++i)
-        {
-            if (e_node.visited[i]) continue;
-            if (feasible(e_node,i).first) {
-                podas++;
-                continue;
+            // Funcion de factibilidad (Se compara con la cota)
+            if (e_node.aprox_cost >= cost) continue;
+
+            // Caso base
+            if (e_node.track.size() == cities.size())
+            {   
+                processSolution(e_node.track);
+                continue; 
             }
-            e_node.track.push_back(i);
-            e_node.visited[i] = true;
-            backtracking(e_node);
-            e_node.track.pop_back();
-            e_node.visited[i] = false;
+
+
+            // Genero todos los hijos
+            for (int i = 1; i < cities.size(); ++i)
+            {   
+                pair<bool, double> viable = feasible(e_node, i);
+                if (viable.first == false) continue;
+
+                //cout << "viable < " << viable.first << ", " <<  viable.second <<">";
+                Track aux = e_node;
+                aux.track.push_back(i);
+                aux.aprox_cost = viable.second;
+                aux.visited[i] = true; 
+
+                //cout << aux.aprox_cost << "\n";
+                nodos_vivos.push(aux);
+            }
+
         }
+
     }
 
-    pair<bool,ld> feasible(Track & e_node, int node)
+    pair<bool, ld> feasible(Track & e_node, int node)
     {
-        if(e_node.track.size() < 2) return {false,-1};
+        
+        pair<bool, ld>  viable(true, -1);
+        if (e_node.visited[node]) {
+            viable.first = false;
+        } 
+        else{
+            ld cota_inf = f_cota(e_node, node);
+            viable.second = cota_inf;
 
-        ld cota_inf = f_cota(e_node, node);
-
-        return {(cota_inf >= cost),cota_inf};
+            if (cota_inf >= cost) {
+                viable.first = false;
+            }
+            else {
+                viable.first = true;
+            }
+        } 
+        return viable;
     }
 
     ld f_cota(Track & e_node, int node) {
@@ -282,6 +316,8 @@ private:
             current = next;
         }
     }
+
+    
 };
 
 int main(int argc, char** argv){
@@ -309,7 +345,7 @@ int main(int argc, char** argv){
         v.push_back(aux);
     }
 
-    TSP_solution sol(v);
+    TSP_solution_BB sol(v);
 
     sol.setCotaVersion(version);
 
