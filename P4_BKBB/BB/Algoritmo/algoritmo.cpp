@@ -6,7 +6,9 @@ using namespace std;
 
 #ifndef TIME 
     #ifndef COST
-        #define TSP
+        #ifndef NODES
+            #define TSP
+        #endif
     #endif
 #endif
 
@@ -22,7 +24,7 @@ public:
 
 private:
 
-    void algorithm(Track& first_node) {
+    void algorithm(Track& first_node) override {
         priority_queue<Track, vector<Track>, greater<Track>> nodos_vivos;
         nodos_vivos.push(first_node);
 
@@ -62,11 +64,9 @@ int main(int argc, char** argv){
     cin.tie(0);
 
     ifstream fin(argv[1],ios::in);
-    int version;
+    int version = 1;
     if (argc == 3)
         version = atoi(argv[2]);
-    else
-        version = 1;
 
     // INPUT
     int n;
@@ -91,13 +91,14 @@ int main(int argc, char** argv){
     sol.solve();
     clock_t t_after = clock();
 
-    // cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
-    // cout << "podas: " << sol.getPodas() << endl;
-    // cout << sol.getSol() << endl;
     // OUTPUT
     #ifdef TSP
     sol.printAns();
-    // cout << n << " " << sol.getCost() << endl;
+    #endif
+
+    #ifdef NODES
+    cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
+    cout << "podas: " << sol.getPodas() << endl;
     #endif
 
     #ifdef COST

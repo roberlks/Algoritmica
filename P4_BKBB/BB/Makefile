@@ -9,6 +9,7 @@ SRC_DIR = ../Src
 TARGETS = $(GEN_DIR)/generador $(GEN_DIR)/visual_generator $(BIN_DIR)/algoritmo
 TIME_TARGETS = $(GEN_DIR)/generador $(BIN_DIR)/algoritmo_time
 COST_TARGETS = $(GEN_DIR)/generador $(BIN_DIR)/algoritmo_cost
+NODE_TARGETS = $(GEN_DIR)/generador $(BIN_DIR)/algoritmo_nodes
 
 # Archivos fuente
 GEN_SRC = $(GEN_DIR)/generador.cpp
@@ -38,5 +39,10 @@ cost: $(COST_TARGETS)
 $(BIN_DIR)/algoritmo_cost: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h
 	g++ -I$(INC_DIR) $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) -o $@ -D COST
 
+nodes: $(NODE_TARGETS)
+
+$(BIN_DIR)/algoritmo_nodes: $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) $(INC_DIR)/City.h
+	g++ -I$(INC_DIR) $(ALG_SRC) $(CITY_SRC) $(SOLUTION_SRC) -o $@ -D NODES
+
 clean:
-	rm -f $(TARGETS) $(TIME_TARGETS) $(COST_TARGETS)
+	rm -f $(TARGETS) $(TIME_TARGETS) $(COST_TARGETS) $(NODE_TARGETS)

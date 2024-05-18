@@ -80,38 +80,9 @@ void TSP_solution::printAns() {
     printCycle(best_ans, cities[0], cities);
 }
 
-// void TSP_solution::algorithm(Track& first_node) {
-//     priority_queue<Track, vector<Track>, greater<Track>> nodos_vivos;
-//     nodos_vivos.push(first_node);
-
-//     while (!nodos_vivos.empty()) {
-//         Track e_node = nodos_vivos.top();
-//         nodos_vivos.pop();
-
-//         if (e_node.aprox_cost >= cost) continue;
-
-//         if (e_node.track.size() == cities.size()) {
-//             processSolution(e_node.track);
-//             continue;
-//         }
-
-//         for (int i = 1; i < cities.size(); ++i) {
-//             pair<bool, double> viable = feasible(e_node, i);
-//             if (viable.first == false) continue;
-
-//             Track aux = e_node;
-//             aux.track.push_back(i);
-//             aux.aprox_cost = viable.second;
-//             aux.visited[i] = true;
-
-//             nodos_vivos.push(aux);
-//         }
-//     }
-// }
-
 pair<bool,ld> TSP_solution::feasible(Track & e_node, int node)
     {
-        if(e_node.track.size() < 2) return {true,-1};
+        if(e_node.track.size() < 2) return {true,0};
 
         ld cota_inf = f_cota(e_node, node);
 
