@@ -38,11 +38,13 @@ private:
                 podas++;
                 continue;
             }
+            e_node.current_cost += (cities[e_node.track[e_node.track.back()]] - cities[i]);
             e_node.track.push_back(i);
             e_node.visited[i] = true;
             algorithm(e_node);
             e_node.track.pop_back();
             e_node.visited[i] = false;
+            e_node.current_cost -= (cities[e_node.track[e_node.track.back()]] - cities[i]);
         }
     }
 };

@@ -48,6 +48,7 @@ private:
                     continue;
                 }
                 Track aux = e_node;
+                aux.current_cost += (cities[aux.track[aux.track.back()]] - cities[i]);
                 aux.track.push_back(i);
                 aux.aprox_cost = viable.second;
                 aux.visited[i] = true;
