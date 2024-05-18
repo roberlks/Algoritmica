@@ -24,7 +24,7 @@ graph_mode="points"
 
 cd $1
 
-greedy="Algoritmo/algoritmo"
+greedy="Algoritmo/tsp3"
 instances_dir="Instancias"
 data_input_dir="Visual/Data/Input"
 data_output_dir="Visual/Data/Output"
@@ -34,6 +34,7 @@ plot_script="../Scripts/plot_path.gp"
 
 mkdir -p $data_output_dir
 mkdir -p $graph_output_dir
+g++ Algoritmo/TSP3.cpp -o Algoritmo/tsp3
 
 make -f $makefile $greedy
 

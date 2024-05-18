@@ -69,7 +69,7 @@ struct City
  * @param v the cities
  * @return the distance between ald the consecutive cities of the cycle
 */
-ld cycleDistance(const std::vector<int> & cycle,const City v[])
+ld cycleDistance(const std::vector<int> & cycle,const std::vector<City> & v)
 {
     if(cycle.size() < 2) return 0;
     ld total = 0;
@@ -100,7 +100,7 @@ void printCycle(const std::vector<int> & cycle, int origin = 0){
 /**
  * @brief Prints a cycle (the cities) starting and ending at origin
 */
-void printCycle(const std::vector<int> & cycle, const City & origin, const City v[]){
+void printCycle(const std::vector<int> & cycle, const City & origin, const std::vector<City> & v){
     int ini = 0;
     while(v[cycle[ini]] != origin) ++ini;
     for(int i=ini; i<(int)cycle.size(); ++i){

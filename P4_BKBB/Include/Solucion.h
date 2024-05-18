@@ -106,7 +106,7 @@ public:
         if(track.size() < 2) return 0;
 
         //? Llamar cycleDistance
-        ld cota_inf = 0;
+        ld cota_inf = cycleDistance(track,cities);
         for (int i = 0; i < (int)track.size()-1; i++)
         {
             cota_inf += (cities[track[i+1]] - cities[track[i]]);

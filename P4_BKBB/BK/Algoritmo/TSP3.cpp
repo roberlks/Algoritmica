@@ -15,7 +15,7 @@ using namespace std;
 template <typename T>
 ostream& operator<<(ostream& os, vector<T> v) {
     for (int i=0; i < v.size(); i++) {
-        os << v[i] << endl;
+        os << v[i] << " ";
     }
     return os;
 }
@@ -28,138 +28,196 @@ void remove(vector<T> & v, const T & elem) {
     }
 }
 
+struct Track
+{
+    vector<int> track;
+    vector<bool> visited; 
+
+    ld aprox_cost;
+    Track(int n=0): visited(n, false), aprox_cost(0){}
+
+    Track(vector<int>& track, vector<bool>& visited, ld cost): track(track), visited(visited), aprox_cost(cost) {}
+    bool operator>(Track other) const {
+        return this->aprox_cost > other.aprox_cost;
+    }
+};
+
 class TSP_solution
 {
+
+private:
     vector<int> best_ans;
-    double cost; 
-
     vector<City> cities;
-    public: 
+    ld cost;
 
-    TSP_solution(){};
+    int podas; 
+    int generated;
+    int version;
 
+public: 
+    TSP_solution() : podas(0), generated(0) {}
 
-    double getCost() const {
+    TSP_solution(const vector<City> & v) {
+        podas = generated = 0;
+        cities = v;
+        TSP_greedy();
+        cost = cycleDistance(best_ans,cities);
+    }
+
+    vector<int> getSol() const {
+        return best_ans;
+    }
+
+    ld getCost() const {
         return cost;
     }
 
-    vector<int> solve(vector<City>& v)
-    {   
-        // Se limpia
-        best_ans.clear();
-        cost = 0;
-
-        cities = v;
-
-        if (cities.empty()) return best_ans;
-        
-        // Se empieza desde el origen para pasar de n! a (n-1)!
-        vector<int> track;
-        track.push_back(0);                 
-        vector<bool> visited(cities.size(), false);
-        visited[0] = true;
-
-        // Estable la primera cota 
-        TSP_greedy_v1(cities.size(), 0, cities, best_ans);
-        cost = cycleDistance(best_ans, cities);
-
-        backtracking(cities, track, visited);
-        return best_ans; 
+    int getPodas() const {
+        return podas;
     }
 
-    void backtracking(vector<City>& cities, vector<int>& track, vector<bool>& visited)
+    ll getPossibleNodes() const {
+        // return n + n*(n-1) + n*(n-1)*(n-2) + ... + n!/2 + n! + n!
+        int n=cities.size();
+        ll sum = 0;
+        for (int k=n; k>1; k--) {
+            ll product = 1;
+            for (int j=k; j<=n; j++) {
+                product *= j;
+            }
+            sum += product;
+        }
+        return sum;
+    }
+
+    int getGeneratedNodes() const {
+        return generated;
+    }
+
+    void setCotaVersion(int version) {
+        this->version = version;
+    }
+
+    /**
+     * @brief Prints the ans calling City::printCycle
+    */
+    void printAns(){
+        printCycle(best_ans,cities[0],cities);
+    }
+
+    void solve() {
+        if (cities.size() == 0) return;
+        Track e_node(cities.size());
+        e_node.visited[0] = true;
+        e_node.track.push_back(0);
+        backtracking(e_node);
+    }
+
+private:
+
+    void backtracking(Track & e_node)
     {
-        if (track.size() >= cities.size())
+        generated++;
+        if (e_node.track.size() == cities.size())
         {
             // Keep the best
-            double cost_aux = cycleDistance(track, cities);
-            if (cost_aux < cost) {
-                best_ans = track;
-                cost = cost_aux;
-            }
-
+            processSolution(e_node.track);
             return;
         }
         // La primera ciudad se ignora
         for (int i=1; i < cities.size(); ++i)
         {
-            //if (visited[i]) continue;
-            if (visited[i] == true || podar(cities, track, visited, i)) continue;
-
-            track.push_back(i);
-            visited[i] = true;
-            backtracking(cities, track, visited);
-            track.pop_back();
-            visited[i] = false;
+            if (e_node.visited[i]) continue;
+            if (podar(e_node,i)) {
+                podas++;
+                continue;
+            }
+            e_node.track.push_back(i);
+            e_node.visited[i] = true;
+            backtracking(e_node);
+            e_node.track.pop_back();
+            e_node.visited[i] = false;
         }
     }
 
-    bool podar(vector<City>& cities, vector<int>& track, vector<bool>& visited, int node)
+    bool podar(Track & e_node, int node)
     {
-        if(track.size() < 2) return 0;
+        if(e_node.track.size() < 2) return false;
 
-        ld cota_inf = 0;
-        for (int i = 0; i < track.size()-1; i++)
-        {
-            cota_inf += (cities[track[i+1]] - cities[track[i]]);
-        }
-        
-        cota_inf += (cities[node] - cities[track.back()]);
-
-        for (int i=0; i < cities.size(); ++i)
-        {
-            if ((node != i) && !visited[i]) {
-                cota_inf += enter_min_cost(cities, visited, i);
-            }
-        }
-        
-        // Coste para volver desde una ciudad
-        cota_inf +=enter_min_cost(cities, visited, 0);
+        ld cota_inf = f_cota(e_node, node);
 
         return (cota_inf >= cost);
     }
 
-    /**
-     * @brief Calculates the distance of the given cycle (cycle)
-     * @param cycle the cycle to calculate the distance from
-     * @param v the cities
-     * @return the distance between ald the consecutive cities of the cycle
-    */
-    ld cycleDistance(const std::vector<int> & cycle,const vector<City> v)
-    {
-        if(cycle.size() < 2) return 0;
-        ld total = 0;
-        for (int i = 0; i < (int)cycle.size()-1; i++)
+    ld f_cota(Track & e_node, int node) {
+        ld cota_inf;
+        switch(version) {
+            case(1) :
+                cota_inf = f_cota1(e_node,node);
+                break;
+            case(2) :
+                cota_inf = f_cota2(e_node,node);
+                break;
+            case(3) :
+                cota_inf = f_cota3(e_node,node);
+                break;
+            default :
+                cerr << "Invalid f_cota version" << endl;
+                exit(1);
+                break;             
+        }
+        return cota_inf;
+    }
+
+    ld f_cota1(Track & e_node,int node) {
+        ld cota_inf = trackDistance(e_node.track) + minPossibleDistance(e_node.visited,node);
+
+        cota_inf += (cities[node] - cities[e_node.track.back()]);
+
+        return cota_inf;
+    }
+
+    ld f_cota2(Track & e_node, int node) {
+        //TODO
+        return INF;
+    }
+
+    ld f_cota3(Track & e_node, int node) {
+        //TODO
+        return INF;
+    }
+
+    ld trackDistance(const vector<int> & track) {
+        ld dist = 0;
+
+        for (int i = 0; i < track.size()-1; i++)
         {
-            total += (v[cycle[i+1]] - v[cycle[i]]);
+            dist += (cities[track[i+1]] - cities[track[i]]);
         }
-        total += (v[cycle[0]] - v[cycle[cycle.size() - 1]]);
-
-        return total;
-    }
-
-    /**
-     * @brief Prints a cycle (index) starting and ending at origin
-    */
-    void printCycle(){
-
-        int origin = 0;
-        int ini = 0;
         
-        for(int i=ini; i<(int)best_ans.size(); ++i){
-            std::cout << best_ans[i] << " ";
-        }
-        for(int i=0; i<ini; ++i){
-            std::cout << best_ans[i] << " ";
-        }
-        std::cout << origin << std::endl;
+        return dist;
     }
 
-    private:
+    ld minPossibleDistance(const vector<bool> & visited, int node) {
+        
+        ld dist = 0;
 
-    double enter_min_cost(vector<City>& cities, vector<bool>& visited, int node)
+        for (int i=0; i < cities.size(); ++i)
+        {
+            if ((node != i) && !visited[i]) {
+                dist += enter_min_cost(cities, visited, i);
+            }
+        }
+        
+        // Coste para volver desde una ciudad
+        dist += enter_min_cost(cities, visited, 0);
+
+        return dist;
+    }
+
+    ld enter_min_cost(const vector<City>& cities, const vector<bool>& visited, int node)
     {   
-        double min_enter = -1;
+        ld min_enter = -1;
         for(int i=0; i < visited.size(); ++i)
         {
             if (i == node) continue;
@@ -171,6 +229,15 @@ class TSP_solution
         return min_enter;
     }
 
+    void processSolution(const vector<int> & track) {
+
+        ld cost_aux = cycleDistance(track,cities);
+        if (cost_aux < cost) {
+            best_ans = track;
+            cost = cost_aux;
+        }
+    }
+
     /**
      * @brief Greedy approximated solution to the Travelling Salesman Problem 
      * 
@@ -179,8 +246,9 @@ class TSP_solution
      * @param v array of cities to visit
      * @param path current path
     */
-    void TSP_greedy_v1(int n, int home_ind, vector<City>& v, vector<int> & path){
+    void TSP_greedy(){
 
+        int n = cities.size();
         // Not visited cities
         vector<int> not_visited(n);
 
@@ -189,17 +257,17 @@ class TSP_solution
             not_visited[i] = i;
         }
         // Start with home city
-        int current = home_ind;
+        int current = 0;
 
         while (not_visited.size() > 0) {
-            path.push_back(current);
+            best_ans.push_back(current);
             remove(not_visited,current);
 
             // Calculate the closest neighbour
             ld min_dist = INF, dist;
             int next;
             for (int city : not_visited) {
-                dist = v[current]-v[city];
+                dist = cities[current]-cities[city];
                 if (dist < min_dist) {
                     min_dist = dist;
                     next = city;
@@ -209,42 +277,51 @@ class TSP_solution
             // Next city
             current = next;
         }
-        path.push_back(home_ind);
     }
-
-    
 };
 
-int main(){
+int main(int argc, char** argv){
     // Faster I/O
     ios::sync_with_stdio(false);
     cin.tie(0);
 
+    ifstream fin(argv[1],ios::in);
+    int version;
+    if (argc == 3)
+        version = atoi(argv[2]);
+    else
+        version = 1;
+
     // INPUT
     int n;
-    cin >> n;
+    fin >> n;
     vector<City> v;
     v.reserve(n);
 
     for(int i=0; i<n; ++i) {
         City aux;
-        cin >> aux;
+        fin >> aux;
 
         v.push_back(aux);
     }
 
-    TSP_solution sol;
+    TSP_solution sol(v);
+
+    sol.setCotaVersion(version);
 
     // TSP
 
     clock_t t_before = clock();
-    sol.solve(v);
+    sol.solve();
     clock_t t_after = clock();
 
+    // cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
+    // cout << "podas: " << sol.getPodas() << endl;
+    // cout << sol.getSol() << endl;
     // OUTPUT
     #ifdef TSP
-    sol.printCycle();
-    cout << n << " " << sol.getCost() << endl;
+    sol.printAns();
+    // cout << n << " " << sol.getCost() << endl;
     #endif
 
     #ifdef COST
@@ -252,7 +329,7 @@ int main(){
     #endif
 
     #ifdef TIME
-    cout << n << " " << ((double)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
+    cout << n << " " << ((ld)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
     #endif
 
     return 0;

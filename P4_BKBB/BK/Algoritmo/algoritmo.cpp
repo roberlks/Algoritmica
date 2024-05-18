@@ -21,7 +21,7 @@ using namespace std;
  * @param cur_cycle current path
  * @param best_cycle best cycle found until now
 */
-void TSP_backtracking(int n,int prev,int home_ind, int cnt,const City v[],bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
+void TSP_backtracking(int n,int prev,int home_ind, int cnt,const vector<City> & v,bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
     // Base case
     if(cnt == n-1){ // Already visited all cities
         // Add distance of the last city to the origin city
@@ -73,12 +73,12 @@ int main(int argc, char **argv){
 
     int n;
     fin >> n;
-    City v[n];
+    vector<City> v(n);
     for(int i=0; i<n; ++i)
         fin >> v[i];
 
     City home = v[0];
-    sort(v,v+n); // sort by x axis
+    sort(v.begin(),v.end()); // sort by x axis
 
     // Locate home index
     int home_ind = 0;

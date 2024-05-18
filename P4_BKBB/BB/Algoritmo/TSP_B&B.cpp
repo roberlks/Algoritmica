@@ -60,7 +60,7 @@ class TSP_solution
         return cost;
     }
 
-    vector<int> solve(vector<City>& v)
+    void solve(vector<City>& v)
     {   
         // Se limpia
         best_ans.clear();
@@ -68,14 +68,14 @@ class TSP_solution
 
         cities = v;
 
-        if (cities.empty()) return best_ans;
+        if (cities.empty()) return;
 
         // Estable la primera cota 
         TSP_greedy_v1(cities.size(), 0, cities, best_ans);
         cost = cycleDistance(best_ans, cities);
 
         branchAndBound();
-        return best_ans; 
+        return; 
     }
 
     void branchAndBound()
@@ -104,7 +104,7 @@ class TSP_solution
             if (e_node.track.size() == cities.size())
             {   
                 ld cost_aux = cycleDistance(e_node.track, cities); // Distancia real
-                if (cost_aux < cost) 
+                if (cost_aux < cost) // Actualizar solución
                 {
                     best_ans = e_node.track;
                     cost = cost_aux;
