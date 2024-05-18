@@ -49,9 +49,9 @@ int TSP_solution::getPodas() const {
 }
 
 ll TSP_solution::getPossibleNodes() const {
-    int n = cities.size();
+    int n = cities.size()-1;
     ll sum = 0;
-    for (int k = n; k > 1; k--) {
+    for (int k = n; k > 0; k--) {
         ll product = 1;
         for (int j = k; j <= n; j++) {
             product *= j;
