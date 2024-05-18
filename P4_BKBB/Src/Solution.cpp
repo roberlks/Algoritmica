@@ -103,6 +103,9 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
         case 3:
             cota_inf += f_cota3(e_node, node);
             break;
+        case 4:
+            cota_inf += f_cota4(e_node, node);
+            break;
         default:
             cerr << "Invalid f_cota version (1, 2, or 3)" << endl;
             exit(1);
@@ -128,9 +131,9 @@ ld TSP_solution::f_cota2(Track& e_node, int node) {
 ld TSP_solution::f_cota3(Track& e_node, int node) {
 
     ld cota_inf = (enter_min_cost(e_node.visited,e_node.track[0]) +
-        enter_min_cost(e_node.visited,e_node.track.back())) / 2;
+        enter_min_cost(e_node.visited,node)) / 2;
     
-    cota_inf += (sumMinEnter(e_node.visited,node)) / 2;
+    cota_inf += (sumMinEnter(e_node.visited,node) + sumMinExit(e_node.visited,node)) / 2;
     return cota_inf; // TODO: Implement f_cota3
 }
 
