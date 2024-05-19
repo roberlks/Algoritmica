@@ -36,8 +36,6 @@ protected:
     int generated;
     int version;
 
-    ld min_e;
-
 public:
     TSP_solution();
     TSP_solution(const std::vector<City>& v);

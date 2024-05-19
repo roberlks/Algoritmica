@@ -22,14 +22,13 @@ void remove(vector<T>& v, const T& elem) {
     }
 }
 
-TSP_solution::TSP_solution() : podas(0), generated(0), cost(INF), min_e(0) {}
+TSP_solution::TSP_solution() : podas(0), generated(0), cost(INF) {}
 
 TSP_solution::TSP_solution(const vector<City>& v) {
     podas = generated = 0;
     cities = v;
     TSP_greedy();
     cost = cycleDistance(best_ans, cities);
-    min_e = min_edge();
 }
 
 vector<City> TSP_solution::getCities() const {
@@ -116,7 +115,7 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
             cota_inf += f_cota4(e_node,node);
             break;
         default:
-            cerr << "Invalid f_cota version (1, 2, or 3)" << endl;
+            cerr << "Invalid f_cota version (1, 2, 3 or 4)" << endl;
             exit(1);
             break;
     }
@@ -125,6 +124,10 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
 
 ld TSP_solution::f_cota1(Track& e_node, int node) {
     int num_not_visited = cities.size() - e_node.track.size();
+    static ld min_e = -1;
+    if(min_e == -1){
+        min_e = min_edge();
+    }
     return num_not_visited * min_e;
 }
 
