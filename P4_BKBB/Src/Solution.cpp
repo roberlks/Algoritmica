@@ -275,19 +275,20 @@ ld TSP_solution::minimoCosteAristasRestantes(int nCiudadesRestantes) {
 	// Ordenamos el vector
 	sort(costesAristas.begin(), costesAristas.end());
 
+	// Acumulamos el coste
+	for (int i = 1; i < costesAristas.size(); i++) {
+	    costesAristas[i] += costesAristas[i-1];
+	}
 	ya_calculado = true;
     }
 
     // Calculamos el mínimo coste de las aristas restantes
     // (si quedan n ciudades por recorrer, quedan n+1 aristas
     // por añadir al camino)
-    ld sum = 0;
-    for (int i = 0; i < nCiudadesRestantes+1; i++) {
-	sum += costesAristas.at(i);
-    }
 
-    return sum;
+    return costesAristas.at(nCiudadesRestantes);
 }
+
 
 void TSP_solution::calcularMinimoCosteAristas() {
     minimoCosteAristasRestantes(cities.size());
