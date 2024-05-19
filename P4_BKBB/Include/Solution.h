@@ -56,6 +56,7 @@ private:
     ld f_cota2(Track& e_node, int node);
     ld f_cota3(Track& e_node, int node);
     ld f_cota4(Track& e_node, int node);
+    ld f_cota5(Track& e_node, int node);
     ld trackDistance(const std::vector<int>& track);
     ld sumMinEnter(const std::vector<bool>& visited, int node);
     ld sumMinExit(const std::vector<bool>& visited, int node);
@@ -63,6 +64,9 @@ private:
     ld enter_min_cost(const std::vector<bool>& visited, int node);
     ld exit_min_cost(const std::vector<bool>& visited, int node);
     ld visit_min_cost(const std::vector<bool>& visited, int node);
+    ld minimoCosteAristasRestantes(int nCiudadesRestantes);
+    void calcularMinimoCosteAristas();
+
     void orderedEdges(const std::vector<bool>& visited, int node, std::set<ld> & edges);
     ld min_edge();
     ld min_edge(const Track& e_node);

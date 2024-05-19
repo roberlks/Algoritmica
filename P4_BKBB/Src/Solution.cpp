@@ -70,6 +70,10 @@ void TSP_solution::setCotaVersion(int version) {
 
 void TSP_solution::solve() {
     if (cities.empty()) return;
+    else if (this->version == 2) { // Calculamos el vector estático de costes
+	calcularMinimoCosteAristas();
+    }
+
     Track e_node(cities.size());
     e_node.visited[0] = true;
     e_node.track.push_back(0);
@@ -114,8 +118,11 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
         case 4:
             cota_inf += f_cota4(e_node,node);
             break;
+        case 5:
+            cota_inf += f_cota4(e_node,node);
+            break;
         default:
-            cerr << "Invalid f_cota version (1, 2, 3 or 4)" << endl;
+            cerr << "Invalid f_cota version (1, 2, 3, 4 or 5)" << endl;
             exit(1);
             break;
     }
@@ -148,6 +155,15 @@ ld TSP_solution::f_cota4(Track& e_node, int node) {
     int num_not_visited = cities.size() - e_node.track.size();
     return num_not_visited * min_edge(e_node);
 }
+
+
+ld TSP_solution::f_cota5(Track& e_node, int node) {
+    int nVisitedCities = e_node.track.size();
+    int nCities = this->cities.size();
+    ld cota_inf = minimoCosteAristasRestantes(nCities-nVisitedCities);
+    return cota_inf;
+}
+
 
 ld TSP_solution::sumMinEnter(const vector<bool> & visited, int node) {
     ld dist = 0;
@@ -225,7 +241,7 @@ ld TSP_solution::min_edge() {
 
 ld TSP_solution::min_edge(const Track& e_node){
     if(cities.size() < 2) return 0;
-    if(e_node.track.empty()) return min_e;
+    //if(e_node.track.empty()) return min_e;
     ld cur_min_e = cities[0] - cities[e_node.track.back()];
     for(int i = 0; i < (int)cities.size(); ++i){
         if(e_node.visited[i]) continue;
@@ -233,11 +249,51 @@ ld TSP_solution::min_edge(const Track& e_node){
         cur_min_e = min(cur_min_e, cities[e_node.track.back()] - cities[i]);
         for(int j = i+1; j < (int)cities.size(); ++j){
             if(!e_node.visited[j])
-                cur_min_e = min(min_e,cities[i] - cities[j]);
+                cur_min_e = min(cur_min_e,cities[i] - cities[j]);
         }
     }
     return cur_min_e;
 }
+
+ld TSP_solution::minimoCosteAristasRestantes(int nCiudadesRestantes) {
+    // Guardo en un array estático el coste de todas las distintas aristas,
+    // y solo lo calculo una vez, lo que controlo con otra variable
+    // estática 
+    static bool ya_calculado = false;
+    static vector<ld> costesAristas;
+
+    if (!ya_calculado) {
+	int n = cities.size();
+	costesAristas.reserve((n*(n-1)/2));
+	for(int i = 0; i < n; ++i){
+	    for(int j = i+1; j < n; ++j){
+		ld dist = this->cities[i] - this->cities[j];
+		costesAristas.push_back(dist);
+	    }
+	}
+
+	// Ordenamos el vector
+	sort(costesAristas.begin(), costesAristas.end());
+
+	ya_calculado = true;
+    }
+
+    // Calculamos el mínimo coste de las aristas restantes
+    // (si quedan n ciudades por recorrer, quedan n+1 aristas
+    // por añadir al camino)
+    ld sum = 0;
+    for (int i = 0; i < nCiudadesRestantes+1; i++) {
+	sum += costesAristas.at(i);
+    }
+
+    return sum;
+}
+
+void TSP_solution::calcularMinimoCosteAristas() {
+    minimoCosteAristasRestantes(cities.size());
+}
+
+
 
 void TSP_solution::processSolution(const vector<int>& track) {
     ld cost_aux = cycleDistance(track, cities);
