@@ -1,115 +1,111 @@
 #include <bits/stdc++.h>
 #include "../../Include/City.h"
+#include "../../Include/Solution.h"
+
 using namespace std;
 
 #ifndef TIME 
     #ifndef COST
-        #define TSP
+        #ifndef NODES
+            #define TSP
+        #endif
     #endif
 #endif
 
-/**
- * @brief Backtracking solution to the Travelling Salesman Problem 
- * @param n number of cities to visit
- * @param cnt number of visited cities
- * @param prev index of the previous city
- * @param home_ind index of the home (origin) city 
- * @param v array of cities to visit
- * @param visited whether city i has been visited or not
- * @param dist current distance
- * @param best_dist best distance found until now
- * @param cur_cycle current path
- * @param best_cycle best cycle found until now
-*/
-void TSP_backtracking(int n,int prev,int home_ind, int cnt,const City v[],bool visited[], ld dist, ld & best_dist, vector<int> cur_cycle, vector<int> &best_cycle){
-    // Base case
-    if(cnt == n-1){ // Already visited all cities
-        // Add distance of the last city to the origin city
-        ld new_dist = dist + v[prev].dist(v[home_ind]); 
-        // If the new distance is better than current best distance
-        // best distance and best cycle are updated
-        if(new_dist < best_dist){ 
-            best_dist = new_dist;
-            best_cycle = cur_cycle;
-        }
-        return;
-    }
+//? En lugar de herencia se podría hacer una función a la que se le pase
+//? TSP_solution
 
-    // Iterate for all the cities to visit
-    for(int i=0; i<n; ++i){
-        // If the city hasn't been visited we try visiting it
-        if(!visited[i]){
-            visited[i] = true; // Mark the city as visited
-            // Add distance of the last city to this city to current distance
-            ld new_dist = dist + v[i].dist(v[prev]);
-            // If the new distance is better than current best distance
-            // we try visiting this city
-            if(new_dist < best_dist){
-                // Add city to current cycle
-                cur_cycle.push_back(i);
-                // Proceded resolving the problem with one more city visited
-                TSP_backtracking(n,i,home_ind,cnt+1,v,visited,new_dist,best_dist,cur_cycle,best_cycle);
-                // Erase the city of the current cycle
-                cur_cycle.pop_back();
+class BK_solution : public TSP_solution
+{
+
+public:
+    
+    BK_solution(const vector<City> & v) : TSP_solution(v) {};
+
+private:
+
+    void algorithm(Track& e_node) override {
+        generated++;
+        if (e_node.track.size() == cities.size())
+        {
+            // Keep the best
+            processSolution(e_node.track);
+            return;
+        }
+        // La primera ciudad se ignora
+        for (int i=1; i < cities.size(); ++i)
+        {
+            if (e_node.visited[i]) continue;
+            if (!feasible(e_node,i).first) {
+                podas++;
+                continue;
             }
-            visited[i] = false; // Mark the city as not visited
+
+            e_node.current_cost += (cities[e_node.track.back()] - cities[i]);
+            e_node.track.push_back(i);
+            e_node.visited[i] = true;
+            algorithm(e_node);
+            e_node.track.pop_back();
+            e_node.visited[i] = false;
+            e_node.current_cost -= (cities[e_node.track.back()] - cities[i]);
         }
     }
-}
+};
 
-int main(int argc, char **argv){
+int main(int argc, char** argv){
     // Faster I/O
     ios::sync_with_stdio(false);
     cin.tie(0);
 
-    // Check given paremeters
-    if (argc < 2) {
-        cout << "Uso: ./greedy <input_file>" << endl;
-        return 1;
-    }
+    ifstream fin(argv[1],ios::in);
+    int version;
+    if (argc == 3)
+        version = atoi(argv[2]);
+    else
+        version = 1;
 
     // INPUT
-    ifstream fin(argv[1],ios::in);
-
     int n;
     fin >> n;
-    City v[n];
-    for(int i=0; i<n; ++i)
-        fin >> v[i];
+    vector<City> v;
+    v.reserve(n);
 
-    City home = v[0];
-    sort(v,v+n); // sort by x axis
+    for(int i=0; i<n; ++i) {
+        City aux;
+        fin >> aux;
 
-    // Locate home index
-    int home_ind = 0;
-    while(v[home_ind] != home) ++home_ind;
+        v.push_back(aux);
+    }
 
-    // Initialize best distance
-    ld best_dist = INF; // Fake impossible value 
-    // Initialize all cities to not visited except for origin city
-    bool visited[n];
-    memset(visited,false,sizeof(visited));
-    visited[home_ind] = true; // Already visited origin city
-    // Answer
-    vector<int> ans;
-    ans.reserve(n);
-    ans.push_back(home_ind); // Already visited origin city
+    BK_solution sol(v);
+
+    sol.setCotaVersion(version);
 
     // TSP
+
     clock_t t_before = clock();
-    TSP_backtracking(n,home_ind,home_ind,0,v,visited,0,best_dist,ans,ans);
+    sol.solve();
     clock_t t_after = clock();
 
+    // cout << sol.getSol() << endl;
     // OUTPUT
     #ifdef TSP
-    printCycle(ans,v[0],v);
+    sol.printAns();
+    // cout << n << " " << sol.getCost() << endl;
+    #endif
+
+    #ifdef NODES
+    cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
+    cout << "podas: " << sol.getPodas() << endl << endl;
     #endif
 
     #ifdef COST
-    cout << n << " " << cycleDistance(ans,v) << endl;
+    cout << n << " " << sol.getCost() << endl;
     #endif
 
     #ifdef TIME
-    cout << n << " " << ((double)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
+    cout << n << " " << ((ld)(t_after - t_before)/ CLOCKS_PER_SEC) << endl;
     #endif
+
+    return 0;
 }
