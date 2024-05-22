@@ -6,14 +6,6 @@
 
 using namespace std;
 
-template <typename T>
-ostream& operator<<(ostream& os, vector<T> v) {
-    for (int i = 0; i < v.size(); i++) {
-        os << v[i] << endl;
-    }
-    return os;
-}
-
 template<typename T>
 void remove(vector<T>& v, const T& elem) {
     auto it = find(v.begin(),v.end(),elem);
@@ -79,15 +71,6 @@ void TSP_solution::solve() {
 
 void TSP_solution::printAns() {
     printCycle(best_ans, cities[0], cities);
-}
-
-
-ld TSP_solution::trackDistance(const vector<int>& track) {
-    ld dist = 0;
-    for (int i = 0; i < track.size() - 1; i++) {
-        dist += (cities[track[i + 1]] - cities[track[i]]);
-    }
-    return dist;
 }
 
 pair<bool,ld> TSP_solution::feasible(Track & e_node, int node)

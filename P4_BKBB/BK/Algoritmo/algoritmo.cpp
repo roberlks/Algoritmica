@@ -117,7 +117,7 @@ int main(int argc, char** argv){
     #endif
 
     #ifdef COST
-    cout << n << " " << sol.getCost() << endl;
+    cout << sol.getCost() << endl;
     #endif
 
     #ifdef TIME
