@@ -70,9 +70,6 @@ void TSP_solution::setCotaVersion(int version) {
 
 void TSP_solution::solve() {
     if (cities.empty()) return;
-    else if (this->version == 2) { // Calculamos el vector estático de costes
-	calcularMinimoCosteAristas();
-    }
 
     Track e_node(cities.size());
     e_node.visited[0] = true;
@@ -119,7 +116,7 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
             cota_inf += f_cota4(e_node,node);
             break;
         case 5:
-            cota_inf += f_cota4(e_node,node);
+            cota_inf += f_cota5(e_node,node);
             break;
         default:
             cerr << "Invalid f_cota version (1, 2, 3, 4 or 5)" << endl;
@@ -135,7 +132,7 @@ ld TSP_solution::f_cota1(Track& e_node, int node) {
     if(min_e == -1){
         min_e = min_edge();
     }
-    return num_not_visited * min_e;
+    return (num_not_visited+1) * min_e;
 }
 
 ld TSP_solution::f_cota2(Track& e_node, int node) {
@@ -153,7 +150,7 @@ ld TSP_solution::f_cota3(Track& e_node, int node) {
 
 ld TSP_solution::f_cota4(Track& e_node, int node) {
     int num_not_visited = cities.size() - e_node.track.size();
-    return num_not_visited * min_edge(e_node);
+    return (num_not_visited+1) * min_edge(e_node);
 }
 
 
@@ -263,23 +260,23 @@ ld TSP_solution::minimoCosteAristasRestantes(int nCiudadesRestantes) {
     static vector<ld> costesAristas;
 
     if (!ya_calculado) {
-	int n = cities.size();
-	costesAristas.reserve((n*(n-1)/2));
-	for(int i = 0; i < n; ++i){
-	    for(int j = i+1; j < n; ++j){
-		ld dist = this->cities[i] - this->cities[j];
-		costesAristas.push_back(dist);
-	    }
-	}
+        int n = cities.size();
+        costesAristas.reserve((n*(n-1)/2));
+        for(int i = 0; i < n; ++i){
+            for(int j = i+1; j < n; ++j){
+                ld dist = this->cities[i] - this->cities[j];
+                costesAristas.push_back(dist);
+            }
+        }
 
-	// Ordenamos el vector
-	sort(costesAristas.begin(), costesAristas.end());
+        // Ordenamos el vector
+        sort(costesAristas.begin(), costesAristas.end());
 
-	// Acumulamos el coste
-	for (int i = 1; i < costesAristas.size(); i++) {
-	    costesAristas[i] += costesAristas[i-1];
-	}
-	ya_calculado = true;
+        // Acumulamos el coste
+        for (int i = 1; i < costesAristas.size(); i++) {
+            costesAristas[i] += costesAristas[i-1];
+        }
+        ya_calculado = true;
     }
 
     // Calculamos el mínimo coste de las aristas restantes

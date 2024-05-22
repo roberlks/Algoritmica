@@ -12,9 +12,6 @@ using namespace std;
     #endif
 #endif
 
-//? En lugar de herencia se podría hacer una función a la que se le pase
-//? TSP_solution
-
 class BB_solution : public TSP_solution
 {
 

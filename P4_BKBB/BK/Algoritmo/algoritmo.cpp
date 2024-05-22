@@ -12,9 +12,6 @@ using namespace std;
     #endif
 #endif
 
-//? En lugar de herencia se podría hacer una función a la que se le pase
-//? TSP_solution
-
 class BK_solution : public TSP_solution
 {
 
@@ -25,26 +22,35 @@ public:
 private:
 
     void algorithm(Track& e_node) override {
-        generated++;
+        generated++; // Counting number of e_nodes generates
+        // Already visited all cities
         if (e_node.track.size() == cities.size())
         {
-            // Keep the best
+            // Keep the best solution
             processSolution(e_node.track);
             return;
         }
-        // La primera ciudad se ignora
+
+        // First (origin) city is ignored
         for (int i=1; i < cities.size(); ++i)
         {
+            // Ignore visited cities
             if (e_node.visited[i]) continue;
+            // Ignore paths we know are worse than our current best 
+            // (prune unfeasible branch)
             if (!feasible(e_node,i).first) {
-                podas++;
+                podas++; // Counting number of prunings
                 continue;
             }
 
+            // Add the city i to the track
             e_node.current_cost += (cities[e_node.track.back()] - cities[i]);
             e_node.track.push_back(i);
             e_node.visited[i] = true;
-            algorithm(e_node);
+
+            algorithm(e_node); // Visit the city i
+
+            // Remove the city i
             e_node.track.pop_back();
             e_node.visited[i] = false;
             e_node.current_cost -= (cities[e_node.track.back()] - cities[i]);
@@ -87,11 +93,9 @@ int main(int argc, char** argv){
     sol.solve();
     clock_t t_after = clock();
 
-    // cout << sol.getSol() << endl;
     // OUTPUT
     #ifdef TSP
     sol.printAns();
-    // cout << n << " " << sol.getCost() << endl;
     #endif
 
     #ifdef NODES
