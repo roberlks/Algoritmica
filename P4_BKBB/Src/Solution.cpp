@@ -178,7 +178,6 @@ ld TSP_solution::sumMinVisit(const vector<bool>& visited, int node) {
             dist += visit_min_cost(visited,i);
         }
     }
-    dist += visit_min_cost(visited, 0);
     return dist;
 }
 
