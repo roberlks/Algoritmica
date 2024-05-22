@@ -118,10 +118,7 @@ ld TSP_solution::f_cota(Track& e_node, int node) {
         case 5:
             cota_inf += f_cota5(e_node,node);
             break;
-        default:
-            cerr << "Invalid f_cota version (1, 2, 3, 4 or 5)" << endl;
-            exit(1);
-            break;
+        // If no f_cota is specified, cota_inf is the current_cost
     }
     return cota_inf;
 }
@@ -173,17 +170,6 @@ ld TSP_solution::sumMinEnter(const vector<bool> & visited, int node) {
     return dist;
 }
 
-ld TSP_solution::sumMinExit(const vector<bool>& visited, int node) {
-    ld dist = 0;
-    for (int i = 0; i < cities.size(); ++i) {
-        if ((node != i) && !visited[i]) {
-            dist += exit_min_cost(visited, i);
-        }
-    }
-    dist += exit_min_cost(visited, 0);
-    return dist;
-}
-
 ld TSP_solution::sumMinVisit(const vector<bool>& visited, int node) {
     ld dist = 0;
 
@@ -197,32 +183,30 @@ ld TSP_solution::sumMinVisit(const vector<bool>& visited, int node) {
 }
 
 ld TSP_solution::enter_min_cost(const vector<bool>& visited, int node) {
-    set<ld> edges;
-    orderedEdges(visited,node,edges);
-    return *edges.begin();
-}
-
-ld TSP_solution::exit_min_cost(const vector<bool>& visited, int node) {
-    set<ld> edges;
-    orderedEdges(visited,node,edges);
-    return *(++edges.begin());
+    return shortest_two_edges(visited,node).first;
 }
 
 ld TSP_solution::visit_min_cost(const vector<bool>& visited, int node) {
-    set<ld> edges;
-    orderedEdges(visited,node,edges);
-    return (*(edges.begin()) + *(++edges.begin())) / 2;
+    pair<ld,ld> shortest_edges = shortest_two_edges(visited,node);
+    return (shortest_edges.first + shortest_edges.second) / 2;
 }
 
-void TSP_solution::orderedEdges(const vector<bool> & visited, int node, set<ld> & edges) {
-    edges.clear();
-    for (int i=0; i < visited.size(); ++i) {
-        if (i==node) continue;
-        if (!visited[i]) {
-            edges.insert(cities[node] - cities[i]);
+pair<ld,ld> TSP_solution::shortest_two_edges(const vector<bool>& visited, int node) {
+    ld min_enter = INF, min_exit = INF;
+    for(int i=0; i < visited.size(); ++i)
+    {
+        if ((visited[i] || i == node) && i != 0) continue;
+        ld dist = cities[node] - cities[i];
+        if (dist < min_enter)
+        {
+            min_exit = min_enter;
+            min_enter = dist;
+        }
+        else if (dist < min_exit && dist != min_enter) {
+            min_exit = dist;
         }
     }
-    edges.insert(cities[node] - cities[0]);
+    return {min_enter,min_exit};
 }
 
 ld TSP_solution::min_edge() {

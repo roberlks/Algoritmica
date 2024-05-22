@@ -3,11 +3,6 @@
 
 #include "City.h"
 
-#include <set>
-
-template <typename T>
-std::ostream& operator<<(std::ostream& os, std::vector<T> v);
-
 template<typename T>
 void remove(std::vector<T>& v, const T& elem);
 
@@ -61,15 +56,12 @@ private:
     ld f_cota5(Track& e_node, int node);
     ld trackDistance(const std::vector<int>& track);
     ld sumMinEnter(const std::vector<bool>& visited, int node);
-    ld sumMinExit(const std::vector<bool>& visited, int node);
     ld sumMinVisit(const std::vector<bool>& visited, int node);
     ld enter_min_cost(const std::vector<bool>& visited, int node);
-    ld exit_min_cost(const std::vector<bool>& visited, int node);
     ld visit_min_cost(const std::vector<bool>& visited, int node);
+    std::pair<ld,ld> shortest_two_edges(const std::vector<bool>& visited, int node);
     ld minimoCosteAristasRestantes(int nCiudadesRestantes);
     void calcularMinimoCosteAristas();
-
-    void orderedEdges(const std::vector<bool>& visited, int node, std::set<ld> & edges);
     ld min_edge();
     ld min_edge(const Track& e_node);
     void TSP_greedy();
