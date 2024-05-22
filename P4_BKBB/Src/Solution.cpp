@@ -70,7 +70,7 @@ void TSP_solution::setCotaVersion(int version) {
 
 void TSP_solution::solve() {
     if (cities.empty()) return;
-    else if (this->version == 2) { // Calculamos el vector estático de costes
+    else if (this->version == 5) { // Calculamos el vector estático de costes
 	calcularMinimoCosteAristas();
     }
 
@@ -181,7 +181,6 @@ ld TSP_solution::sumMinVisit(const vector<bool>& visited, int node) {
             dist += visit_min_cost(visited,i);
         }
     }
-    dist += visit_min_cost(visited, 0);
     return dist;
 }
 

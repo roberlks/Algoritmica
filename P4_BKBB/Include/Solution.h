@@ -6,13 +6,20 @@
 template<typename T>
 void remove(std::vector<T>& v, const T& elem);
 
+/**
+ * @struct Track
+ * @brief Represents a track with its aprox_cost and current_cost
+ * Especia
+*/
 struct Track {
     std::vector<int> track;
     std::vector<bool> visited;
     ld aprox_cost;
     ld current_cost;
 
-    Track(int n = 0) : visited(n, false), aprox_cost(0), current_cost(0) {}
+    Track(int n = 0) : visited(n, false), aprox_cost(0), current_cost(0) {
+        track.reserve(n);
+    }
     Track(std::vector<int>& track, std::vector<bool>& visited, ld cost, ld current_cost) 
     : track(track), visited(visited), aprox_cost(cost), current_cost(current_cost) {}
     bool operator>(Track other) const {

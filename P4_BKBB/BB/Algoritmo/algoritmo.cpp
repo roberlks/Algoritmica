@@ -12,24 +12,35 @@ using namespace std;
     #endif
 #endif
 
-//? En lugar de herencia se podría hacer una función a la que se le pase
-//? TSP_solution
 
+/**
+ * @class BB_solution
+ * @brief TSP_solution class which implements branch&bound algorithm
+*/
 class BB_solution : public TSP_solution
 {
 
 public:
     
+    /**
+     * @class BB_solution
+     * @brief TSP_solution class which implements branch&bound algorithm
+    */
     BB_solution(const vector<City> & v) : TSP_solution(v) {};
 
 private:
 
+    /**
+     * @brief Branch&Bound solution to the TSP problem
+     * @param e_node The node (city) we are first exploring
+    */
     void algorithm(Track& first_node) override {
         priority_queue<Track, vector<Track>, greater<Track>> nodos_vivos;
         nodos_vivos.push(first_node);
+        generated++;
 
         while (!nodos_vivos.empty()) {
-            generated++;
+            
             Track e_node = nodos_vivos.top();
             nodos_vivos.pop();
 
@@ -54,6 +65,7 @@ private:
                 aux.visited[i] = true;
 
                 nodos_vivos.push(aux);
+                generated++;
             }
         }
     }
