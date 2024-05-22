@@ -112,7 +112,7 @@ ld TSP_solution::f_cota1(Track& e_node, int node) {
     if(min_e == -1){
         min_e = min_edge();
     }
-    return (num_not_visited+1) * min_e;
+    return num_not_visited * min_e;
 }
 
 ld TSP_solution::f_cota2(Track& e_node, int node) {
@@ -130,7 +130,7 @@ ld TSP_solution::f_cota3(Track& e_node, int node) {
 
 ld TSP_solution::f_cota4(Track& e_node, int node) {
     int num_not_visited = cities.size() - e_node.track.size();
-    return (num_not_visited+1) * min_edge(e_node);
+    return num_not_visited * min_edge(e_node);
 }
 
 
@@ -223,7 +223,7 @@ ld TSP_solution::minimoCosteAristasRestantes(int nCiudadesRestantes) {
     // y solo lo calculo una vez, lo que controlo con otra variable
     // estática 
     static bool ya_calculado = false;
-    static vector<ld> costesAristas;
+    static vector<ld> costesAristas, prefix_sum;
 
     if (!ya_calculado) {
         int n = cities.size();
@@ -239,8 +239,10 @@ ld TSP_solution::minimoCosteAristasRestantes(int nCiudadesRestantes) {
         sort(costesAristas.begin(), costesAristas.end());
 
         // Acumulamos el coste
+        prefix_sum.resize((n*(n-1)/2 + 1));
+        prefix_sum[0] = 0;
         for (int i = 1; i < costesAristas.size(); i++) {
-            costesAristas[i] += costesAristas[i-1];
+            prefix_sum[i] = prefix_sum[i-1] + costesAristas[i-1];
         }
         ya_calculado = true;
     }
@@ -249,7 +251,7 @@ ld TSP_solution::minimoCosteAristasRestantes(int nCiudadesRestantes) {
     // (si quedan n ciudades por recorrer, quedan n+1 aristas
     // por añadir al camino)
 
-    return costesAristas.at(nCiudadesRestantes);
+    return prefix_sum.at(nCiudadesRestantes);
 }
 
 
