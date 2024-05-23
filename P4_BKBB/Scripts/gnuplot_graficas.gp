@@ -1,6 +1,6 @@
 #!/bin/gnuplot
 
-# <numero de entradas> <datos1> <data_dir> <version> 
+# <numero de entradas> <datos1> <version> 
 
 decision=ARG1   	# Si numero de entradas es == 1 entonces solo hace regresion, si es 2 hace la comparacion
 datos1=ARG2

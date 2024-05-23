@@ -39,7 +39,7 @@ int main(int argc, char * argv[]){
     }
 
     // OUPUT
-    srand(56*n);
+    srand(n);
     #ifndef VISUAL
         fout << n << endl; // Number of cities
     #endif

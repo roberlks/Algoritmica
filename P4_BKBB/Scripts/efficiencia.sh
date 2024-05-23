@@ -1,9 +1,9 @@
 #!/bin/bash
 #TODO adaptar
 #<P4> <V2>
-if (($# < 1)); then
+if (($# < 5)); then
     echo "IMPORTANTE: Ejecutar desde la carpeta padre"
-    echo "<BK/BB> [ini] [fin] [step]"
+    echo "<BK/BB> [ini] [fin] [step] [f_cota]"
     exit -1
 fi
 
@@ -11,6 +11,7 @@ alg=$1
 ini=${2:-10}
 fin=${3:-100}
 step=${4:-10}
+version=$5
 
 ./Scripts/input_generator.sh $alg $ini $fin $step
 
@@ -25,7 +26,7 @@ echo "" > $output_file
 for ((i=1;i<=(fin-ini)/step;++i))
 do
     data_name="Instancias/ni$i.txt"
-    ./$bin $data_name >> $output_file
+    ./$bin $data_name $version >> $output_file
 done
 
 gnuplot -c "../Scripts/plot.gp" $output_file "tiempo $alg" "Graficas/TSP_$1_empirica_lines.png" "lines"
