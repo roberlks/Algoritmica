@@ -16,8 +16,9 @@ void remove(vector<T>& v, const T& elem) {
 
 TSP_solution::TSP_solution() : podas(0), generated(0), cost(INF) {}
 
-TSP_solution::TSP_solution(const vector<City>& v) {
+TSP_solution::TSP_solution(const vector<City>& v, int version) {
     podas = generated = 0;
+    this->version = version;
     cities = v;
     TSP_greedy();
     cost = cycleDistance(best_ans, cities);
@@ -54,10 +55,6 @@ ll TSP_solution::getPossibleNodes() const {
 
 int TSP_solution::getGeneratedNodes() const {
     return generated;
-}
-
-void TSP_solution::setCotaVersion(int version) {
-    this->version = version;
 }
 
 void TSP_solution::solve() {

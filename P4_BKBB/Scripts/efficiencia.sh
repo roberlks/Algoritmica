@@ -31,4 +31,4 @@ done
 gnuplot -c "../Scripts/plot.gp" $output_file "tiempo $alg" "Graficas/TSP_$1_empirica_lines.png" "lines"
 gnuplot -c "../Scripts/plot.gp" $output_file "tiempo $alg" "Graficas/TSP_$1_empirica_points.png" "points"
 
-gnuplot -c "../Scripts/gnuplot_graficas.gp" "1" $output_file "tiempo $alg" 
+gnuplot -c "../Scripts/gnuplot_graficas2.gp" "1" $output_file "tiempo $alg" 

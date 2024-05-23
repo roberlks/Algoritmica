@@ -69,7 +69,7 @@ protected:
     int podas;
     // Number of generated nodes
     int generated;
-    // Version of bound function
+    // Version of inferior bound function
     int version;
 
 public:
@@ -84,9 +84,10 @@ public:
      * @brief Constructor of the class
      * Initializes @p podas and @p generated to 0, and @p best_ans and @p cost
      * to the result of an initial Greedy approach.
-     * @param v A vector with the cities of the problem
+     * @param v A vector with the cities of the problem.
+     * @param version The f_cota version used for the problem.
     */
-    TSP_solution(const std::vector<City>& v);
+    TSP_solution(const std::vector<City>& v, int version = 0);
 
     /**
      * @brief Consultor of @p cities. Query method.
@@ -124,11 +125,6 @@ public:
      * @return Number of possible nodes if no prunes occur.
     */
     ll getPossibleNodes() const;
-
-    /**
-     * @brief Sets the bound function version. Modifier method.
-    */
-    void setCotaVersion(int version);
 
     /**
      * @brief The public method which solves the problem. 
@@ -188,7 +184,7 @@ private:
      * @brief Fifth bound function.
      * @param e_node Current node in expansion, with information of the followed track.
      * @param node Candidate node to choose.
-     * @return //TODO
+     * @return The minimum cost of the remaining edges of the track.
     */
     ld f_cota5(Track& e_node, int node);
 
@@ -234,17 +230,64 @@ private:
     std::pair<ld,ld> shortest_two_edges(const std::vector<bool>& visited, int node);
 
     /**
-     * 
+     * @brief Calculates the minimum cost of the remaining edges.
+     * @param nCiudadesRestantes Number of remaining cities.
+     * @return Minimum cost of the remaining edges.
     */
     ld minimoCosteAristasRestantes(int nCiudadesRestantes);
+
+    /**
+     * @brief Calculates the minimum cost of all the edges
+     * Stores all costs in an static vector.
+    */
     void calcularMinimoCosteAristas();
+
+    /**
+     * @brief Calculates the cost of the minimum edge.
+     * @return That minimum cost.
+    */
     ld min_edge();
+
+    /**
+     * @brief Calculates the cost of the minimum possible edge expanding the node.
+     * @param e_node The node in expansion, with information of the track.
+     * @return The cost of the minimum possible edge.
+    */
     ld min_edge(const Track& e_node);
+
+    /**
+     * @brief Greedy approach for the TSP problem. 
+     * Implements the closest neighbour approach.
+    */
     void TSP_greedy();
 
 protected:
+
+    /**
+     * @brief Calculates the local inferior bound for @p e_node track
+     * following @p node branch.
+     * @param e_node
+     * @param node
+     * @return Local inferior bound, depending on @p version attribute.
+     * @see f_cota1
+     * @see f_cota2
+     * @see f_cota3
+     * @see f_cota4
+     * @see f_cota5
+    */
     ld f_cota(Track& e_node, int node);
+
+    /**
+     * @brief Estimates if the branch @p node is feasible from track
+     * @p e_node .
+    */
     std::pair<bool, ld> feasible(Track& e_node, int node);
+
+    /**
+     * @brief Processes the final solution of a track (leaf node), changing the
+     * global solution @p best_ans and @p cost if necessary.
+     * @param track The final resulting track.
+    */
     void processSolution(const std::vector<int>& track);
 };
 

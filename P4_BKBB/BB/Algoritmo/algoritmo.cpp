@@ -26,7 +26,7 @@ public:
      * @class BB_solution
      * @brief TSP_solution class which implements branch&bound algorithm
     */
-    BB_solution(const vector<City> & v) : TSP_solution(v) {};
+    BB_solution(const vector<City> & v, int version) : TSP_solution(v, version) {};
 
 private:
 
@@ -94,9 +94,7 @@ int main(int argc, char** argv){
         v.push_back(aux);
     }
 
-    BB_solution sol(v);
-
-    sol.setCotaVersion(version);
+    BB_solution sol(v, version);
 
     // TSP
 
@@ -110,8 +108,7 @@ int main(int argc, char** argv){
     #endif
 
     #ifdef NODES
-    cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
-    cout << "podas: " << sol.getPodas() << endl;
+    cout << n << " " << sol.getGeneratedNodes() << end;
     #endif
 
     #ifdef COST

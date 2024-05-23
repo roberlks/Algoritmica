@@ -20,7 +20,6 @@ version1=$5
 version2=$6
 
 ./Scripts/input_generator.sh $1 $ini $fin $step
-./Scripts/visual_input_generator.sh $1 $ini $fin $step
 
 cd $1
 

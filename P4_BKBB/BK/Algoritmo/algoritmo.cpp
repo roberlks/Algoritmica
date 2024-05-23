@@ -26,7 +26,7 @@ public:
      * @brief Constructor of the class, calls TSP_solution constructor
      * @param v The cities of the problem
     */
-    BK_solution(const vector<City> & v) : TSP_solution(v) {};
+    BK_solution(const vector<City> & v, int version) : TSP_solution(v,version) {};
 
 private:
 
@@ -96,9 +96,7 @@ int main(int argc, char** argv){
         v.push_back(aux);
     }
 
-    BK_solution sol(v);
-
-    sol.setCotaVersion(version);
+    BK_solution sol(v,version);
 
     // TSP
 
@@ -112,8 +110,7 @@ int main(int argc, char** argv){
     #endif
 
     #ifdef NODES
-    cout << "nodes: " << sol.getGeneratedNodes() << " / " << sol.getPossibleNodes() << endl;
-    cout << "podas: " << sol.getPodas() << endl << endl;
+    cout << n << " " << sol.getGeneratedNodes() << endl;
     #endif
 
     #ifdef COST
