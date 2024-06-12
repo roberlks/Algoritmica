@@ -108,7 +108,7 @@ int main(int argc, char** argv){
     #endif
 
     #ifdef NODES
-    cout << n << " " << sol.getGeneratedNodes() << endl;
+    cout << n << " " << sol.getGeneratedNodes() << end;
     #endif
 
     #ifdef COST
